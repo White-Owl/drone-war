@@ -10,21 +10,21 @@ let main =
 				  ";
 
 	let cage = new arena in
-(*	Array.iter (fun parameter ->
-		if Filename.check_suffix(parameter, ".dt") then (
+	Array.iter (fun parameter ->
+		if parameter.[0]='-' then
+		begin
+			print_endline ("option " ^parameter);
+		end
+		else
+		if (Filename.check_suffix parameter ".dt" ) then
+		begin
 			print_string "Loading ";
-			print_string (parameter ^ "\n");
+			print_string parameter;
 			cage#load (parameter);
-		) else (
-			print_string "failed\n"
-		)
-	) Sys.argv; *)
+			print_endline " ok";
+		end 
+	) Sys.argv;
 
-	for i = 1 to (Array.length Sys.argv) - 1 do
-		print_string "Loading ";
-		print_string (Sys.argv.(i) ^ "\n");
-		cage#load (Sys.argv.(i));
-	done;
 	print_string ("Loaded " ^ (string_of_int cage#get_drone_count) ^ " drones\n");
 	exit 0;;
 
