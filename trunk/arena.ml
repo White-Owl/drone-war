@@ -6,8 +6,11 @@ object
 
 	method load file_name =
 		let d = new drone in
-			d#load file_name;
+		if (d#load file_name ) then (
 			drones <- d::drones;
+			true;
+		) else
+			false;
 
 	method get_drone_count = List.length drones;
 

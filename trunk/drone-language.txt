@@ -23,8 +23,8 @@ E.g. each of the following words are exactly the same:
      WoRd
 
 
-Each word read from the source code is either comment, integer, call to a user
-defined function, label, variable, or operator.
+Each word read from the source code is either comment, integer, boolean,
+call to a user defined function, label, variable, or operator.
 
 
 Comments are single line only, they start with a word // and continue to the
@@ -35,9 +35,13 @@ end of the line. E.g. each of the following lines contains a comment
 
 
 Integer is a word which consists solely from characters 0-9.
-	123            // one integer 
+	123            // one integer
 	1 2 3          // three integers
 These words put the specified integer directly on the stack.
+
+
+Booleans are two words "true" and "false" which represent the logical values
+and are subject to logical operations and conditional jumps.
 
 
 User functions are marked with a word which starts with a colon, and ends with
@@ -46,8 +50,8 @@ single colon.
 	:add + :
 The first example defines a function named "foo" with some arbitrary words and
 the second example defines an alias "add" for a simple arithmetic operation.
-The call to the previously defined function is just its name. E.g. the next two
-lines will do exactly the same:
+The call to the previously defined function is just its name. E.g. the next
+two lines will do exactly the same:
     2 2 +
     2 2 add
 Functions cannot have sub-functions. For example, the next line shows an
@@ -71,6 +75,7 @@ previous example:
 	this_is_label>
 	this-is/also.label>
 	123456>
+
 The conditional jump is marked by adding character '?' to the name. Conditional
 jump happens if and only if the top of the stack contains boolean "true" value.
 If top of the stack is not a boolean value, then drone freezes.
@@ -106,9 +111,14 @@ Arithmetic operators:
  ^      a b -> (a ^ b)
 
 Logic operators:
- &      a b -> (a and b)
- |      a b -> (a or b)
- ~      a   -> (not a)
+ and    a b -> (a and b)
+ or     a b -> (a or b)
+ not    a   -> (not a)
+
+
+Logic constants
+ true       -> true
+ false      -> false
 
 
 Conditions:
@@ -119,10 +129,10 @@ Conditions:
 
 Stack manipulation:
  drop      a b c -> a b
- dropall   a b c -> 
+ dropall   a b c ->
  dup       a b c -> a b c c
  swap      a b c -> a c b
- over      a b c -> a b c b 
+ over      a b c -> a b c b
  rot       a b c -> b c a
 
 
@@ -141,14 +151,14 @@ Suffixes:
    Define a label.
  name>     ->
    Unconditional jump to the label.
- name?   a -> 
+ name?   a ->
    Jump to the specified label if top of the stack contains boolean true.
 Continue execution of the next word if there was false. Die if top of the stack
 was not a boolean value.
 
 
 Game specific operators:
- move   direction -> 
+ move   direction ->
 	Start moving in the specified direction
 
  stop   ->
@@ -191,4 +201,3 @@ corresponding boolean value.
 
  random     a b -> r
     Make a random integer in the range [a,b] (inclusive) and return it.
-

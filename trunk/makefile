@@ -1,13 +1,28 @@
-obj=drone.cmo arena.cmo main.cmo
+OBJS=scanner.cmo drone.cmo arena.cmo main.cmo
+INTERFACES=ast.cmi
+LIBS=
 
 all: DroneWar.exe
-	./DroneWar.exe drones/rabbit.dt drones/turret.dt
+	./DroneWar.exe test.dt
 
-DroneWar.exe: $(obj)
-	ocamlc -I +/site-lib/extlib -I +extlib extLib.cma -o $@ $^
+DroneWar.exe: $(OBJS)
+	ocamlc  -o $@ $^
 
-%.cmo: %.ml
-	ocamlc -I +/site-lib/extlib -I +extlib extLib.cma -c $<
+$(OBJS): $(INTERFACES)
+
+%.cmo %.cmi: %.ml
+	ocamlc -warn-error A -c $<
+
+%.ml: %.mll
+	ocamllex -o $@ $<
+
+%.ml: %.mly
+	ocamlyacc $<
+
+%.cmi: %.mli
+	ocamlc -c -o $@ $<
 
 clean:
 	rm -f *.cmi *.cmo *.exe
+
+redo: clean all
