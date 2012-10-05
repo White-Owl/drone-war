@@ -20,9 +20,9 @@ let main =
 		begin
 			print_string "Loading ";
 			print_string parameter;
-			cage#load (parameter);
+			if not (cage#load parameter) then raise (Failure "abort");
 			print_endline " ok";
-		end 
+		end
 	) Sys.argv;
 
 	print_string ("Loaded " ^ (string_of_int cage#get_drone_count) ^ " drones\n");

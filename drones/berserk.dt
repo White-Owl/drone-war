@@ -1,0 +1,46 @@
+// This drone is very aggressive. It looks for any other drone, regardless of
+// is it friend or foe, runs toward it and shoot.
+
+0 >direction
+
+main_loop:
+	<direction look
+
+check_what_I_saw:
+	isDrone sees_a_drone?
+	isEnd main_loop?
+    // if that was not a drone or END, then it had to be a WALL
+	// drop direction and distance to the wall and repeat the deciphering loop
+	drop2
+	check_what_I_saw>
+
+sees_a_drone:
+	drop              // it should have an ALLY/FOE flag after isDrone
+	dup >direction    // store the direction to the drone
+	move              // start moving toward the target
+	<direction shoot  // and shoot in the same direction
+
+	// after charged to the nearest drone, we still have to cleanup data for
+	// other objects seen by look.
+look_cleanup:
+	isEnd	main_loop?
+	drop2
+	look_cleanup>
+
+
+// user function
+// drop two values from the stack
+:drop2 drop drop :
+
+
+// User function
+// Push TRUE to the stack if top value is a flag which represents a drone
+// Keep the flag itself.
+:isDrone
+	dup isAlly l1?
+	dup isFoe
+	l2>
+l1:
+	true
+l2:
+	:
