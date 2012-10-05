@@ -27,11 +27,14 @@ Each word read from the source code is either comment, integer, boolean,
 call to a user defined function, label, variable, or operator.
 
 
-Comments are single line only, they start with a word // and continue to the
+Single line comments, start with a word // and continue to the
 end of the line. E.g. each of the following lines contains a comment
 	// whole line can be a comment
 	2 2  + // or comment can start after some compilable words
 	// any word appeared after // is still a comment
+
+Multi line comments, start with a word /* and continue to the first */ word.
+The nested comments are not supported.
 
 
 Integer is a word which consists solely from characters 0-9.
