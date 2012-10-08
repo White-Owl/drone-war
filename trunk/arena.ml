@@ -8,6 +8,8 @@ object
 		let d = new drone in
 		if (d#load file_name ) then (
 			drones <- d::drones;
+			print_newline();
+			d#dump_code;
 			true;
 		) else
 			false;

@@ -1,47 +1,48 @@
+open Ast;;
 open Scanner;;
 
-module StringMap = Map.Make(struct
-	type t = string
-	let compare x y = Pervasives.compare x y
-	end)
-;;
-
-type procedure = {
-	name: string;
-	code: Ast.bytecode array;
-	labels: StringMap;
-	let compare x y = Pervasives.compare x.name y.name
-}
-;;
-
-module ProcedureMap = Map.Make(procedure);;
+module StringMap = Map.Make(String);;
 
 
 class drone =
-	object
-		val mutable procedures: ProcedureMap;
-		val mutable drone_name = ""
-		val mutable stack: Stack;
+	object (self)
+		val mutable procedures = StringMap.empty;
+		val mutable drone_name="";
+		val mutable stack = Stack.create;
+
 
 		method get_drone_name = drone_name
 
 
-(*		method print_code code =
+		method string_of_bytecode code =
 			match code with
-			  Plus        -> print_endline "Plus"
-			| Minus       -> print_endline "Minus"
-			| Times       -> print_endline "Times"
-			| Divide      -> print_endline "Divide" *)
+			  Plus        -> "Plus"
+			| Minus       -> "Minus"
+			| Times       -> "Times"
+			| Divide      -> "Divide"
+			| Int(x)      -> "Int(" ^ (string_of_int x) ^ ")"
+
+
+		method dump_code =
+			StringMap.iter (fun procedure_name procedure_code ->
+				print_string ("Procedure " ^ procedure_name ^ ":");
+				List.iter (fun code ->
+					print_char ' ';
+					print_string (self#string_of_bytecode code)
+				) procedure_code;
+				print_newline();
+			) procedures
 
 
 		method load file_name =
 			drone_name <- Filename.chop_extension (Filename.basename file_name);
 			let chan_in = Pervasives.open_in file_name in
 			let lexbuf = Lexing.from_channel chan_in in
-			let code = [] in
+			let current_function = ref " " in
+			let code = ref [] in
 			try
 				while true do
-					code <- (Scanner.token lexbuf) :: code
+					code := (Scanner.token lexbuf) :: !code;
 				done;
 
 				true;
@@ -57,6 +58,7 @@ class drone =
 			end
 			| End_of_file -> begin
 				Pervasives.close_in chan_in;
+				procedures <- StringMap.add !current_function (List.rev !code) procedures;
 				true;
 			end
 
