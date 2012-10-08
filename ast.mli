@@ -3,9 +3,4 @@ type bytecode =
 	| Plus
 	| Minus
 	| Times
-	| Divide
-
-
-type expr =
-	  Operator of expr
-	| Integer of int
+	| Divide;;
