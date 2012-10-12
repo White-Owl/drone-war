@@ -16,11 +16,24 @@ class drone =
 
 		method string_of_bytecode code =
 			match code with
-			  Plus        -> "Plus"
-			| Minus       -> "Minus"
-			| Times       -> "Times"
-			| Divide      -> "Divide"
-			| Int(x)      -> "Int(" ^ (string_of_int x) ^ ")"
+			  Int(x)         -> "Int(" ^ (string_of_int x) ^ ")"
+			| Plus           -> "Plus"
+			| Minus          -> "Minus"
+			| Times          -> "Times"
+			| Divide         -> "Divide"
+			| Mod            -> "Mod"
+			| Power          -> "Power"
+			| And            -> "And"
+			| Or             -> "Or"
+			| Not            -> "Not"
+			| Bool(b)        -> "Bool(" ^ (string_of_bool b) ^ ")"
+			| Equal          -> "Equal"
+			| Less           -> "Less"
+			| Greater        -> "Greater"
+			| Colon          -> "Colon"
+			| Store(var)     -> "Store(" ^var ^ ")"
+			| Read(var)      -> "Read(" ^var ^ ")"
+			| Function(name) -> "Function(" ^ name ^ ")"
 
 
 		method dump_code =
@@ -46,7 +59,17 @@ class drone =
 				done;
 
 				true;
-			with Failure explanation -> begin
+			with Unrecognized_Token token -> begin
+				let pos = Lexing.lexeme_start_p lexbuf in
+				print_string ("\nReading drone " ^ drone_name ^ " failed \nUnrecognized token '" ^ token ^ "' at ");
+				print_int pos.Lexing.pos_lnum;
+				print_char ':';
+				print_int (pos.Lexing.pos_cnum - pos.Lexing.pos_bol +1);
+				print_newline();
+				Pervasives.close_in chan_in;
+				false;
+			end
+			| Failure explanation -> begin
 				let pos = Lexing.lexeme_start_p lexbuf in
 				print_string ("\nReading drone " ^ drone_name ^ " failed \n" ^ explanation ^ " at ");
 				print_int pos.Lexing.pos_lnum;
