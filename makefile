@@ -1,5 +1,5 @@
-OBJS=scanner.cmo drone.cmo arena.cmo main.cmo
-INTERFACES=ast.cmi
+OBJS=parser.cmo scanner.cmo drone.cmo arena.cmo main.cmo
+INTERFACES=ast.cmi parser.cmi
 LIBS=
 
 all: DroneWar.exe
@@ -10,17 +10,17 @@ DroneWar.exe: $(OBJS)
 
 $(OBJS): $(INTERFACES)
 
-%.cmo %.cmi: %.ml
-	ocamlc -warn-error A -c $<
-
 %.ml: %.mll
 	ocamllex -o $@ $<
 
-%.ml: %.mly
+%.ml %.mli: %.mly
 	ocamlyacc $<
 
 %.cmi: %.mli
 	ocamlc -c -o $@ $<
+
+%.cmo %.cmi: %.ml
+	ocamlc -warn-error A -c $<
 
 clean:
 	rm -f *.cmi *.cmo *.exe
