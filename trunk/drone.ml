@@ -1,8 +1,7 @@
 open Ast;;
-open Scanner;;
+open Parser;;
 
 module StringMap = Map.Make(String);;
-
 
 class drone =
 	object (self)
@@ -51,8 +50,10 @@ class drone =
 			drone_name <- Filename.chop_extension (Filename.basename file_name);
 			let chan_in = Pervasives.open_in file_name in
 			let lexbuf = Lexing.from_channel chan_in in
-			let current_function = ref " " in
-			let code = ref [] in
+		(*	let current_function = ref " " in *)
+			let code = Parser.operations Scanner.token lexbuf in
+			List.iter (fun x -> print_endline (self#string_of_bytecode x)) code;
+(*			let code = ref [] in
 			try
 				while true do
 					code := (Scanner.token lexbuf) :: !code;
@@ -83,6 +84,7 @@ class drone =
 				Pervasives.close_in chan_in;
 				procedures <- StringMap.add !current_function (List.rev !code) procedures;
 				true;
-			end
+			end *)
+			true
 
 end;;

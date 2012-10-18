@@ -20,6 +20,7 @@ let main =
 		begin
 			print_string "Loading ";
 			print_string parameter;
+			print_char ' ';
 			if not (cage#load parameter) then raise (Failure "abort");
 			print_endline " ok";
 		end
