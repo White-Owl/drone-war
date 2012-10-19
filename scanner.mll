@@ -1,15 +1,14 @@
 {
 open Parser;;
+open Lexing;;
 
 exception Unrecognized_Token of string;;
-
-(* let incr_linenum lexbuf =
-    let pos = lexbuf.Lexing.lex_start_p in
-    lexbuf.Lexing.lex_start_p <- { pos with
-      Lexing.pos_lnum = pos.Lexing.pos_lnum + 1;
-      Lexing.pos_bol = pos.Lexing.pos_cnum;
-    }
-  ;; *)
+let incr_lineno lexbuf =
+	let pos = lexbuf.lex_curr_p in
+	lexbuf.lex_curr_p <- { pos with
+		pos_lnum = pos.pos_lnum + 1;
+		pos_bol = pos.pos_cnum;
+	}
 }
 
 let digit      = ['0'-'9']
@@ -18,7 +17,7 @@ let notspace   = [^ ' ' '\t' '\r' '\n']
 let name       = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9']*
 
 rule token = parse
-	| '\n'                  { Lexing.new_line lexbuf; token lexbuf }
+	| '\n'                  { incr_lineno lexbuf; token lexbuf }
 	| digit+ as str         { INTEGER (int_of_string str) }
 	| ':'                   { COLON }
 	| '+'	                { PLUS }
