@@ -19,8 +19,7 @@ let main =
 		if (Filename.check_suffix parameter ".dt" ) then
 		begin
 			print_string "Loading ";
-			print_string parameter;
-			print_char ' ';
+			print_endline parameter;
 			if not (cage#load parameter) then raise (Failure "abort");
 			print_endline " ok";
 		end

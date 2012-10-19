@@ -13,34 +13,13 @@ class drone =
 		method get_drone_name = drone_name
 
 
-		method string_of_bytecode code =
-			match code with
-			  Int(x)         -> "Int(" ^ (string_of_int x) ^ ")"
-			| Plus           -> "Plus"
-			| Minus          -> "Minus"
-			| Times          -> "Times"
-			| Divide         -> "Divide"
-			| Mod            -> "Mod"
-			| Power          -> "Power"
-			| And            -> "And"
-			| Or             -> "Or"
-			| Not            -> "Not"
-			| Bool(b)        -> "Bool(" ^ (string_of_bool b) ^ ")"
-			| Equal          -> "Equal"
-			| Less           -> "Less"
-			| Greater        -> "Greater"
-			| Colon          -> "Colon"
-			| Store(var)     -> "Store(" ^var ^ ")"
-			| Read(var)      -> "Read(" ^var ^ ")"
-			| Function(name) -> "Function(" ^ name ^ ")"
-
 
 		method dump_code =
 			StringMap.iter (fun procedure_name procedure_code ->
 				print_string ("Procedure " ^ procedure_name ^ ":");
 				List.iter (fun code ->
 					print_char ' ';
-					print_string (self#string_of_bytecode code)
+					print_string (string_of_bytecode code)
 				) procedure_code;
 				print_newline();
 			) procedures
@@ -52,7 +31,7 @@ class drone =
 			let lexbuf = Lexing.from_channel chan_in in
 		(*	let current_function = ref " " in *)
 			let code = Parser.operations Scanner.token lexbuf in
-			List.iter (fun x -> print_endline (self#string_of_bytecode x)) code;
+			List.iter (fun x -> print_endline (string_of_bytecode x)) code;
 (*			let code = ref [] in
 			try
 				while true do

@@ -1,28 +1,56 @@
-OBJS=parser.cmo scanner.cmo drone.cmo arena.cmo main.cmo
-INTERFACES=ast.cmi parser.cmi
+TARGET=DroneWar
+ML=ast.ml drone.ml arena.ml main.ml
+MLY=parser.mly
+MLL=scanner.mll
 LIBS=
+OBJS=$(MLL:.mll=.cmo) $(MLY:.mly=.cmo) $(ML:.ml=.cmo)
 
-all: DroneWar.exe
-	./DroneWar.exe test.dt
 
-DroneWar.exe: $(OBJS)
-	ocamlc  -o $@ $^
+ifeq ($(OS),Windows_NT)
+TARGET:=$(TARGET).exe
+endif
 
-$(OBJS): $(INTERFACES)
+all: $(TARGET)
+	./$(TARGET) test.dt
+
+
+$(TARGET): $(OBJS)
+	ocamlc  -o $@ $(LIBS) $^
 
 %.ml: %.mll
-	ocamllex -o $@ $<
+	ocamllex $<
 
 %.ml %.mli: %.mly
 	ocamlyacc $<
 
 %.cmi: %.mli
-	ocamlc -c -o $@ $<
-
-%.cmo %.cmi: %.ml
 	ocamlc -warn-error A -c $<
 
-clean:
-	rm -f *.cmi *.cmo *.exe
+%.cmo %.cmi %.mli: %.ml
+	ocamlc -warn-error A -c $<
 
-redo: clean all
+%.mli: %.ml
+	ocamlc -i $< >$@
+
+
+.depend: $(ML) $(MLY:.mly=.ml) $(MLL:.mll=.ml) makefile
+ifeq ($(OS),Windows_NT)
+	@attrib -H $@
+endif
+	ocamldep -all $(ML) $(MLY:.mly=.ml) $(MLY:.mly=.mli) $(MLL:.mll=.ml) $(MLL:.mll=.mli) | grep -v ".cmx" > .depend
+ifeq ($(OS),Windows_NT)
+	@attrib +H $@
+endif
+
+clean:
+	rm -f $(OBJS) $(OBJS:.cmo=.cmi) $(TARGET)
+	rm -f $(MLY:.mly=.ml) $(MLY:.mly=.mli)
+	rm -f $(MLL:.mll=.ml) $(MLL:.mll=.mli)
+	rm -f .depend
+
+redo: clean
+	make
+
+ifneq ($(MAKECMDGOALS),clean)
+-include .depend
+endif
