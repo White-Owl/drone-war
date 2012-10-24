@@ -20,7 +20,7 @@ let main =
 		begin
 			print_string "Loading ";
 			print_endline parameter;
-			if not (cage#load parameter) then raise (Failure "abort");
+			cage#load parameter;
 			print_endline " ok";
 		end
 	) Sys.argv;
