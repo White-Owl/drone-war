@@ -3,6 +3,9 @@ open Parser;;
 open Lexing;;
 
 exception Unrecognized_Token of string;;
+
+let debug=1;;
+
 let incr_lineno lexbuf =
 	let pos = lexbuf.lex_curr_p in
 	lexbuf.lex_curr_p <- { pos with
@@ -19,7 +22,6 @@ let name       = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9']*
 rule token = parse
 	| '\n'                  { incr_lineno lexbuf; token lexbuf }
 	| digit+ as str         { INTEGER (int_of_string str) }
-	| ':'                   { COLON }
 	| '+'	                { PLUS }
 	| '-'                   { MINUS }
 	| '*'                   { TIMES }
@@ -34,10 +36,25 @@ rule token = parse
 	| '<'                   { LESS }
 	| '>'                   { GREATER }
 
+	| "dup"                 { DUP }
+	| "drop"                { DROP }
+	| "dropall"             { DROPALL }
+	| "swap"                { SWAP }
+	| "over"                { OVER }
+	| "rot"                 { ROT }
+
+	| "read"                { READ }
+	| "store"               { STORE }
+	| ':'                   { COLON }
+	| "jump"                { JUMP }
+	| "ifjump"              { JUMP }
+	| "sub"                 { SUB }
+	| "esub"                { END_SUB }
+	| name as str           { NAME (str) }
+
 	| whitespace            { token lexbuf }
 	| "//"                  { sinlge_line_comment lexbuf }
 	| "/*"                  { multi_line_comment lexbuf }
-	| name as str           { NAME (str) }
 (*	| notspace + as str     { raise (Unrecognized_Token str) } *)
 	| eof                   { EOF }
 
