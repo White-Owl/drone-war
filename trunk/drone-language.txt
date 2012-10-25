@@ -66,7 +66,7 @@ Labels are any set of characters ended with colon:
 	this_is_label:
 	this-is/also.label:
 	123456:
-Of course, the wight-space character splits any sequence of characters into
+Of course, the wight-space character   any sequence of characters into
 sequence of words and the next line will be understood as four words and a
 label with the name 'label':
 	this is not a label:

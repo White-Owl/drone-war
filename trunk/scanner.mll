@@ -55,7 +55,8 @@ rule token = parse
 	| whitespace            { token lexbuf }
 	| "//"                  { sinlge_line_comment lexbuf }
 	| "/*"                  { multi_line_comment lexbuf }
-(*	| notspace + as str     { raise (Unrecognized_Token str) } *)
+	| _ as char 			{ raise (Failure("illegal character " ^  (*  *)
+							Char.escaped char)) }
 	| eof                   { EOF }
 
 and sinlge_line_comment = parse
