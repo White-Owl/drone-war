@@ -1,18 +1,1 @@
-2 2 +
-3 3 -
-dup
-sub a
-	2 2 +
-esub
-label1: 1 1 +
-adsfadsf read
-aaaread
-sub b
-	2 2 +
-	3 3 -
-esub
-label1 jump
-sub c
-	label1 jump
-esub
-2 2 mod
+sub foo 2 lbl1: 2 + lbl1 jump esub lbl2: lbl1 jumpif

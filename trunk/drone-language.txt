@@ -80,19 +80,23 @@ label with the name 'label':
 	this is not a label:
 
 
-Operation "unconditional jump to the label" is marked with adding character ">"
+Operation "unconditional jump to the label" is marked with adding "jump"
 to the name. The next three lines are jumps to the labels defined in the
 previous example:
-	this_is_label>
-	this-is/also.label>
-	123456>
+	this_is_label jump
+	this-is/also.label jump
+	123456 jump
 
-The conditional jump is marked by adding character '?' to the name. Conditional
+The conditional jump is marked by adding "jump if" the name. Conditional
 jump happens if and only if the top of the stack contains boolean "true" value.
 If top of the stack is not a boolean value, then drone freezes.
 
 Labels are visiblity are restricted to the function. For example:
-  :foo 2 lbl1: 2 + lbl1> : lbl2: lbl1?
+ 
+
+   :foo 2 lbl1: 2 + lbl1> : lbl2: lbl1?
+
+
 Here, label lbl1 is defined inside a function foo and jump to it is allowed.
 The label lbl2 is defined in the main program and jump to it is allowed from
 any where from the main program, but not from the inside of user defined
@@ -101,14 +105,14 @@ defined inside of the function, but the jump is attempted from the main program.
 
 
 
-Variables are words which are directly preceeded by characters ">" or "<". The
+Variables are words which are directly preceeded by keywords "store" or "read". The
 first one take the top of the stack and stores it into the variable (creating
 the variable in the process if necessary). The second one reads variable and
 puts its contents on the stack. For example, if you need to store top value in
 the variable and leave it on the stack for the future use, you can do this:
-    >abc <abc
 
-
+    abc store  
+    abc read
 
 Operators are always take some number of values from the stack and return some
 values back on the stack:
