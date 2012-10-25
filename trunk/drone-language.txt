@@ -93,8 +93,12 @@ If top of the stack is not a boolean value, then drone freezes.
 
 Labels are visiblity are restricted to the function. For example:
  
-
-   :foo 2 lbl1: 2 + lbl1> : lbl2: lbl1?
+   	sub foo 
+		2 
+		lbl1: 2 +
+		lbl1 jump 
+   	esub 
+   	lbl2: lbl1 jumpif
 
 
 Here, label lbl1 is defined inside a function foo and jump to it is allowed.
