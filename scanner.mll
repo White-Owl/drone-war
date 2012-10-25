@@ -2,8 +2,6 @@
 open Parser;;
 open Lexing;;
 
-exception Unrecognized_Token of string;;
-
 let debug=1;;
 
 let incr_lineno lexbuf =
@@ -20,8 +18,8 @@ let notspace   = [^ ' ' '\t' '\r' '\n']
 let name       = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9']*
 
 rule token = parse
-	| '\n'                  { incr_lineno lexbuf; token lexbuf }
-	| digit+ as str         { INTEGER (int_of_string str) }
+	| '\n'                  { incr_lineno lexbuf; token lexbuf }			
+	| digit+ as str         { INTEGER (int_of_string str) }					
 	| '+'	                { PLUS }
 	| '-'                   { MINUS }
 	| '*'                   { TIMES }
@@ -50,13 +48,13 @@ rule token = parse
 	| "ifjump"              { JUMP }
 	| "sub"                 { SUB }
 	| "esub"                { END_SUB }
-	| name as str           { NAME (str) }
+	| name as str           { NAME (str) } 
 
 	| whitespace            { token lexbuf }
-	| "//"                  { sinlge_line_comment lexbuf }
+	| "//"                  { sinlge_line_comment lexbuf }					
 	| "/*"                  { multi_line_comment lexbuf }
-	| _ as char 			{ raise (Failure("illegal character " ^  (*  *)
-							Char.escaped char)) }
+	| _ as char 			{ raise (Failure("illegal character " ^  		
+							Char.escaped char)) }							
 	| eof                   { EOF }
 
 and sinlge_line_comment = parse
