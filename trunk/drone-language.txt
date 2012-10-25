@@ -47,26 +47,34 @@ Booleans are two words "true" and "false" which represent the logical values
 and are subject to logical operations and conditional jumps.
 
 
-User functions are marked with a word which starts with a colon, and ends with
-single colon.
-	:foo these words a body of a function :
-	:add + :
+User functions are marked with a word which starts with a "sub" followed by a function name and ends with
+"esub".
+	sub foo 
+		these words a body of a function
+	esub
+	
+	sub add 
+	 +
+	esub
+
 The first example defines a function named "foo" with some arbitrary words and
 the second example defines an alias "add" for a simple arithmetic operation.
 The call to the previously defined function is just its name. E.g. the next
 two lines will do exactly the same:
     2 2 +
     2 2 add
+
 Functions cannot have sub-functions. For example, the next line shows an
 illegal code:
-    :foo 1 2 :bar 3 4 : :
+    sub foo 1 2 sub bar 3 4 esub esub
 
 
 Labels are any set of characters ended with colon:
 	this_is_label:
 	this-is/also.label:
 	123456:
-Of course, the wight-space character   any sequence of characters into
+
+Of course, the wight-space character any sequence of characters into
 sequence of words and the next line will be understood as four words and a
 label with the name 'label':
 	this is not a label:

@@ -4,14 +4,14 @@ open Ast;;
 open Printf;;
 open Lexing;;
 
-let variable_table   = Hashtbl.create 16
-let label_table      = Hashtbl.create 16
-let function_table   = Hashtbl.create 16
-let current_function = ref " "
+let variable_table   = Hashtbl.create 16   										(* variable container *)
+let label_table      = Hashtbl.create 16										(* label container *)
+let function_table   = Hashtbl.create 16										(* user function container *)
+let current_function = ref " "													(* *)
 %}
 
-%token SUB END_SUB
-%token READ STORE
+%token SUB END_SUB  															
+%token READ STORE                                                               
 %token COLON
 %token JUMP JUMP_IF
 %token <string> NAME
@@ -35,16 +35,16 @@ let current_function = ref " "
 %%
 
 program:
-	  /* nothing */ { [], [] }
-	| program operation { ($2 :: fst $1), snd $1 }
-	| program sub { fst $1, ($2 :: snd $1) }
+	{ [], [] }																	/* two dimension array contains bytecode actions and functions defined by users */
+	| program operation { ($2 :: fst $1), snd $1 } 								/* add operations to the first sub-array */
+	| program sub { fst $1, ($2 :: snd $1) }									/* add user functions to second sub-array */
 
 sub:
-	  SUB NAME operations END_SUB  { { name = $2; body = Array.of_list (List.rev $3); } }
+	  SUB NAME operations END_SUB  { { name = $2; body = Array.of_list (List.rev $3); } }	/* store the function name and function operations between "sub" and "esub" */
 
 
 operations:
-	   /* nothing */         { [] }
+	{ [] }
 	| operations operation   { if $2=Nop then $1 else $2 :: $1 }
 	| operations error       { let start_pos = Parsing.rhs_start_pos 2 in
 	                           (* let end_pos = Parsing.rhs_end_pos 2 in *)
