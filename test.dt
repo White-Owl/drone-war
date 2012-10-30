@@ -1,1 +1,1 @@
-sub foo 2 lbl1: 2 + lbl1 jump esub lbl2: lbl1 jumpif
+sub foo 2 lbl1: 2 + lbl1 jump esub lbl2: lbl1 jumpif 1234asf
