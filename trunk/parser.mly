@@ -10,10 +10,11 @@ let function_table   = Hashtbl.create 16										(* user function container *)
 let current_function = ref " "													(* *)
 %}
 
-%token SUB END_SUB  															
-%token READ STORE                                                               
+%token SUB END_SUB
+%token READ STORE
 %token COLON
-%token JUMP JUMP_IF
+%token JUMP JUMPIF
+%token <string> LABEL
 %token <string> NAME
 %token <int> INTEGER
 %token PLUS MINUS TIMES DIVIDE MOD POWER
@@ -40,7 +41,8 @@ program:
 	| program sub { fst $1, ($2 :: snd $1) }									/* add user functions to second sub-array */
 
 sub:
-	  SUB NAME operations END_SUB  { { name = $2; body = Array.of_list (List.rev $3); } }	/* store the function name and function operations between "sub" and "esub" */
+	SUB NAME operations END_SUB  { current_function := $2;
+	                               { name = $2; body = Array.of_list (List.rev $3); } } /* store the function name and function operations between "sub" and "esub" */
 
 
 operations:
@@ -77,7 +79,18 @@ operation:
 	| SWAP          { Swap }
 	| OVER          { Over }
 	| ROT           { Rot }
-	| NAME COLON    { Label($1) }
+	| LABEL         { Label($1) }
 	| NAME JUMP     { Jump($1) }
-	| NAME JUMP_IF  { JumpIf($1) }
+	| NAME JUMPIF   { JumpIf($1) }
 	| NAME          { Call($1) }
+	| MOVE          { Move }
+	| STOP          { Stop }
+	| SHOOT         { Shoot }
+	| LOOK          { Look }
+	| ISFOE         { IsFoe }
+	| ISALLY        { IsAlly }
+	| ISWALL        { IsWall }
+	| ISEND         { IsEnd }
+	| WAIT          { Wait }
+	| GETHEALTH     { GetHealth }
+	| RANDOM        { Random }

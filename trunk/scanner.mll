@@ -10,6 +10,9 @@ let incr_lineno lexbuf =
 		pos_lnum = pos.pos_lnum + 1;
 		pos_bol = pos.pos_cnum;
 	}
+;;
+exception Unknown_token of string * int * int;;
+
 }
 
 let digit      = ['0'-'9']
@@ -18,8 +21,8 @@ let notspace   = [^ ' ' '\t' '\r' '\n']
 let name       = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9']*
 
 rule token = parse
-	| '\n'                  { incr_lineno lexbuf; token lexbuf }			
-	| digit+ as str         { INTEGER (int_of_string str) }					
+	| '\n'                  { incr_lineno lexbuf; token lexbuf }
+	| digit+ as str         { INTEGER (int_of_string str) }
 	| '+'	                { PLUS }
 	| '-'                   { MINUS }
 	| '*'                   { TIMES }
@@ -43,18 +46,30 @@ rule token = parse
 
 	| "read"                { READ }
 	| "store"               { STORE }
-	| ':'                   { COLON }
+	| name ':' as str       { LABEL (String.sub str 0 ((String.length str)-1) ) }
 	| "jump"                { JUMP }
-	| "ifjump"              { JUMP }
+	| "jumpif"              { JUMPIF }
 	| "sub"                 { SUB }
 	| "esub"                { END_SUB }
-	| name as str           { NAME (str) } 
+
+	| "move"                { MOVE }
+	| "stop"                { STOP }
+	| "shoot"               { SHOOT }
+	| "look"                { LOOK }
+	| "wait"                { WAIT }
+	| "gethealth"           { GETHEALTH }
+	| "random"              { RANDOM }
+	| "isfoe"               { ISFOE }
+	| "isally"              { ISALLY }
+	| "iswall"              { ISWALL }
+	| "isend"               { ISEND }
+
+	| name as str           { NAME (str) }
 
 	| whitespace            { token lexbuf }
-	| "//"                  { sinlge_line_comment lexbuf }					
+	| "//"                  { sinlge_line_comment lexbuf }
 	| "/*"                  { multi_line_comment lexbuf }
-	| _ as char 			{ raise (Failure("illegal character " ^  		
-							Char.escaped char)) }							
+	| notspace * as str     { raise (Unknown_token (str, lexbuf.lex_curr_p.pos_lnum, lexbuf.lex_start_p.pos_cnum-lexbuf.lex_start_p.pos_bol +1)  ) }
 	| eof                   { EOF }
 
 and sinlge_line_comment = parse
