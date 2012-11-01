@@ -12,6 +12,11 @@ ifeq ($(OS),Windows_NT)
 TARGET:=$(TARGET).exe
 endif
 
+OCAML_VERSION:= $(shell ocaml -version | sed -e "s/.*version //g" -e "s/\..*//g")
+ifeq ($(OCAML_VERSION), 4)
+OCAMLDEP_FLAGS=-all -one-line
+endif
+
 all: $(TARGET)
 ifeq ($(DEBUG), yes)
 	export OCAMLRUNPARAM='p' && ./$(TARGET) test.dt  > stdout 2> stderr
@@ -41,12 +46,11 @@ endif
 %.mli: %.ml
 	ocamlc -i $< >$@
 
-
 .depend: $(ML) $(MLY:.mly=.ml) $(MLL:.mll=.ml) makefile
 ifeq ($(OS),Windows_NT)
 	@attrib -H $@
 endif
-	ocamldep -all -one-line $(ML) $(MLY:.mly=.ml) $(MLY:.mly=.mli) $(MLL:.mll=.ml) $(MLL:.mll=.mli) | grep -v ".cmx" > .depend
+	ocamldep $(OCAMLDEP_FLAGS) $(ML) $(MLY:.mly=.ml) $(MLY:.mly=.mli) $(MLL:.mll=.ml) $(MLL:.mll=.mli) | grep -v ".cmx" > .depend
 ifeq ($(OS),Windows_NT)
 	@attrib +H $@
 endif
