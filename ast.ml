@@ -100,7 +100,7 @@ type operands =
 
 type sub = {                                                        (* function defined by user *)
     name   : string;                                                (* function name *)
-    body   : bytecode array;                                        (* function body *)
+    body   : bytecode list;                                         (* function body *)
   }
 
 type program = bytecode list * sub list                           (* compiled, but not-linked program defintion returned from the parser *)

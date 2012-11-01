@@ -1,14 +1,13 @@
 open Ast;;
 open Parser;;
-module StringMap = Map.Make(String);;
 
 class drone =
 	object (self)
 
 		(* init the containers*)
 		val mutable main_body : Ast.bytecode array = [| |]
-		val mutable subs = StringMap.empty
-		val mutable vars = StringMap.empty
+		val mutable subs = Hashtbl.create 16
+		val mutable vars = Hashtbl.create 16
 
 		(*val mutable program : Ast.program = ([],[]) *)
 		(* init the filename*)
@@ -19,39 +18,62 @@ class drone =
 		(* function to get the filename *)
 		method get_drone_name = drone_name
 
-		(* print out all operations and user functions in the containers *)
-		method dump_code =
-			(* operation container *)
-			List.iter (fun x -> print_string ((string_of_bytecode x) ^ " ")) main_body;
+		(* print out all operations in the container *)
+		method dump_code body_as_array =
+			Array.iter (fun x -> print_string ((string_of_bytecode x) ^ " ")) body_as_array
+
+		(* decompile the program into compilable text *)
+		method decompile = 
+			self#dump_code main_body;
 			print_newline();
+			Hashtbl.iter (fun name body ->
+			              print_string ("sub "^name^" ");
+			              self#dump_code body;
+			              print_endline ("esub");
+			             ) subs
 
-			(* user function container *)
-			(*List.iter (fun s -> print_endline ("sub " ^ s.name ^ " " ^(string_of_int (Array.length s.body)))) (List.rev (snd program));*)
-
-
-		method linker bclist =
-			let lbls = Hashtbl.empty in
-			let no_label = List.fold (fun acc x ->
+		(* takes a raw list of operators including a Label(name) operator,
+		   Remove all label, put them into temporary hash table
+		   Using this hash table satisfy all jump(name) and convert them to jump(address) *)
+		method link_jumps body_as_list =
+			let lbls = Hashtbl.create 16 in
+			let no_label = List.fold_left (fun acc x ->
 			                          match x with
 			                            Label(name) ->
 			                               if Hashtbl.mem lbls name then raise (Failure ("Label "^name^" defined twice"))
 			                               else Hashtbl.add lbls name (List.length acc);
 			                               acc
 			                          | _ -> x::acc
-			                         ) [] bclist in
+			                         ) [] body_as_list in
 			let abs_jumps = List.map(fun x -> match x with
 			                           Jump(name) -> AbsJump( Hashtbl.find lbls name )
 			                         | JumpIf(name) -> AbsJumpIf( Hashtbl.find lbls name )
-			                         | _ -> _ ) no_label in
+			                         | _ -> x ) no_label in
 			Array.of_list (List.rev abs_jumps)
 
+		(* check existance of a called sub, complain if it is not defined *)
+		method check_sub_existance body =
+			Array.iter (fun x -> match x with
+			              Call(name) -> if not (Hashtbl.mem subs name) then raise (Failure ("Sub "^name^" is not defined"))
+			             | _ -> ()
+			           ) body
 
-		(* function to get filename *)
+
+		(* Read the drone *)
 		method load file_name =
 			drone_name <- Filename.chop_extension (Filename.basename file_name);
 			let chan_in = Pervasives.open_in file_name in
 			let lexbuf = Lexing.from_channel chan_in in
 			let program = Parser.program Scanner.token lexbuf in
-			main_body <- self#linker (fst program)
-
+			(* parser will return two lists - list operations of main program and list of subs *)
+			(* first, we need to convert all jumps to label into jumps to absolute position in the code,
+			   as a side-effect it will ensure that all jumps are legal *)
+			main_body <- self#link_jumps (List.rev (fst program));
+			List.iter (fun sub ->
+			            if Hashtbl.mem subs sub.name then raise (Failure ("Sub "^sub.name^" defined twice"))
+						else Hashtbl.add subs sub.name (self#link_jumps sub.body) 
+			          ) (snd program);
+			(* second step, check the existance of all called user funcitons *)
+			self#check_sub_existance main_body;
+			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs
 end;;

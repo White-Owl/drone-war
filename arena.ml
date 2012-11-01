@@ -9,7 +9,7 @@ object
 			d#load file_name;
 			drones <- d::drones;
 			print_newline();
-			d#dump_code;
+			d#decompile;
 		)
 
 	method get_drone_count = List.length drones;

@@ -4,10 +4,6 @@ open Ast;;
 open Printf;;
 open Lexing;;
 
-let variable_table   = Hashtbl.create 16   										(* variable container *)
-let label_table      = Hashtbl.create 16										(* label container *)
-let function_table   = Hashtbl.create 16										(* user function container *)
-let current_function = ref " "													(* *)
 %}
 
 %token SUB END_SUB
@@ -36,13 +32,12 @@ let current_function = ref " "													(* *)
 %%
 
 program:
-	{ [], [] }																	/* two dimension array contains bytecode actions and functions defined by users */
-	| program operation { ($2 :: fst $1), snd $1 } 								/* add operations to the first sub-array */
-	| program sub { fst $1, ($2 :: snd $1) }									/* add user functions to second sub-array */
+	{ [], [] }                                      /* two lists for main body  of the program and for functions defined by users */
+	| program operation { ($2 :: fst $1), snd $1 }  /* add operation to the first sub-list */
+	| program sub { fst $1, ($2 :: snd $1) }        /* add user function to second sub-list */
 
 sub:
-	SUB NAME operations END_SUB  { current_function := $2;
-	                               { name = $2; body = Array.of_list (List.rev $3); } } /* store the function name and function operations between "sub" and "esub" */
+	SUB NAME operations END_SUB  { { name = $2; body = List.rev $3; } } /* store the function name and function operations between "sub" and "esub" */
 
 
 operations:
@@ -71,8 +66,8 @@ operation:
 	| EQUAL         { Equal }
 	| LESS          { Less }
 	| GREATER       { Greater }
-	| NAME READ     { if not (Hashtbl.mem variable_table $1) then Hashtbl.add variable_table $1 Undefined; Read($1) }
-	| NAME STORE    { if not (Hashtbl.mem variable_table $1) then Hashtbl.add variable_table $1 Undefined; Store($1) }
+	| NAME READ     { Read($1) }
+	| NAME STORE    { Store($1) }
 	| DROP          { Drop }
 	| DROPALL       { Dropall }
 	| DUP           { Dup }
