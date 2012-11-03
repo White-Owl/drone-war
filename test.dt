@@ -1,2 +1,2 @@
-lbl1: move dup dup
+lbl1: move dup dup dup
 sub foo 2 lbl1: 2 + lbl1 jump esub lbl2: lbl1 jumpif 1234 
