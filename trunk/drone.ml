@@ -95,12 +95,17 @@ class drone =
 				else Stack.push 0 stack; 
 		 		execute_byte (mp+1)
 		| Or -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in 
-
 				if ((op1=1)&&(op2=1)) then Stack.push 1 stack
 				else (if((op1=1)&&(op2=0)) then Stack.push 1 stack
 				else (if ((op1=0)&&(op2=1))	then Stack.push 1 stack
 				else Stack.push 0 stack)); 
 			execute_byte (mp+1)
+		| Not -> let op= Stack.pop stack in
+				if op=1 then Stack.push 0 stack
+			else if op=0 then S.push 1 stack
+		else print("error!!");
+		execute_byte(mp+1)
+
 		|_-> ()
 		in execute_byte 0 
 
