@@ -10,8 +10,12 @@ object
 			drones <- d::drones;
 			print_newline();
 			d#decompile;
+			d#step;
+			d#prt;
 		)
 
 	method get_drone_count = List.length drones;
 
+
+	  
 end;;
