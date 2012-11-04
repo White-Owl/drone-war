@@ -102,9 +102,10 @@ class drone =
 			execute_byte (mp+1)
 		| Not -> let op= Stack.pop stack in
 				if op=1 then Stack.push 0 stack
-			else if op=0 then S.push 1 stack
-		else print("error!!");
+			else if op=0 then Stack.push 1 stack
+		else print_endline("not boolean in the top of stack");
 		execute_byte(mp+1)
+
 
 		|_-> ()
 		in execute_byte 0 
