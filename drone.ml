@@ -92,6 +92,11 @@ class drone =
 		Boolean op-> op
 		|_ ->print_endline("error: excepted type: \"boolean\"");false
 
+		method pop_drop=
+		match (Stack.pop stack) with
+		 _ -> ()
+
+
 		method step = let rec execute_byte mp =(*kan bu dong ba? sp indicates stack pointer, mp main pointer, subp sub pointer, vp var pointer*) 
 		match (main_body.(mp)) with
 		 Int (x)  -> Stack.push (Integer x) stack; execute_byte (mp+1)  (*find integer push to stack move mp to the next*)
@@ -122,7 +127,9 @@ class drone =
 		execute_byte(mp+1)
 		| Store(varName) -> let op = self#pop_int in Hashtbl.add vars varName op ; execute_byte (mp+1)(*store value in stack in var and pop it*)
 		| Read(varName) -> let op = (Integer(Hashtbl.find vars varName)) in Stack.push op stack ; execute_byte (mp+1)(*push value of var to stack*)
-
+		| Drop ->self#pop_drop ; execute_byte (mp+1)
+		| Dropall->Stack.clear stack;execute_byte (mp+1)
+		| Dup->let op=Stack.top stack in Stack.push op stack;execute_byte (mp+1)
 
 		|_-> ()
 		in execute_byte 0 
