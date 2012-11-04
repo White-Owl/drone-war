@@ -105,9 +105,8 @@ class drone =
 			else if op=0 then Stack.push 1 stack
 		else print_endline("not boolean in the top of stack");
 		execute_byte(mp+1)
-		| Store(varName) -> let op = Stack.pop in Hashtbl.add vars varName op ; execute_byte (mp+1)
-		(*| Read(varName) -> let op = (Hashtbl.find vars varName) in Stack.push op stack ; execute_byte (mp+1)*)
-
+		| Store(varName) -> let op = Stack.pop stack in Hashtbl.add vars varName op ; execute_byte (mp+1)
+		| Read(varName) -> let op = (Hashtbl.find vars varName) in Stack.push op stack ; execute_byte (mp+1)
 
 		|_-> ()
 		in execute_byte 0 
