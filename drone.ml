@@ -13,7 +13,7 @@ class drone =
 		(* init the filename*)
 		val mutable drone_name="";
 		(* init the stack *)
-		val mutable stack = Stack.create();
+		val mutable stack : (Ast.operands) Stack.t= Stack.create ();
 
 		(* function to get the filename *)
 		method get_drone_name = drone_name
@@ -78,50 +78,61 @@ class drone =
 			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs
 
 
+		(*help pop int that is convert operands to int*)
+		(*but how to deal with rest types? I return 404 and print error message*)
+		method pop_int=
+		match (Stack.pop stack) with
+		Integer op-> op
+		|_ ->print_endline("error: excepted type: \"integer\"");404
+
+		(*help pop int that is convert operands to bool*)
+		(*error type return false and print error message*)
+		method pop_bool=
+		match (Stack.pop stack) with
+		Boolean op-> op
+		|_ ->print_endline("error: excepted type: \"boolean\"");false
 
 		method step = let rec execute_byte mp =(*kan bu dong ba? sp indicates stack pointer, mp main pointer, subp sub pointer, vp var pointer*) 
 		match (main_body.(mp)) with
-		 Int (x)  -> Stack.push x stack; execute_byte (mp+1)  (*find integer push to stack move mp to the next*)
-		| Plus -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1+op2) stack ; execute_byte (mp+1)
-		| Minus -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1-op2) stack ; execute_byte (mp+1)
-		| Times -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1*op2) stack ; execute_byte (mp+1)
-		| Divide-> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op2/op1) stack ; execute_byte (mp+1)
-		| Mod -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op2 mod op1) stack ; execute_byte (mp+1)
-		| Bool(x)-> if x then Stack.push 1 stack
-					else Stack.push 0 stack ; execute_byte (mp+1)
-		| Power-> let op1 = Stack.pop stack and op2=Stack.pop stack in Stack.push (int_of_float((float_of_int(op2))**(float_of_int(op1)))) stack ; execute_byte (mp+1)
-		| And ->let op1 = Stack.pop stack and op2 =Stack.pop stack  in 
-				if ((op1=1)&&(op2=1)) then Stack.push 1 stack
-				else Stack.push 0 stack; 
+		 Int (x)  -> Stack.push (Integer x) stack; execute_byte (mp+1)  (*find integer push to stack move mp to the next*)
+		
+		| Plus -> let op1=self#pop_int and op2 = self#pop_int in Stack.push (Integer (op1+op2)) stack ; execute_byte (mp+1)
+		| Minus -> let op1=self#pop_int and op2 = self#pop_int in Stack.push (Integer (op1-op2)) stack ; execute_byte (mp+1)
+		| Times -> let op1 = self#pop_int and op2 = self#pop_int  in Stack.push (Integer (op1*op2)) stack ; execute_byte (mp+1)
+		| Divide-> let op1 = self#pop_int  and op2 = self#pop_int  in Stack.push (Integer (op2/op1)) stack ; execute_byte (mp+1)
+		| Mod -> let op1 = self#pop_int  and op2 = self#pop_int  in Stack.push (Integer (op2 mod op1)) stack ; execute_byte (mp+1)
+		| Power-> let op1 = self#pop_int and op2 = self#pop_int in Stack.push (Integer (int_of_float((float_of_int(op2))**(float_of_int(op1))))) stack ; execute_byte (mp+1)
+		
+		| Bool(x)-> if x then Stack.push (Boolean true) stack
+					else Stack.push (Boolean false) stack ; execute_byte (mp+1)
+		| And ->let op1 = self#pop_bool and op2 = self#pop_bool  in 
+				if ((op1=true)&&(op2=true)) then Stack.push (Boolean true) stack
+				else Stack.push (Boolean false) stack; 
 		 		execute_byte (mp+1)
-		| Or -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in 
-				if ((op1=1)&&(op2=1)) then Stack.push 1 stack
-				else (if((op1=1)&&(op2=0)) then Stack.push 1 stack
-				else (if ((op1=0)&&(op2=1))	then Stack.push 1 stack
-				else Stack.push 0 stack)); 
+		| Or -> let op1 = self#pop_bool and op2 = self#pop_bool  in 
+				if ((op1=true)&&(op2=false)) then Stack.push (Boolean true) stack
+				else (if((op1=true)&&(op2=false)) then Stack.push (Boolean true) stack
+				else (if ((op1=false)&&(op2=true))	then Stack.push (Boolean true) stack
+				else Stack.push (Boolean false) stack)); 
 			execute_byte (mp+1)
-		| Not -> let op= Stack.pop stack in
-				if op=1 then Stack.push 0 stack
-			else if op=0 then Stack.push 1 stack
-		else print_endline("not boolean in the top of stack");
+		| Not -> let op = self#pop_bool in
+				if op=true then Stack.push (Boolean false) stack
+			else if op=false then Stack.push (Boolean true) stack
+		else print_endline("error: excepted boolean ");
 		execute_byte(mp+1)
-		| Store(varName) -> let op = Stack.pop stack in Hashtbl.add vars varName op ; execute_byte (mp+1)
-		| Read(varName) -> let op = (Hashtbl.find vars varName) in Stack.push op stack ; execute_byte (mp+1)
+		| Store(varName) -> let op = self#pop_int in Hashtbl.add vars varName op ; execute_byte (mp+1)(*store value in stack in var and pop it*)
+		| Read(varName) -> let op = (Integer(Hashtbl.find vars varName)) in Stack.push op stack ; execute_byte (mp+1)(*push value of var to stack*)
+
 
 		|_-> ()
 		in execute_byte 0 
 
-
-		method prt = print_endline (string_of_int(Stack.pop stack)) (*print top of the stack*)
-
-
-
-
-
-
-
-
-
-
+		(*print top of stack to help check if code is right*)
+		method prt =
+		match  (Stack.pop stack) with
+		Integer op ->print_endline("*********"); print_endline("Top of stack now is:"^string_of_int(op))
+		|Boolean op->print_endline("*********");print_endline("Top of stack now is:"^string_of_bool(op))
+		| _ -> print_endline("*********");print_endline("nothing to print")
+		 
 
 end;;
