@@ -1,3 +1,6 @@
-true true  1 and or not 3 not
+true  true  and false or not  not true  and
+1 
+num store 
+num read
 lbl1: move dup dup dup
 sub foo 2 lbl1: 2 + lbl1 jump esub lbl2: lbl1 jumpif 1234 
