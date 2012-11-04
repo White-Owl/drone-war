@@ -8,7 +8,7 @@ class drone =
 		val mutable main_body : Ast.bytecode array = [| |]
 		val mutable subs = Hashtbl.create 16
 		val mutable vars = Hashtbl.create 16
-        val mutable lbls = Hashtbl.create 16 
+
 		(*val mutable program : Ast.program = ([],[]) *)
 		(* init the filename*)
 		val mutable drone_name="";
@@ -36,7 +36,7 @@ class drone =
 		   Remove all label, put them into temporary hash table
 		   Using this hash table satisfy all jump(name) and convert them to jump(address) *)
 		method link_jumps body_as_list =
-			
+			let lbls = Hashtbl.create 16 in
 			let no_label = List.fold_left (fun acc x ->
 			                          match x with
 			                            Label(name) ->
