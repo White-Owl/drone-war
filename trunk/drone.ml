@@ -87,9 +87,20 @@ class drone =
 		| Times -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1*op2) stack ; execute_byte (mp+1)
 		| Divide-> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op2/op1) stack ; execute_byte (mp+1)
 		| Mod -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op2 mod op1) stack ; execute_byte (mp+1)
-
+		| Bool(x)-> if x then Stack.push 1 stack
+					else Stack.push 0 stack ; execute_byte (mp+1)
 		| Power-> let op1 = Stack.pop stack and op2=Stack.pop stack in Stack.push (int_of_float((float_of_int(op2))**(float_of_int(op1)))) stack ; execute_byte (mp+1)
-		| And-> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op2/op1) stack ; execute_byte (mp+1)
+		| And ->let op1 = Stack.pop stack and op2 =Stack.pop stack  in 
+				if ((op1=1)&&(op2=1)) then Stack.push 1 stack
+				else Stack.push 0 stack; 
+		 		execute_byte (mp+1)
+		| Or -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in 
+
+				if ((op1=1)&&(op2=1)) then Stack.push 1 stack
+				else (if((op1=1)&&(op2=0)) then Stack.push 1 stack
+				else (if ((op1=0)&&(op2=1))	then Stack.push 1 stack
+				else Stack.push 0 stack)); 
+			execute_byte (mp+1)
 		|_-> ()
 		in execute_byte 0 
 
