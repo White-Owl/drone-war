@@ -13,7 +13,7 @@ class drone =
 		(* init the filename*)
 		val mutable drone_name="";
 		(* init the stack *)
-		val mutable stack = Stack.create;
+		val mutable stack = Stack.create();
 
 		(* function to get the filename *)
 		method get_drone_name = drone_name
@@ -76,4 +76,31 @@ class drone =
 			(* second step, check the existance of all called user funcitons *)
 			self#check_sub_existance main_body;
 			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs
+
+
+
+		method step = let rec execute_byte mp =(*kan bu dong ba? sp indicates stack pointer, mp main pointer, subp sub pointer, vp var pointer*) 
+		match (main_body.(mp)) with
+		 Int (x)  -> Stack.push x stack; execute_byte (mp+1)  (*find integer push to stack move mp to the next*)
+		| Plus -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1+op2) stack ; execute_byte (mp+1)
+		| Minus -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1-op2) stack ; execute_byte (mp+1)
+		| Times -> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op1*op2) stack ; execute_byte (mp+1)
+		| Divide-> let op1 = Stack.pop stack and op2 =Stack.pop stack  in Stack.push (op2/op1) stack ; execute_byte (mp+1)
+		|Power-> let op1 = Stack.pop stack and op2=Stack.pop stack in Stack.push (int_of_float((float_of_int(op2))**(float_of_int(op1)))) stack ; execute_byte (mp+1)
+		| _-> ()
+		in execute_byte 0 
+
+
+		method prt = print_endline (string_of_int(Stack.pop stack)) (*print top of the stack*)
+
+
+
+
+
+
+
+
+
+
+
 end;;
