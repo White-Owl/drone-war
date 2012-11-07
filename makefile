@@ -57,9 +57,10 @@ endif
 
 clean:
 	rm -f $(OBJS) $(OBJS:.cmo=.cmi) $(TARGET)
-	rm -f $(MLY:.mly=.ml) $(MLY:.mly=.mli)
+	rm -f $(MLY:.mly=.ml) $(MLY:.mly=.mli) $(MLY:.mly=.output)
 	rm -f $(MLL:.mll=.ml) $(MLL:.mll=.mli)
 	rm -f .depend
+	rm -f stdout stderr
 
 redo: clean
 	make
