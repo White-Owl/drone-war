@@ -8,7 +8,10 @@ class drone =
 		val mutable main_body : Ast.bytecode array = [| |]
 		val mutable subs = Hashtbl.create 16
 		val mutable vars = Hashtbl.create 16
-		val ip = 0 (*global instructor pointer*)
+
+		val mutable ip = 0 (*global instructor pointer*)
+		val mutable current_sub = ""
+
 
 		(*val mutable program : Ast.program = ([],[]) *)
 		(* init the filename*)
@@ -82,21 +85,20 @@ class drone =
 		(*help pop int that is convert operands to int*)
 		(*but how to deal with rest types? I return 404 and print error message*)
 		method pop_int=
-		match (Stack.pop stack) with
-		Integer op-> op
-		|_ ->print_endline("error: excepted type: \"integer\"");404
+			match (Stack.pop stack) with
+			Integer op-> op
+			|_ ->print_endline("error: excepted type: \"integer\"");404
 
 		(*help pop int that is convert operands to bool*)
 		(*error type return false and print error message*)
 		method pop_bool=
-		match (Stack.pop stack) with
-		Boolean op-> op
-		|_ ->print_endline("error: excepted type: \"boolean\"");false
+			match (Stack.pop stack) with
+			Boolean op-> op
+			|_ ->print_endline("error: excepted type: \"boolean\"");false
 
 		method pop_drop=
-		match (Stack.pop stack) with
-		 _ -> ()
-
+			match (Stack.pop stack) with
+		 	_ -> ()
 
 
 
@@ -137,6 +139,18 @@ class drone =
 				else if op=false then Stack.push (Boolean true) stack
 				else print_endline("error: excepted boolean ")
 			(*take !op and push the boolean result into the stack*)
+			| Less -> let op1 = self#pop_bool and op2 = self#pop_bool  in 
+				if op2 < op1 then Stack.push (Boolean true) stack
+				else Stack.push (Boolean false) stack
+			(*check if op1 is less than op2 return boolean type into the stack*)
+			| Greater -> let op1 = self#pop_bool and op2 = self#pop_bool  in 
+				if op2 > op1 then Stack.push (Boolean true) stack
+				else Stack.push (Boolean false) stack
+			(*check if op1 is greater than op2 return boolean type into the stack*)
+
+			
+
+
 			| Store(varName) -> let op = self#pop_int in Hashtbl.add vars varName op
 			(*store value in stack in var and pop it*)
 			| Read(varName) -> let op = (Integer(Hashtbl.find vars varName)) in Stack.push op stack
@@ -147,15 +161,21 @@ class drone =
 			(*pop all vars on the stack*)
 			| Dup->let op=Stack.top stack in Stack.push op stack
 			(*copy the var on the top of the stack*)
+
 			|_-> ()
+
+
+
+
+
 
 
 		(*print top of stack to help check if code is right*)
 		method prt =
-		match  (Stack.pop stack) with
-		Integer op ->print_endline("*********"); print_endline("Top of stack now is:"^string_of_int(op))
-		|Boolean op->print_endline("*********");print_endline("Top of stack now is:"^string_of_bool(op))
-		| _ -> print_endline("*********");print_endline("nothing to print")
+			match  (Stack.pop stack) with
+			Integer op ->print_endline("*********"); print_endline("Top of stack now is:"^string_of_int(op))
+			|Boolean op->print_endline("*********");print_endline("Top of stack now is:"^string_of_bool(op))
+			| _ -> print_endline("*********");print_endline("nothing to print")
 		 
 
 end;;
