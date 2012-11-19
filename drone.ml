@@ -8,9 +8,10 @@ class drone =
 		val mutable main_body : Ast.bytecode array = [| |]
 		val mutable subs = Hashtbl.create 16
 		val mutable vars = Hashtbl.create 16
-
-		val mutable ip = 0 (*global instructor pointer*)
-		val mutable current_sub = ""
+		val mutable test : Ast.bytecode array = [| |]
+		(* val mutable ip = -1 global instructor pointer *)
+		val mutable sip = 0 (*global sub instructor pointer*)
+		val mutable current_sub = "main"(*initialize current_sub*)
 
 
 		(*val mutable program : Ast.program = ([],[]) *)
@@ -19,6 +20,7 @@ class drone =
 		(* init the stack *)
 		val mutable stack : (Ast.operands) Stack.t= Stack.create ();
 
+		method get_current_sub = current_sub;
 		(* function to get the filename *)
 		method get_drone_name = drone_name
 
@@ -28,7 +30,7 @@ class drone =
 
 		(* decompile the program into compilable text *)
 		method decompile = 
-			self#dump_code main_body;
+(* 			self#dump_code main_body; *)
 			print_newline();
 			Hashtbl.iter (fun name body ->
 			              print_string ("sub "^name^" ");
@@ -72,13 +74,12 @@ class drone =
 			(* parser will return two lists - list operations of main program and list of subs *)
 			(* first, we need to convert all jumps to label into jumps to absolute position in the code,
 			   as a side-effect it will ensure that all jumps are legal *)
-			main_body <- self#link_jumps (List.rev (fst program));
+			Hashtbl.add subs "main" (Array.of_list (List.rev (fst program)));
 			List.iter (fun sub ->
 			            if Hashtbl.mem subs sub.name then raise (Failure ("Sub "^sub.name^" defined twice"))
 						else Hashtbl.add subs sub.name (self#link_jumps sub.body) 
 			          ) (snd program);
 			(* second step, check the existance of all called user funcitons *)
-			self#check_sub_existance main_body;
 			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs
 
 
@@ -101,17 +102,25 @@ class drone =
 		 	_ -> ()
 
 
+		 method run subname=(*run step by step*)
+		 let subbody = Hashtbl.find subs subname in
+		  let rec execute p sub=
+		 match (Array.length sub)=p+1 with
+		 true-> () 
+		|false->let p=p+1 in self#step subname p;
+			execute p sub
+		 in execute (-1) subbody
 
 
-
-
-		method step =(*kan bu dong ba? sp indicates stack pointer, mp main pointer, subp sub pointer, vp var pointer*) 
-			match (main_body.(ip)) with
+		method step current p=
+		let bcarray=(Hashtbl.find subs current) in
+		let bc=Array.get bcarray (p) in
+			match bc with
 		 	Int (x)  -> Stack.push (Integer x) stack  (*find integer push to stack move mp to the next*)
 			(*push integer var into the stack*)
 			| Plus -> let op1=self#pop_int and op2 = self#pop_int in Stack.push (Integer (op1+op2)) stack
 			(*take addition of the two ints at the top of the stack, then push result into stack*)
-			| Minus -> let op1=self#pop_int and op2 = self#pop_int in Stack.push (Integer (op1-op2)) stack
+			| Minus -> let op1=self#pop_int and op2 = self#pop_int in Stack.push (Integer (op2-op1)) stack
 			(*take difference of the two ints at the top of the stack, then push result into stack*)
 			| Times -> let op1 = self#pop_int and op2 = self#pop_int  in Stack.push (Integer (op1*op2)) stack
 			(*take multiplcation of the two ints at the top of the stack, then push result into stack*)
@@ -147,7 +156,7 @@ class drone =
 				if op2 > op1 then Stack.push (Boolean true) stack
 				else Stack.push (Boolean false) stack
 			(*check if op1 is greater than op2 return boolean type into the stack*)
-
+			| Call(subname)->self#run subname
 			
 
 
@@ -161,7 +170,6 @@ class drone =
 			(*pop all vars on the stack*)
 			| Dup->let op=Stack.top stack in Stack.push op stack
 			(*copy the var on the top of the stack*)
-
 			|_-> ()
 
 
