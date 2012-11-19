@@ -170,6 +170,7 @@ class drone =
 			(*pop all vars on the stack*)
 			| Dup->let op=Stack.top stack in Stack.push op stack
 			(*copy the var on the top of the stack*)
+			| Swap -> let op1 = self#pop_int and op2 = self#pop_int in begin Stack.push (Integer op1) stack; Stack.push (Integer op2) stack end
 			|_-> ()
 
 
