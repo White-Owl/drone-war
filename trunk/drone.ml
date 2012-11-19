@@ -5,12 +5,8 @@ class drone =
 	object (self)
 
 		(* init the containers*)
-		val mutable main_body : Ast.bytecode array = [| |]
 		val mutable subs = Hashtbl.create 16
 		val mutable vars = Hashtbl.create 16
-		val mutable test : Ast.bytecode array = [| |]
-		(* val mutable ip = -1 global instructor pointer *)
-		val mutable sip = 0 (*global sub instructor pointer*)
 		val mutable current_sub = "main"(*initialize current_sub*)
 
 
@@ -104,7 +100,7 @@ class drone =
 
 		 method run subname=(*run step by step*)
 		 let subbody = Hashtbl.find subs subname in
-		  let rec execute p sub=
+		 let rec execute p sub=
 		 match (Array.length sub)=p+1 with
 		 true-> () 
 		|false->let p=p+1 in self#step subname p;
