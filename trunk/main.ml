@@ -6,7 +6,7 @@ let main =
 				  Students:\tGeorge Brink (gb2280)\n\
 				  \t\tXiang Yao (xy2191)\n\
 				  \t\tXiaotong Chen (xc2230)\n\
-				  \t\tShuo Qin (sq2144)\n\n\
+				  \t\tShuo Qiu (sq2144)\n\n\
 				  ";
 
 	let cage = new arena in

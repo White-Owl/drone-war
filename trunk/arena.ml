@@ -10,7 +10,7 @@ object
 			drones <- d::drones;
 			print_newline();
 			d#decompile;
-			d#step;
+			d#run d#get_current_sub;
 			d#prt;
 		)
 
