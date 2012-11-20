@@ -15,7 +15,7 @@ class drone =
 
 		(* init the containers*)
 		val mutable subs = Hashtbl.create 16
-		val mutable vars = Hashtbl.create 16
+		val mutable vars : (string, Ast.operands) Hashtbl.t = Hashtbl.create 16
 		val mutable current_sub = "--"
 		val mutable instruction_pointer = 0
 		val mutable call_stack: (string * int) Stack.t = Stack.create ()
@@ -193,10 +193,11 @@ class drone =
 					                    No_Action
     					(* variables *)
 						| Store(varName) -> if Stack.is_empty stack then self#freeze "Nothing to store";
-											let op = Stack.pop in Hashtbl.add vars varName op;
+											let op = Stack.pop stack in Hashtbl.replace vars varName op;
     										No_Action
 
-						| Read(varName)  -> (* Stack.push (Hashtbl.find vars varName) stack;*)
+						| Read(varName)  -> let op = Hashtbl.find vars varName in
+											Stack.push op stack;
 											No_Action
 
 						(* stack manipulation *)
