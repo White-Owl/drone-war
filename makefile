@@ -21,7 +21,7 @@ all: $(TARGET)
 ifeq ($(DEBUG), yes)
 	export OCAMLRUNPARAM='p' && ./$(TARGET) test.dt  > stdout 2> stderr
 else
-	./$(TARGET) test.dt
+	./$(TARGET) -D test.dt test2.dt
 endif
 
 $(TARGET): $(OBJS)
@@ -61,6 +61,7 @@ clean:
 	rm -f $(MLL:.mll=.ml) $(MLL:.mll=.mli)
 	rm -f .depend
 	rm -f stdout stderr
+	rm -f *.debug *.decompiled
 
 redo: clean
 	make
