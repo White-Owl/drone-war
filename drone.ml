@@ -79,7 +79,6 @@ class drone =
 		   Using this hash table satisfy all jump(name) and convert them to jump(address) *)
 		method link_jumps body_as_list =
 			let lbls = Hashtbl.create 16 in
-			List.iter (fun bc -> printf "%s\n" (string_of_bytecode bc))  body_as_list;
 			let no_label = List.fold_left (fun acc x ->
 			                          match x with
 			                            Label(name) ->
