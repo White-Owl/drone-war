@@ -37,7 +37,7 @@ program:
 	| program sub { fst $1, ($2 :: snd $1) }        /* add user function to second sub-list */
 
 sub:
-	SUB NAME operations END_SUB  { { name = $2; body = List.rev $3; } } /* store the function name and function operations between "sub" and "esub" */
+	SUB NAME operations END_SUB  { { name = $2; body = $3; } } /* store the function name and function operations between "sub" and "esub" */
 
 
 operations:

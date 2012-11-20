@@ -49,30 +49,30 @@ let string_of_bytecode code =
 	  Nop             -> ""											(* *)
 	| Int(x)          -> "Int(" ^ (string_of_int x) ^ ")"			(* 5, integer*)
 	| Plus            -> "Plus"										(* 1 2 +, addition of integers *)
-	| Minus           -> "Minus"										(* 1 2 -, subtraction of integers *)
-	| Times           -> "Times"										(* 1 2 *, mutip of integers *)
+	| Minus           -> "Minus"									(* 1 2 -, subtraction of integers *)
+	| Times           -> "Times"									(* 1 2 *, mutip of integers *)
 	| Divide          -> "Divide"									(* 1 2 /, division of integers *)
 	| Mod             -> "Mod"										(* 1 2 mod, take mod of 1 by 2 *)
-	| Power           -> "Power"										(* 1 2 ^, take the power of 1 by 2  *)
-	| And             -> "And"                                       (* bool1 bool2 and, return bool1 && bool2 *)
-	| Or              -> "Or"                                        (* bool1 bool2 or, return bool1 || bool2 *)
-	| Not             -> "Not"                                       (* bool1 not, return negation of bool1  *)
-	| Bool(b)         -> "Bool(" ^ (string_of_bool b) ^ ")"          (* true, boolean type true or false *)
-	| Equal           -> "Equal"                                     (* 2 2 =, equal *)
-	| Less            -> "Less"                                      (* 1 2 <, smaller *)
-	| Greater         -> "Greater"                                   (* 2 1 >, greater *)
-	| Colon           -> "Colon"                                     (* : , colon *)
-	| Store(var)      -> "Store(" ^var ^ ")"                         (* 2 store , store the value of 2 *)
-	| Read(var)       -> "Read(" ^var ^ ")"                          (* 2 read , read the value of 2 *)
-	| Label(name)     -> "Label(" ^ name ^ ")"                       (* label1: , take the label of name label1 *)
-	| Drop            -> "Drop"                                      (* a b c -> a b, drop the first element in the stack *)
-	| Dropall         -> "Dropall"                                   (* a b c ->, drop all elements in the stack *)
-	| Dup             -> "Dup"                                       (* a b c -> a b c c, duplicate first element in the stack *)
-	| Swap            -> "Swap"                                      (* a b c -> a c b, swap the elements in the stack *)
-	| Over            -> "Over"                                      (* a b c -> a b c b *)
-	| Rot             -> "Rot"                                       (* a b c -> b c a *)
-	| Jump(name)      -> "Jump(" ^ name ^ ")"                        (* label1 jump, jump the label names label1 *)
-	| JumpIf(name)    -> "JumpIf(" ^ name ^ ")"                      (* label1 jumpif, condition jump*)
+	| Power           -> "Power"									(* 1 2 ^, take the power of 1 by 2  *)
+	| And             -> "And"                                      (* bool1 bool2 and, return bool1 && bool2 *)
+	| Or              -> "Or"                                       (* bool1 bool2 or, return bool1 || bool2 *)
+	| Not             -> "Not"                                      (* bool1 not, return negation of bool1  *)
+	| Bool(b)         -> "Bool(" ^ (string_of_bool b) ^ ")"         (* true, boolean type true or false *)
+	| Equal           -> "Equal"                                    (* 2 2 =, equal *)
+	| Less            -> "Less"                                     (* 1 2 <, smaller *)
+	| Greater         -> "Greater"                                  (* 2 1 >, greater *)
+	| Colon           -> "Colon"                                    (* : , colon *)
+	| Store(var)      -> "Store(" ^var ^ ")"                        (* 2 store , store the value of 2 *)
+	| Read(var)       -> "Read(" ^var ^ ")"                         (* 2 read , read the value of 2 *)
+	| Label(name)     -> "Label(" ^ name ^ ")"                      (* label1: , take the label of name label1 *)
+	| Drop            -> "Drop"                                     (* a b c -> a b, drop the first element in the stack *)
+	| Dropall         -> "Dropall"                                  (* a b c ->, drop all elements in the stack *)
+	| Dup             -> "Dup"                                      (* a b c -> a b c c, duplicate first element in the stack *)
+	| Swap            -> "Swap"                                     (* a b c -> a c b, swap the elements in the stack *)
+	| Over            -> "Over"                                     (* a b c -> a b c b *)
+	| Rot             -> "Rot"                                      (* a b c -> b c a *)
+	| Jump(name)      -> "Jump(" ^ name ^ ")"                       (* label1 jump, jump the label names label1 *)
+	| JumpIf(name)    -> "JumpIf(" ^ name ^ ")"                     (* label1 jumpif, condition jump*)
 	| AbsJump(addr)   -> "AbsJump(" ^ (string_of_int addr) ^ ")"
 	| AbsJumpIf(addr) -> "AbsJumpIf(" ^ (string_of_int addr) ^ ")"
 	| Call(name)      -> "Call(" ^ name ^ ")"						(* call the function by the name *)
@@ -89,14 +89,29 @@ let string_of_bytecode code =
 	| Random          -> "Random"
 ;;
 
+type look_flags =
+	  Foe															(* enemy type *)
+	| Ally                                                          (* friend type*)
+	| Wall                                                          (* boundary of arena *)
+	| End															(* end of the action *)
+
 type operands =
 	  Undefined
 	| Integer of int
 	| Boolean of bool
-	| Foe															(* enemy type *)
-	| Ally                                                          (* friend type*)
-	| Wall                                                          (* boundary of arena *)
-	| End															(* end of the action *)
+	| Flag of look_flags
+
+let string_of_operand op =
+	match op with
+	  Undefined  -> "undef"
+	| Integer(x) -> string_of_int x
+	| Boolean(b) -> string_of_bool b
+	| Flag(f)    -> match f with
+					  Foe  -> "Foe"
+					| Ally -> "Ally"
+					| Wall -> "Wall"
+					| End  -> "End"
+
 
 type sub = {                                                        (* function defined by user *)
     name   : string;                                                (* function name *)

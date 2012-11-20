@@ -13,7 +13,9 @@ let main =
 	Array.iter (fun parameter ->
 		if parameter.[0]='-' then
 		begin
-			print_endline ("option " ^parameter);
+			if parameter.[1]='D' then cage#set_debug_mode true
+			else
+				print_endline ("Unknown option " ^parameter);
 		end
 		else
 		if (Filename.check_suffix parameter ".dt" ) then
@@ -26,6 +28,7 @@ let main =
 	) Sys.argv;
 
 	print_string ("Loaded " ^ (string_of_int cage#get_drone_count) ^ " drones\n");
+	cage#run;
 	exit 0;;
 
 main;;
