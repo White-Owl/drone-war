@@ -2,3 +2,13 @@
 s:
 2 +
 s jump
+2 2 - if
+3 +
+end if
+
+sub aaa
+if
+2 2 +
+end if
+5 56
+end	sub

@@ -16,6 +16,7 @@ exception Unknown_token of string * int * int;;
 }
 
 let digit      = ['0'-'9']
+let space      = [' ' '\t']
 let whitespace = [' ' '\t' '\r']
 let notspace   = [^ ' ' '\t' '\r' '\n']
 let name       = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9']*
@@ -50,7 +51,10 @@ rule token = parse
 	| "jump"                { JUMP }
 	| "jumpif"              { JUMPIF }
 	| "sub"                 { SUB }
-	| "esub"                { END_SUB }
+	| "end" space+ "sub"    { END_SUB }
+	| "if"                  { IF }
+	| "else"                { ELSE }
+	| "end" space+ "if"     { END_IF }
 
 	| "move"                { MOVE }
 	| "stop"                { STOP }

@@ -57,7 +57,7 @@ class drone =
 
 		(* print out all operations in the container *)
 		method dump_code body_as_array out_file =
-			let command_counter = ref 1 in
+			let command_counter = ref 0 in
 			Array.iter (fun x ->
 							fprintf out_file "%3d: %s\n" !command_counter (string_of_bytecode x);
 							command_counter := !command_counter +1
@@ -79,6 +79,7 @@ class drone =
 		   Using this hash table satisfy all jump(name) and convert them to jump(address) *)
 		method link_jumps body_as_list =
 			let lbls = Hashtbl.create 16 in
+			List.iter (fun bc -> printf "%s\n" (string_of_bytecode bc))  body_as_list;
 			let no_label = List.fold_left (fun acc x ->
 			                          match x with
 			                            Label(name) ->

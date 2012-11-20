@@ -1,4 +1,4 @@
 1 2 3 + - anothertest
-sub test 2 + esub
+sub test 2 + end sub
 test
-sub anothertest 2 2 + + esub
+sub anothertest 2 2 + + end sub
