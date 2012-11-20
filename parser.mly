@@ -4,9 +4,12 @@ open Ast;;
 open Printf;;
 open Lexing;;
 
+let auto_label_counter = ref 0;;
+
 %}
 
 %token SUB END_SUB
+%token IF ELSE END_IF
 %token READ STORE
 %token COLON
 %token JUMP JUMPIF
@@ -33,8 +36,9 @@ open Lexing;;
 
 program:
 	{ [], [] }                                      /* two lists for main body  of the program and for functions defined by users */
-	| program operation { ($2 :: fst $1), snd $1 }  /* add operation to the first sub-list */
-	| program sub { fst $1, ($2 :: snd $1) }        /* add user function to second sub-list */
+	| program operation { ($2 :: fst $1), snd $1 }  /* add operations to the body of the main program */
+	| program sub { fst $1, ($2 :: snd $1) }        /* add user function to the list of subs */
+	| program if_block { ($2 @ fst $1), snd $1 }
 
 sub:
 	SUB NAME operations END_SUB  { { name = $2; body = $3; } } /* store the function name and function operations between "sub" and "esub" */
@@ -43,6 +47,7 @@ sub:
 operations:
 	{ [] }
 	| operations operation   { if $2=Nop then $1 else $2 :: $1 }
+	| operations if_block    { $2 @ $1 }
 	| operations error       { let start_pos = Parsing.rhs_start_pos 2 in
 	                           (* let end_pos = Parsing.rhs_end_pos 2 in *)
 	                           printf "Unrecognized tokens starting from line %d position %d\n" start_pos.pos_lnum (start_pos.pos_cnum - start_pos.pos_bol +1);
@@ -50,6 +55,11 @@ operations:
 	                           print_endline (String.sub Parser.lexbuf.lex_buffer start_pos.pos_cnum end_pos.pos_cnum); *)
 	                           $1 }
 
+
+if_block:
+	IF operations END_IF     { incr auto_label_counter; let lbl = ("-" ^ string_of_int(!auto_label_counter)) in
+								( Label(lbl):: $2 ) @ [ JumpIf(lbl) ; Not ]
+							 }
 
 operation:
 	  INTEGER       { Int($1) }

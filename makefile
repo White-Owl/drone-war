@@ -19,7 +19,7 @@ endif
 
 all: $(TARGET)
 ifeq ($(DEBUG), yes)
-	export OCAMLRUNPARAM='p' && ./$(TARGET) test.dt  > stdout 2> stderr
+	export OCAMLRUNPARAM='p' && ./$(TARGET) test2.dt  > stdout 2> stderr
 else
 	./$(TARGET) -D test.dt test2.dt
 endif

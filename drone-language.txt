@@ -48,14 +48,14 @@ and are subject to logical operations and conditional jumps.
 
 
 User functions are marked with a word which starts with a "sub" followed by a function name and ends with
-"esub".
-	sub foo 
+"end sub".
+	sub foo
 		these words a body of a function
-	esub
-	
-	sub add 
+	end sub
+
+	sub add
 	 +
-	esub
+	end sub
 
 The first example defines a function named "foo" with some arbitrary words and
 the second example defines an alias "add" for a simple arithmetic operation.
@@ -92,12 +92,12 @@ jump happens if and only if the top of the stack contains boolean "true" value.
 If top of the stack is not a boolean value, then drone freezes.
 
 Labels are visiblity are restricted to the function. For example:
- 
-   	sub foo 
-		2 
+
+   	sub foo
+		2
 		lbl1: 2 +
-		lbl1 jump 
-   	esub 
+		lbl1 jump
+   	esub
    	lbl2: lbl1 jumpif
 
 
@@ -115,7 +115,7 @@ the variable in the process if necessary). The second one reads variable and
 puts its contents on the stack. For example, if you need to store top value in
 the variable and leave it on the stack for the future use, you can do this:
 
-    abc store  
+    abc store
     abc read
 
 Operators are always take some number of values from the stack and return some
