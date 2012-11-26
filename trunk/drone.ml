@@ -38,6 +38,17 @@ class drone =
 		val mutable brain_dead = false        (* will become true if at some step the drone caught an exception *)
 		val mutable reason_for_coma = ""      (* explanation why AI died *)
 
+		(* variables for shoot and look *)
+		val mutable distance_in_arena = 0.	  (* used by other drones to determine the position in the arena can set maximum in Arena as Radius of the circle*)
+		val mutable direction_in_arena = 0.	  (* used by other drones to determine the position in the arena 0-360*)
+
+		method get_distance_in_arena = distance_in_arena
+
+		method set_distance_in_arena dis = distance_in_arena <- dis
+
+		method get_direction_in_arena = direction_in_arena
+
+		method set_direction_in_arena dire = direction_in_arena <- dire
 
 		method get_current_sub = current_sub;
 
