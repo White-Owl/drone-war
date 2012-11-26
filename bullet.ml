@@ -1,7 +1,6 @@
 open Ast;;
 open Parser;;
 open Printf;;
-open Drone;;
 
 class bullet =
 	object (self)

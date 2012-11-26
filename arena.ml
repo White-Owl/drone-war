@@ -1,5 +1,6 @@
 open Drone;;
 open Printf;;
+open Bullet;;
 
 class arena =
 object (self)
@@ -26,14 +27,14 @@ object (self)
 	method get_drone_count = List.length drones;
 
 
-	(* method add_bullet dire dist =
+	method add_bullet dire dist =
 		let b = new bullet in (
 			begin
 			b#set_direction dire;
 			b#set_distance dist;
 			end;
 			bullets <- b :: bullets;
-	) *)
+	)
 
 	method run =
 		let steps = ref 1 in
@@ -64,9 +65,10 @@ object (self)
 				let action = d#step in  
 				match action with
 				  No_Action                     -> ()
-				| Do_Look(direction)            -> ( (* TO DO! *) ) (* check what the drone sees and put the result into drone's stack *)
-				(* create object 'bullet' with initial position the same as drone's *)				
-				| Do_Shoot(direction, distance) -> ()(* self#add_bullet direction distance *)
+				(* TO DO ! check what the drone sees and put the result into drone's stack *)
+				| Do_Look(direction)            -> ()
+				(* TO DO ! create object 'bullet' with initial position the same as drone's *)				
+				| Do_Shoot(direction, distance) -> self#add_bullet direction distance
 													 
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find stack is empty, moving on...\n" d#get_drone_name
 
