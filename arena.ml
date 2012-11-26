@@ -50,11 +50,16 @@ object (self)
 		List.iter (fun d ->
 			if (d#is_alive) && (not d#is_brain_dead) then
 				incr live_drones;
-				let action = d#step in  (* TO DO! d#step can terminate with Error_in_AI exception. Catch it and deal with it gracefully *)
+
+			(* TO DO! d#step can terminate with Error_in_AI exception. Catch it and deal with it gracefully *)
+			try
+				let action = d#step in  
 				match action with
 				  No_Action                     -> ()
 				| Do_Look(direction)            -> ( (* TO DO! *) ) (* check what the drone sees and put the result into drone's stack *)
 				| Do_Shoot(direction, distance) -> ( (* TO DO! *) ) (* create object 'bullet' with initial position the same as drone's *)
+ 			with Error_in_AI ("Main program terminated", "--", _) -> print_endline (d#get_drone_name ^ ": find stack is empty, moving on...")
+
 		) drones;
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
