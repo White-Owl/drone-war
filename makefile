@@ -1,5 +1,5 @@
 TARGET=DroneWar
-ML=ast.ml drone.ml arena.ml main.ml
+ML=ast.ml drone.ml arena.ml main.ml bullet.ml
 MLY=parser.mly
 MLL=scanner.mll
 LIBS=
