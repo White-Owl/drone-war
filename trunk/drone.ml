@@ -209,7 +209,7 @@ class drone =
 						| Rot     -> let op3=Stack.pop stack and op2=Stack.top stack and op1=Stack.top stack in begin Stack.push op2 stack; Stack.push op3 stack; Stack.push op1 stack end; No_Action
 
 						(* game specific operations *)
-						| Move      -> let direction=self#pop_int in direction_of_the_body<-direction; moving <- true; No_Action
+						| Move      -> let direction=self#pop_int in direction_of_the_body <- direction; moving <- true; No_Action
 						| Stop      -> moving <- false; No_Action
 						| Shoot     -> let direction=self#pop_int and distance=self#pop_int in direction_of_the_gun<-direction; Do_Shoot(direction, distance)
 						| Look      -> let direction=self#pop_int in Do_Look(direction)
