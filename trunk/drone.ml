@@ -221,7 +221,7 @@ class drone =
 						| Wait      -> ticks_to_wait <- self#pop_int; No_Action
 
 						(* TO DO! get random int between min and max *)
-						| Random    -> (* let max=self#pop_int and min=self#pop_int in Stack.push (Integer (0)) stack; *) No_Action
+						| Random    -> let max=self#pop_int and min=self#pop_int in Stack.push (Integer(Random.int (max - min + 1) + min)) stack; No_Action
 
 						(* jumps *)
 						| AbsJump(x)   -> instruction_pointer <- x-1; No_Action
