@@ -26,6 +26,15 @@ object (self)
 	method get_drone_count = List.length drones;
 
 
+	(* method add_bullet dire dist =
+		let b = new bullet in (
+			begin
+			b#set_direction dire;
+			b#set_distance dist;
+			end;
+			bullets <- b :: bullets;
+	) *)
+
 	method run =
 		let steps = ref 1 in
 		while (self#step > 1) && (!steps < 100) do
@@ -44,7 +53,6 @@ object (self)
 		) drones
 
 
-
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
 		List.iter (fun d ->
@@ -57,12 +65,14 @@ object (self)
 				match action with
 				  No_Action                     -> ()
 				| Do_Look(direction)            -> ( (* TO DO! *) ) (* check what the drone sees and put the result into drone's stack *)
-				| Do_Shoot(direction, distance) -> ( (* TO DO! *) ) (* create object 'bullet' with initial position the same as drone's *)
+				(* create object 'bullet' with initial position the same as drone's *)				
+				| Do_Shoot(direction, distance) -> ()(* self#add_bullet direction distance *)
+													 
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find stack is empty, moving on...\n" d#get_drone_name
 
 		) drones;
 
-		
+
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
 
