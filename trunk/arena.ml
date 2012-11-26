@@ -58,7 +58,7 @@ object (self)
 				  No_Action                     -> ()
 				| Do_Look(direction)            -> ( (* TO DO! *) ) (* check what the drone sees and put the result into drone's stack *)
 				| Do_Shoot(direction, distance) -> ( (* TO DO! *) ) (* create object 'bullet' with initial position the same as drone's *)
- 			with Error_in_AI ("Main program terminated", "--", _) -> print_endline (d#get_drone_name ^ ": find stack is empty, moving on...")
+ 			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find stack is empty, moving on...\n" d#get_drone_name
 
 		) drones;
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
