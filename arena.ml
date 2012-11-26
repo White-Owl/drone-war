@@ -8,6 +8,9 @@ object (self)
 	val mutable bullets = []
 	val mutable debug_mode = false
 
+	val mutable nearest_drone = new drone
+	val mutable pi = 4. *. atan 1.
+
 	method set_debug_mode mode =
 		debug_mode <- mode
 
@@ -54,6 +57,28 @@ object (self)
 		) drones
 
 
+	(* calculate distance between two drones *)
+	method get_distance dire1 dist1 dire2 dist2 = 
+		sqrt( ((dist1 *. cos((360. -. dire1) *. pi /. 180.)) -. (dist2 *. cos((360. -. dire2) *. pi /. 180.)))*.
+			((dist1 *. cos((360. -. dire1) *. pi /. 180.)) -. (dist2 *. cos((360. -. dire2) *. pi /. 180.))) +. 
+			((dist1 *. (-.sin((360. -. dire1) *. pi /. 180.))) -. (dist2 *. (-.sin((360. -. dire2) *. pi /. 180.)))) *. 
+			((dist1 *. (-.sin((360. -. dire1) *. pi /. 180.))) -. (dist2 *. (-.sin((360. -. dire2) *. pi /. 180.)))) )
+
+
+
+	 (* 	method look_enemy dire range =
+
+			List.iter (fun d -> 
+				if (d#get_direction_in_arena<=(dire-range) && d#get_direction_in_arena>=(dire-range)) && (d#get_distance_in_arena = 0.) || 
+
+				then
+
+
+
+			) drones 
+	  *)
+
+
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
 		List.iter (fun d ->
@@ -70,7 +95,7 @@ object (self)
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)				
 				| Do_Shoot(direction, distance) -> self#add_bullet direction distance
 													 
- 			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find stack is empty, moving on...\n" d#get_drone_name
+ 			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find call_stack is currently empty, moving on...\n" d#get_drone_name
 
 		) drones;
 

@@ -10,6 +10,7 @@ class bullet =
 	val mutable current_position_y = 0;
 	val mutable drone_name = "";
 	val mutable distance = 0;
+	val mutable speed = 10;
 
 	method get_pos_x = current_position_x
 
