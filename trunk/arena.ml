@@ -61,6 +61,8 @@ object (self)
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find stack is empty, moving on...\n" d#get_drone_name
 
 		) drones;
+
+		
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
 
