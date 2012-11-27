@@ -11,7 +11,8 @@ object (self)
 	val mutable nearest_drone = new drone
 	val mutable pi = 4. *. atan 1.
 
-	val mutable radius = 100.;
+	val mutable area_map_x = 1000;
+	val mutable area_map_y = 1000;
 
 	method set_debug_mode mode =
 		debug_mode <- mode
@@ -25,8 +26,8 @@ object (self)
 				close_out decompiled_file;
 
 				(*set random of drone's position*)
-				d#set_direction_in_arena (Random.float 360.);
-				d#set_distance_in_arena (Random.float 100.);
+				d#set_x_position (Random.int 1000);
+				d#set_y_position (Random.int 1000);
 
 				d#set_debug_output (open_out (file_name ^ ".debug"))
 			end;
@@ -72,18 +73,6 @@ object (self)
 
 
   
-(* 	 method look_enemy dire range =
-	 		let found = false in
-			List.iter (fun d -> 
-				if 	d#get_direction_in_arena<=(dire +. range) && d#get_direction_in_arena>=(dire -. range) && found = false
-				then
-					begin
-					
-					found = true
-					end 
-			) drones 
-	  
- *)
 
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
@@ -97,7 +86,8 @@ object (self)
 				match action with
 				  No_Action                     -> ()
 				(* TO DO ! check what the drone sees and put the result into drone's stack *)
-				| Do_Look(direction)            -> ()
+				| Do_Look(direction)            -> () (* List.iter (fun d -> self#look_one_drone d) drones *)
+				
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)				
 				| Do_Shoot(direction, distance) -> self#add_bullet direction distance
 													 
