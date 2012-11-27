@@ -8,15 +8,20 @@ class bullet =
 	val mutable direction_of_the_body = 0;
 	val mutable current_position_x = 0;
 	val mutable current_position_y = 0;
-	val mutable drone_name = "";
 	val mutable distance = 0;
-	val mutable speed = 10;
+
 
 	method get_pos_x = current_position_x
 
 	method get_pos_y = current_position_y
 
 	method get_direction = direction_of_the_body
+
+	method get_distance = distance
+
+	method set_x_position x = current_position_x <- x
+
+	method set_y_position y = current_position_y <- y 
 
 	method set_direction dire = direction_of_the_body <- dire
 
