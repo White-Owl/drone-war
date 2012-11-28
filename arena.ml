@@ -99,6 +99,21 @@ object (self)
 		) drones;
 
 
+	method update_bullet_position = 
+		List.iter (fun b ->
+			begin
+			b#move;
+			if b#check_hit_wall = true
+			then
+			(* here should also explore !!!*)
+			if b#check_reach_distance = true
+			then
+				begin
+					(* not finished need explore here!!! *)
+				end
+			end
+		) bullets;
+
 
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
@@ -123,6 +138,7 @@ object (self)
 
 		(* update position for all drones *)
 		self#update_drone_position;
+		self#update_bullet_position;
 
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
