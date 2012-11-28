@@ -1,6 +1,3 @@
-open Ast;;
-open Parser;;
-open Printf;;
 
 class bullet =
 	object (self)

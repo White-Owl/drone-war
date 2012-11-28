@@ -73,6 +73,13 @@ class drone =
 				Stack.push (Integer (dire)) stack;
 			end
 
+		method init =
+			begin
+				self#set_x_position (Random.int 1000);
+				self#set_y_position (Random.int 1000);
+				self#set_moving_direction (Random.int 360);
+			end
+				
 
 		method hit_wall = 
 			begin
