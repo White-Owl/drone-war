@@ -45,6 +45,8 @@ class drone =
 
 		method get_moving_direction = direction_of_the_body
 
+		method set_moving_direction dire = direction_of_the_body <- dire
+
 		method get_x_position = x_position
 
 		method set_x_position x = x_position <- x
