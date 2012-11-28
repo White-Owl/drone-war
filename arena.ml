@@ -10,8 +10,8 @@ object (self)
 
 	val mutable pi = 4. *. atan 1.
 	val mutable look_range = 30 		(*+30 and -30 on the given degree*)
-	val mutable bullet_speed = 500	
-	val mutable drone_speed = 100
+	val mutable bullet_speed = 50	
+	val mutable drone_speed = 10
 
 	val mutable area_map_x = 1000
 	val mutable area_map_y = 1000
@@ -27,13 +27,10 @@ object (self)
 				let decompiled_file = open_out (file_name ^ ".decompiled") in
 				d#decompile decompiled_file;
 				close_out decompiled_file;
-
 				(*set random of drone's position*)
-				d#set_x_position (Random.int 1000);
-				d#set_y_position (Random.int 1000);
-				d#set_moving_direction (Random.int 360);
+				d#init;
 
-				d#set_debug_output (open_out (file_name ^ ".debug"))
+				d#set_debug_output (open_out (file_name ^ ".debug"));
 			end;
 			drones <- d :: drones;
 		)
@@ -41,11 +38,13 @@ object (self)
 	method get_drone_count = List.length drones;
 
 
-	method add_bullet dire dist =
+	method add_bullet dire dist x_pos y_pos =
 		let b = new bullet in (
 			begin
 			b#set_direction dire;
 			b#set_distance dist;
+			b#set_x_position x_pos;
+			b#set_y_position y_pos;
 			end;
 			bullets <- b :: bullets;
 	)
@@ -80,7 +79,8 @@ object (self)
 			let target_dire = int_of_float(atan( float_of_int(y_target_pos - y_shoot_pos) /. float_of_int(x_target_pos - x_shoot_pos)) *. 180. /. pi) and
 				distance = self#get_distance x_target_pos y_target_pos x_shoot_pos y_shoot_pos	
 			in 
-			if target_dire < (dire + look_range) && target_dire > (dire - look_range)
+			if 
+				target_dire < (dire + look_range) && target_dire > (dire - look_range)
 			then 
 				d_shoot#add_found_target distance target_dire
 
@@ -131,7 +131,7 @@ object (self)
 				| Do_Look(direction)            -> () (* List.iter (fun d -> self#look_one_drone d) drones *)
 				
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)				
-				| Do_Shoot(direction, distance) -> self#add_bullet direction distance
+				| Do_Shoot(direction, distance) -> self#add_bullet direction distance d#get_x_position d#get_y_position
 													 
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find call_stack is currently empty, moving on...\n" d#get_drone_name
 
