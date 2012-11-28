@@ -31,6 +31,7 @@ object (self)
 				(*set random of drone's position*)
 				d#set_x_position (Random.int 1000);
 				d#set_y_position (Random.int 1000);
+				d#set_moving_direction (Random.int 360);
 
 				d#set_debug_output (open_out (file_name ^ ".debug"))
 			end;
