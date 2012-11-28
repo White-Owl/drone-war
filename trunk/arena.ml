@@ -8,11 +8,14 @@ object (self)
 	val mutable bullets = []
 	val mutable debug_mode = false
 
-	val mutable nearest_drone = new drone
 	val mutable pi = 4. *. atan 1.
+	val mutable look_range = 30 		(*+30 and -30 on the given degree*)
+	val mutable bullet_speed = 500	
+	val mutable drone_speed = 100
 
-	val mutable area_map_x = 1000;
-	val mutable area_map_y = 1000;
+	val mutable area_map_x = 1000
+	val mutable area_map_y = 1000
+
 
 	method set_debug_mode mode =
 		debug_mode <- mode
@@ -64,15 +67,38 @@ object (self)
 		) drones
 
 
-	(* calculate distance between two drones *)
-	method get_distance dire1 dist1 dire2 dist2 = 
-		sqrt( ((dist1 *. cos((360. -. dire1) *. pi /. 180.)) -. (dist2 *. cos((360. -. dire2) *. pi /. 180.)))*.
-			((dist1 *. cos((360. -. dire1) *. pi /. 180.)) -. (dist2 *. cos((360. -. dire2) *. pi /. 180.))) +. 
-			((dist1 *. (-.sin((360. -. dire1) *. pi /. 180.))) -. (dist2 *. (-.sin((360. -. dire2) *. pi /. 180.)))) *. 
-			((dist1 *. (-.sin((360. -. dire1) *. pi /. 180.))) -. (dist2 *. (-.sin((360. -. dire2) *. pi /. 180.)))) )
+	method get_distance x1 y1 x2 y2 = 
+		int_of_float(sqrt(float_of_int((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2))))
 
 
-  
+  	(* method look_one_drone dire d_shoot d_target = 
+		let x_target_pos = d_target#get_x_position and 
+			y_target_pos = d_target#get_y_position and
+			x_shoot_pos = d_shoot#get_x_position and
+			y_shoot_pos = d_shoot#get_y_position in
+			let target_dire = int_of_float(atan( float_of_int(y_target_pos - y_shoot_pos) /. float_of_int(x_target_pos - x_shoot_pos)) *. 180. /. pi) and
+				distance = self#get_distance x_target_pos y_target_pos x_shoot_pos y_shoot_pos	
+			in 
+			if target_dire < (dire + look_range) && target_dire > (dire - look_range)
+			then 
+				d_shoot#add_found_target distance target_dire
+
+	 *)			
+
+	method update_drone_position =
+		List.iter (fun d ->
+			begin
+			d#move;
+			if d#check_hit_wall = true
+			then
+				begin
+				d#update_hit_pos;
+				d#hit_wall;
+				end
+			end
+		) drones;
+
+
 
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
@@ -95,6 +121,8 @@ object (self)
 
 		) drones;
 
+		(* update position for all drones *)
+		self#update_drone_position;
 
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones

@@ -40,6 +40,10 @@ class drone =
 
 		val mutable x_position = 0	  (* used by other drones to determine the position in the arena can set maximum in Arena as Radius of the circle*)
 		val mutable y_position = 0	  (* used by other drones to determine the position in the arena 0-360*)
+		val mutable pi = 4. *. atan 1.
+
+
+		method get_moving_direction = direction_of_the_body
 
 		method get_x_position = x_position
 
@@ -60,6 +64,39 @@ class drone =
 		method get_ai_ticks = tick_counter
 
 		method get_health = health
+
+		method add_found_target dist dire = 
+			begin
+				Stack.push (Integer (dist)) stack;
+				Stack.push (Integer (dire)) stack;
+			end
+
+
+		method hit_wall = 
+			begin
+				health <- (health - 10);
+				direction_of_the_body <- (direction_of_the_body + 180);
+			end
+
+		method move = 
+			begin
+				y_position <- y_position + int_of_float(100. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
+				x_position <- x_position + int_of_float(100. *. (1. /. (tan (float_of_int(direction_of_the_body) *. pi /. 180.))));
+			end
+
+		method check_hit_wall = 
+			if x_position > 1000 || x_position < 0 || y_position > 1000 || y_position < 0
+			then true
+			else false
+
+		method update_hit_pos = 
+		begin
+			if x_position > 1000 then x_position <- 1000;
+			if x_position < 0 then x_position <- 0;
+			if y_position > 1000 then y_position <- 1000;
+			if y_position < 0 then y_position <- 0;
+		end
+
 
 		method set_debug_output out_file =
 			debug_out_file <- out_file;
