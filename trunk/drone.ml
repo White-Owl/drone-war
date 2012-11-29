@@ -38,8 +38,8 @@ class drone =
 		val mutable brain_dead = false        (* will become true if at some step the drone caught an exception *)
 		val mutable reason_for_coma = ""      (* explanation why AI died *)
 
-		val mutable x_position = 0	  (* used by other drones to determine the position in the arena can set maximum in Arena as Radius of the circle*)
-		val mutable y_position = 0	  (* used by other drones to determine the position in the arena 0-360*)
+		val mutable x_position = 0.	  (* used by other drones to determine the position in the arena can set maximum in Arena as Radius of the circle*)
+		val mutable y_position = 0.	  (* used by other drones to determine the position in the arena 0-360*)
 		val mutable pi = 4. *. atan 1.
 
 
@@ -75,8 +75,8 @@ class drone =
 
 		method init =
 			begin
-				self#set_x_position (Random.int 1000);
-				self#set_y_position (Random.int 1000);
+				self#set_x_position (Random.float 1000.);
+				self#set_y_position (Random.float 1000.);
 				self#set_moving_direction (Random.int 360);
 			end
 				
@@ -89,21 +89,21 @@ class drone =
 
 		method move = 
 			begin
-				y_position <- y_position + int_of_float(100. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
-				x_position <- x_position + int_of_float(100. *. (1. /. (tan (float_of_int(direction_of_the_body) *. pi /. 180.))));
+				y_position <- y_position +. (100. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
+				x_position <- x_position +. (100. *. (1. /. (tan (float_of_int(direction_of_the_body) *. pi /. 180.))));
 			end
 
 		method check_hit_wall = 
-			if x_position > 1000 || x_position < 0 || y_position > 1000 || y_position < 0
+			if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0.
 			then true
 			else false
 
 		method update_hit_pos = 
 		begin
-			if x_position > 1000 then x_position <- 1000;
-			if x_position < 0 then x_position <- 0;
-			if y_position > 1000 then y_position <- 1000;
-			if y_position < 0 then y_position <- 0;
+			if x_position > 1000. then x_position <- 1000.;
+			if x_position < 0. then x_position <- 0.;
+			if y_position > 1000. then y_position <- 1000.;
+			if y_position < 0. then y_position <- 0.;
 		end
 
 
