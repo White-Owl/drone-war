@@ -13,9 +13,10 @@ let main =
 	Array.iter (fun parameter ->
 		if parameter.[0]='-' then
 		begin
-			if parameter.[1]='D' then cage#set_debug_mode true
-			else
-				print_endline ("Unknown option " ^parameter);
+			match parameter.[1] with
+			  'D' -> cage#set_debug_mode true
+			| 't' -> cage#start_a_team
+			|  _  -> print_endline ("Unknown option " ^parameter);
 		end
 		else
 		if (Filename.check_suffix parameter ".dt" ) then
