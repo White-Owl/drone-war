@@ -4,11 +4,11 @@ s:
 s jump
 2 2 - if
 3 +
-end if
+endif
 
 sub aaa
 if
 2 2 +
-end if
+endif
 5 56
-end	sub
+endsub

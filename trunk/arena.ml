@@ -10,7 +10,7 @@ object (self)
 
 	val mutable pi = 4. *. atan 1.
 	val mutable look_range = 30 		(*+30 and -30 on the given degree*)
-	val mutable bullet_speed = 50	
+	val mutable bullet_speed = 50
 	val mutable drone_speed = 10
 
 	val mutable area_map_x = 1000
@@ -67,24 +67,24 @@ object (self)
 		) drones
 
 
-	method get_distance x1 y1 x2 y2 = 
+	method get_distance x1 y1 x2 y2 =
 		int_of_float(sqrt(float_of_int((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2))))
 
 
-  	(* method look_one_drone dire d_shoot d_target = 
-		let x_target_pos = d_target#get_x_position and 
+  	(* method look_one_drone dire d_shoot d_target =
+		let x_target_pos = d_target#get_x_position and
 			y_target_pos = d_target#get_y_position and
 			x_shoot_pos = d_shoot#get_x_position and
 			y_shoot_pos = d_shoot#get_y_position in
 			let target_dire = int_of_float(atan( float_of_int(y_target_pos - y_shoot_pos) /. float_of_int(x_target_pos - x_shoot_pos)) *. 180. /. pi) and
-				distance = self#get_distance x_target_pos y_target_pos x_shoot_pos y_shoot_pos	
-			in 
-			if 
+				distance = self#get_distance x_target_pos y_target_pos x_shoot_pos y_shoot_pos
+			in
+			if
 				target_dire < (dire + look_range) && target_dire > (dire - look_range)
-			then 
+			then
 				d_shoot#add_found_target distance target_dire
 
-	 *)			
+	 *)
 
 	method update_drone_position =
 		List.iter (fun d ->
@@ -100,7 +100,7 @@ object (self)
 		) drones;
 
 
-	method update_bullet_position = 
+	method update_bullet_position =
 		List.iter (fun b ->
 			begin
 			b#move;
@@ -124,15 +124,15 @@ object (self)
 
 			(* TO DO! d#step can terminate with Error_in_AI exception. Catch it and deal with it gracefully *)
 			try
-				let action = d#step in  
+				let action = d#step in
 				match action with
 				  No_Action                     -> ()
 				(* TO DO ! check what the drone sees and put the result into drone's stack *)
 				| Do_Look(direction)            -> () (* List.iter (fun d -> self#look_one_drone d) drones *)
-				
-				(* TO DO ! create object 'bullet' with initial position the same as drone's *)				
+
+				(* TO DO ! create object 'bullet' with initial position the same as drone's *)
 				| Do_Shoot(direction, distance) -> self#add_bullet direction distance d#get_x_position d#get_y_position
-													 
+
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find call_stack is currently empty, moving on...\n" d#get_drone_name
 
 		) drones;
@@ -143,5 +143,8 @@ object (self)
 
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
+
+	method start_a_team =
+		() (* TO DO! *)
 
 end;;
