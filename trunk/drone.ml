@@ -28,6 +28,7 @@ class drone =
 
 		(* various members *)
 		val mutable drone_name = ""  (* name of the drone for GUI *)
+		val mutable team_id    = 0   (* id of the team this drone belongs to *)
 
 		(* variuables to describe current drone state *)
 		val mutable health = 100
@@ -67,7 +68,10 @@ class drone =
 
 		method get_health = health
 
-		method add_found_target dist dire = 
+		method belongs_to_team id = team_id <- id
+
+
+		method add_found_target dist dire =
 			begin
 				Stack.push (Integer (dist)) stack;
 				Stack.push (Integer (dire)) stack;
@@ -79,26 +83,26 @@ class drone =
 				self#set_y_position (Random.float 1000.);
 				self#set_moving_direction (Random.int 360);
 			end
-				
 
-		method hit_wall = 
+
+		method hit_wall =
 			begin
 				health <- (health - 10);
 				direction_of_the_body <- (direction_of_the_body + 180);
 			end
 
-		method move = 
+		method move =
 			begin
 				y_position <- y_position +. (100. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
 				x_position <- x_position +. (100. *. (1. /. (tan (float_of_int(direction_of_the_body) *. pi /. 180.))));
 			end
 
-		method check_hit_wall = 
+		method check_hit_wall =
 			if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0.
 			then true
 			else false
 
-		method update_hit_pos = 
+		method update_hit_pos =
 		begin
 			if x_position > 1000. then x_position <- 1000.;
 			if x_position < 0. then x_position <- 0.;
