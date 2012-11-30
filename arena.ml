@@ -16,6 +16,8 @@ object (self)
 	val mutable area_map_x = 1000
 	val mutable area_map_y = 1000
 
+	val mutable team_counter = 0
+	val mutable gathering_team = false
 
 	method set_debug_mode mode =
 		debug_mode <- mode
@@ -23,13 +25,13 @@ object (self)
 	method load file_name =
 		let d = new drone in (
 			d#load file_name;
+			d#init; (*set random of drone's position*)
+			d#belongs_to_team team_counter;
+			if not gathering_team then team_counter <- team_counter+1;
 			if debug_mode then begin
 				let decompiled_file = open_out (file_name ^ ".decompiled") in
 				d#decompile decompiled_file;
 				close_out decompiled_file;
-				(*set random of drone's position*)
-				d#init;
-
 				d#set_debug_output (open_out (file_name ^ ".debug"));
 			end;
 			drones <- d :: drones;
@@ -145,6 +147,7 @@ object (self)
 		!live_drones
 
 	method start_a_team =
-		() (* TO DO! *)
+		team_counter <- team_counter+1;
+		gathering_team <- true
 
 end;;
