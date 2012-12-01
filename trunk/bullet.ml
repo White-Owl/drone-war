@@ -11,6 +11,8 @@ class bullet =
 	val mutable start_y_position = 0.;
 	val mutable pi = 4. *. atan 1.
 
+	val mutable explored = false;
+
 	method get_pos_x = x_position
 
 	method get_pos_y = y_position
@@ -25,6 +27,9 @@ class bullet =
 
 	method set_distance dis = distance <- dis;
 
+	method get_exploed = explored
+
+	method set_exploed exp = explored <- exp
 	method move = 
 		begin
 			y_position <- y_position +. (500. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
@@ -46,5 +51,12 @@ class bullet =
 		then true
 		else false
 
+	method update_hit_pos =
+		begin
+			if x_position > 1000. then x_position <- 1000.;
+			if x_position < 0. then x_position <- 0.;
+			if y_position > 1000. then y_position <- 1000.;
+			if y_position < 0. then y_position <- 0.;
+		end
 
 end;;

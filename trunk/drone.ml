@@ -70,11 +70,16 @@ class drone =
 
 		method belongs_to_team id = team_id <- id
 
+		method get_team_id = team_id 
 
-		method add_found_target dist dire =
+		method set_health h=health<-h
+
+		method add_found_target dist dire flag=
 			begin
 				Stack.push (Integer (dist)) stack;
 				Stack.push (Integer (dire)) stack;
+				Stack.push (Flag (flag)) stack;
+
 			end
 
 		method init =
