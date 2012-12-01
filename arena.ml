@@ -1,6 +1,7 @@
 open Drone;;
 open Printf;;
 open Bullet;;
+open Ast;;
 
 class arena =
 object (self)
@@ -70,23 +71,41 @@ object (self)
 
 
 	method get_distance x1 y1 x2 y2 =
-		int_of_float(sqrt(float_of_int((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2))))
+		int_of_float(sqrt((x1 -. x2)*.(x1 -. x2) +. (y1 -. y2)*.(y1 -. y2)))
 
 
-  	(* method look_one_drone dire d_shoot d_target =
-		let x_target_pos = d_target#get_x_position and
-			y_target_pos = d_target#get_y_position and
-			x_shoot_pos = d_shoot#get_x_position and
-			y_shoot_pos = d_shoot#get_y_position in
-			let target_dire = int_of_float(atan( float_of_int(y_target_pos - y_shoot_pos) /. float_of_int(x_target_pos - x_shoot_pos)) *. 180. /. pi) and
-				distance = self#get_distance x_target_pos y_target_pos x_shoot_pos y_shoot_pos
+   	method look_one_drone dire d_shoot d_target =
+   	let 
+   	d_shoot_x=d_shoot#get_x_position and
+   	d_shoot_y=d_shoot#get_y_position and
+   	d_target_x=d_target#get_x_position and
+   	d_target_y=d_target#get_y_position in
+			let target_dire = int_of_float(atan( (d_target_y -. d_shoot_y) /. (d_target_x  -. d_shoot_x)) *. 180. /. pi) and
+				distance = self#get_distance d_target_x d_target_y d_shoot_x d_shoot_y
+			in
+			
+			let flag=
+			if(d_shoot#get_team_id=d_target#get_team_id)
+			then Foe
+			else Ally
 			in
 			if
 				target_dire < (dire + look_range) && target_dire > (dire - look_range)
-			then
-				d_shoot#add_found_target distance target_dire
+			then 
+				d_shoot#add_found_target distance target_dire flag
 
-	 *)
+	method look_wall dire d_look=
+	let 
+	d_look_x=d_look#get_x_position and
+	d_look_y=d_look#get_y_position in
+	let 
+	wall_x=(float_of_int(area_map_y) -. d_look_y) /. tan(float_of_int(dire) /. 180. *. pi) +. d_look_x and
+	wall_y=(float_of_int(area_map_x) -. d_look_x) *. tan(float_of_int(dire) /. 180. *. pi) +. d_look_y in
+	let 
+	dist = self#get_distance d_look_x d_look_y wall_x wall_y
+	in
+	d_look#add_found_target dist dire Wall 
+
 
 	method update_drone_position =
 		List.iter (fun d ->
@@ -108,16 +127,37 @@ object (self)
 			b#move;
 			if b#check_hit_wall = true
 			then
-			(* here should also explore !!!*)
+				begin
+					b#update_hit_pos;
+					List.iter (fun d -> 
+					self#explosion b d) drones;
+				end;
 			if b#check_reach_distance = true
 			then
 				begin
-					(* not finished need explore here!!! *)
-				end
+					List.iter (fun d -> 
+					self#explosion b d) drones;
+				end;
 			end
 		) bullets;
 
-
+	
+   	method explosion b d =
+   	let 
+   	d_x=d#get_x_position and
+   	d_y=d#get_y_position and
+   	exp_x=b#get_pos_x and
+	exp_y=b#get_pos_y in
+			let distance = self#get_distance d_x d_y exp_x exp_y
+			in
+			if distance < 50
+			then 
+			begin
+				d#set_health (100 - distance);
+				(*after GUI perform explosion, it should remove exploed bullet*)
+				b#set_exploed true;
+ 			end;
+				
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
 		List.iter (fun d ->
@@ -130,7 +170,11 @@ object (self)
 				match action with
 				  No_Action                     -> ()
 				(* TO DO ! check what the drone sees and put the result into drone's stack *)
-				| Do_Look(direction)            -> () (* List.iter (fun d -> self#look_one_drone d) drones *)
+				| Do_Look(direction)            -> 
+				begin
+				List.iter (fun dd -> self#look_one_drone direction d dd) drones;
+				self#look_wall direction d;
+				end
 
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)
 				| Do_Shoot(direction, distance) -> self#add_bullet direction distance d#get_x_position d#get_y_position
