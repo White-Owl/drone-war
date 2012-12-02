@@ -25,6 +25,7 @@ sees_a_drone:
 look_cleanup:
 	isEnd	main_loop jumpif
 	drop2
+	true
 	look_cleanup jump
 
 

@@ -178,10 +178,9 @@ object (self)
 				List.iter (fun dd -> self#look_one_drone direction d dd) drones;
 				self#look_wall direction d;
 				end
-
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)
-				| Do_Shoot(direction, distance) -> self#add_bullet direction distance d#get_x_position d#get_y_position
-
+				| Do_Shoot(direction, distance) -> if distance > 500 then self#add_bullet direction 500 d#get_x_position d#get_y_position 
+																	 else self#add_bullet direction distance d#get_x_position d#get_y_position 
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find call_stack is currently empty, moving on...\n" d#get_drone_name
 
 		) drones;
