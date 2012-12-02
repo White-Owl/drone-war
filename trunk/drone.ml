@@ -87,20 +87,42 @@ class drone =
 				self#set_x_position (Random.float 1000.);
 				self#set_y_position (Random.float 1000.);
 				self#set_moving_direction (Random.int 360);
+				self#print_current_pos;
 			end
 
 
 		method hit_wall =
+			let mod_dire = direction_of_the_body mod 360 in
 			begin
 				health <- (health - 10);
-				direction_of_the_body <- (direction_of_the_body + 180);
+				direction_of_the_body <- (mod_dire + 180);
 			end
 
-		method move =
+		method move speed =
+			let mod_dire = (direction_of_the_body mod 360) in
+			if moving = true
+			then
 			begin
-				y_position <- y_position +. (100. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
-				x_position <- x_position +. (100. *. (1. /. (tan (float_of_int(direction_of_the_body) *. pi /. 180.))));
+				if mod_dire >= 0 && mod_dire <= 90
+				then
+					y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(mod_dire) *. pi /. 180.)));
+					x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(mod_dire) *. pi /. 180.)));
+				if mod_dire > 90 && mod_dire <= 180
+				then
+					y_position <- y_position +. (float_of_int(speed) *. (sin (float_of_int(180 - mod_dire) *. pi /. 180.)));
+					x_position <- x_position -. (float_of_int(speed) *. (cos (float_of_int(180 - mod_dire) *. pi /. 180.)));
+
+				if mod_dire > 180 && mod_dire <= 270
+				then
+					y_position <- y_position -. (float_of_int(speed) *. (cos (float_of_int(270 - mod_dire) *. pi /. 180.)));
+					x_position <- x_position -. (float_of_int(speed) *. (sin (float_of_int(270 - mod_dire) *. pi /. 180.)));
+
+				if mod_dire > 270 && mod_dire < 360 
+				then
+					y_position <- y_position -. (float_of_int(speed) *. (sin (float_of_int(360 - mod_dire) *. pi /. 180.)));
+					x_position <- x_position +. (float_of_int(speed) *. (cos (float_of_int(360 - mod_dire) *. pi /. 180.)));
 			end
+
 
 		method check_hit_wall =
 			if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0.
@@ -296,6 +318,22 @@ class drone =
 					instruction_pointer <- instruction_pointer+1;
 					action
 				end
+			end
+
+		method print_current_pos = 
+			begin
+				print_endline drone_name;
+				print_float x_position;
+				print_endline "";
+				print_float y_position;
+				print_endline "";
+				print_endline "Direction: ";
+				print_int direction_of_the_body;
+				print_endline "";
+				print_endline "Health: ";
+				print_int health;
+				print_endline "";
+				print_endline "";
 			end
 
 

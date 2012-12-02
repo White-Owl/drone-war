@@ -110,13 +110,14 @@ object (self)
 	method update_drone_position =
 		List.iter (fun d ->
 			begin
-			d#move;
+			d#move drone_speed;
 			if d#check_hit_wall = true
 			then
 				begin
 				d#update_hit_pos;
 				d#hit_wall;
-				end
+				end;
+			d#print_current_pos;
 			end
 		) drones;
 
@@ -124,7 +125,7 @@ object (self)
 	method update_bullet_position =
 		List.iter (fun b ->
 			begin
-			b#move;
+			b#move bullet_speed;
 			if b#check_hit_wall = true
 			then
 				begin

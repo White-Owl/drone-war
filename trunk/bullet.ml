@@ -30,11 +30,31 @@ class bullet =
 	method get_exploed = explored
 
 	method set_exploed exp = explored <- exp
-	method move = 
-		begin
-			y_position <- y_position +. (500. *. (tan (float_of_int(direction_of_the_body) *. pi /. 180.)));
-			x_position <- x_position +. (500. *. (1. /. (tan (float_of_int(direction_of_the_body) *. pi /. 180.))));
-		end
+
+
+	method move speed =
+			let mod_dire = (direction_of_the_body mod 360) in
+			begin
+				if mod_dire >= 0 && mod_dire <= 90
+				then
+					y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(mod_dire) *. pi /. 180.)));
+					x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(mod_dire) *. pi /. 180.)));
+				if mod_dire > 90 && mod_dire <= 180
+				then
+					y_position <- y_position +. (float_of_int(speed) *. (sin (float_of_int(180 - mod_dire) *. pi /. 180.)));
+					x_position <- x_position -. (float_of_int(speed) *. (cos (float_of_int(180 - mod_dire) *. pi /. 180.)));
+
+				if mod_dire > 180 && mod_dire <= 270
+				then
+					y_position <- y_position -. (float_of_int(speed) *. (cos (float_of_int(270 - mod_dire) *. pi /. 180.)));
+					x_position <- x_position -. (float_of_int(speed) *. (sin (float_of_int(270 - mod_dire) *. pi /. 180.)));
+
+				if mod_dire > 270 && mod_dire < 360 
+				then
+					y_position <- y_position -. (float_of_int(speed) *. (sin (float_of_int(360 - mod_dire) *. pi /. 180.)));
+					x_position <- x_position +. (float_of_int(speed) *. (cos (float_of_int(360 - mod_dire) *. pi /. 180.)));
+			end
+
 
 	method cal_distance x1 y1 x2 y2 = 
 		int_of_float(sqrt((x1 -. x2)*.(x1 -. x2) +. (y1 -. y2)*.(y1 -. y2)))
@@ -58,5 +78,16 @@ class bullet =
 			if y_position > 1000. then y_position <- 1000.;
 			if y_position < 0. then y_position <- 0.;
 		end
+
+	(* method print_current_pos = 
+		begin
+			print_float x_position;
+			print_endline "";
+			print_float y_position;
+			print_endline "";
+			print_int direction_of_the_body;
+			print_endline "";
+			print_endline "";
+		end *)
 
 end;;
