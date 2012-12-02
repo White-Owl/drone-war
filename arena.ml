@@ -117,7 +117,9 @@ object (self)
 				d#update_hit_pos;
 				d#hit_wall;
 				end;
-			d#print_current_pos;
+			if d#get_moving_status = true
+			then
+				d#print_current_pos;
 			end
 		) drones;
 
