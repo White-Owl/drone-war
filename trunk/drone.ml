@@ -72,6 +72,8 @@ class drone =
 
 		method get_team_id = team_id 
 
+		method get_moving_status = moving
+
 		method set_health h=health<-h
 
 		method add_found_target dist dire flag=
