@@ -21,7 +21,11 @@ class bullet =
 
 	method set_x_position x = x_position <- x
 
-	method set_y_position y = y_position <- y 
+	method set_y_position y = y_position <- y
+
+	method set_start_x_pos x = start_x_position <- x
+
+	method set_start_y_pos y = start_y_position <- y  
 
 	method set_direction dire = direction_of_the_body <- dire
 

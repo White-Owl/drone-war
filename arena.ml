@@ -48,6 +48,8 @@ object (self)
 			b#set_distance dist;
 			b#set_x_position x_pos;
 			b#set_y_position y_pos;
+			b#set_start_x_pos x_pos;
+			b#set_start_y_pos y_pos;
 			end;
 			bullets <- b :: bullets;
 	)
