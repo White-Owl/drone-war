@@ -52,7 +52,7 @@ rule drone_basic = parse
   | id as word  { try
                     let token = Hashtbl.find keyword_table (String.lowercase word) in
                     token
-                  with Not_found -> ID word
+                  with Not_found -> ID (String.lowercase word)
                 }
   | '('      { LPAREN }
   | ')'      { RPAREN }
