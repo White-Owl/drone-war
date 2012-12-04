@@ -19,9 +19,9 @@ endif
 
 all: $(TARGET)
 ifeq ($(DEBUG), yes)
-	export OCAMLRUNPARAM='p' && ./$(TARGET) test2.dt  > stdout 2> stderr
+	export OCAMLRUNPARAM='p' && ./$(TARGET) AI_DRONE1.dt > stdout 2> stderr
 else
-	./$(TARGET) -D test.dt test2.dt
+	./$(TARGET) -D AI_DRONE1.dt AI_DRONE2.dt AI_DRONE3.dt AI_DRONE4.dt AI_DRONE5.dt AI_DRONE6.dt AI_DRONE7.dt AI_DRONE8.dt
 endif
 
 $(TARGET): $(OBJS)
