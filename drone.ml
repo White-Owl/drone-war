@@ -2,6 +2,7 @@ open Ast;;
 open Parser;;
 open Parser_dbt;;
 open Printf;;
+open Utils;;
 
 exception Error_in_AI of string * string * int;;
 
@@ -42,7 +43,6 @@ class drone =
 
 		val mutable x_position = 0.	  (* used by other drones to determine the position in the arena can set maximum in Arena as Radius of the circle*)
 		val mutable y_position = 0.	  (* used by other drones to determine the position in the arena 0-360*)
-		val mutable pi = 4. *. atan 1.
 
 		(* maxmium bullet load is 5 can be displayed in the GUI *)
 		val mutable bullet_capacity = 5
