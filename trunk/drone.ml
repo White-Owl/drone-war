@@ -101,7 +101,7 @@ class drone =
 		method hit_wall =
 			let mod_dire = direction_of_the_body mod 360 in
 			begin
-				(* health <- (health - 10); *)
+				health <- (health - 10);
 				direction_of_the_body <- (mod_dire + 180);
 			end
 
