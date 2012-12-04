@@ -19,6 +19,7 @@ sees_a_drone:
 	dup direction store   // store the direction to the drone
 	move                  // start moving toward the target
 	direction read shoot  // and shoot in the same direction
+	drop                  // ignore the result of shooting
 
 	// after charged to the nearest drone, we still have to cleanup data for
 	// other objects seen by look.

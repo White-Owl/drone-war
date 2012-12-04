@@ -3,6 +3,7 @@
 open Ast;;
 open Printf;;
 open Lexing;;
+open Utils;;
 
 let auto_label_counter = ref 0;;
 
@@ -48,12 +49,10 @@ operations:
 	{ [] }
 	| operations operation   { if $2=Nop then $1 else $2 :: $1 }
 	| operations if_block    { $2 @ $1 }
-	| operations error       { let start_pos = Parsing.rhs_start_pos 2 in
-	                           (* let end_pos = Parsing.rhs_end_pos 2 in *)
-	                           printf "Unrecognized tokens starting from line %d position %d\n" start_pos.pos_lnum (start_pos.pos_cnum - start_pos.pos_bol +1);
-	                           (* Here we are supposed to print the text which caused the error, but I have no idea how to reach lex_buffer from the parser.
-	                           print_endline (String.sub Parser.lexbuf.lex_buffer start_pos.pos_cnum end_pos.pos_cnum); *)
-	                           $1 }
+	| operations error       { let pos = Parsing.rhs_start_pos 2 in
+	                           raise (Parse_failure ("Unrecognized tokens starting from line %d position %d\n", pos.pos_lnum, (pos.pos_cnum - pos.pos_bol +1)));
+	                           (* TO DO! I have no idea how to reach lex_buffer from the parser. So the exact token or text of the line are unknown *)
+	                         }
 
 
 if_block:

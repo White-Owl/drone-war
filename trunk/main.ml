@@ -1,4 +1,6 @@
 open Arena;;
+open Printf;;
+open Utils;;
 
 let main =
 	print_string "The Drone War\nThe class project for COMS W4115 Programming Languages and Translators\nColumbia University, Fall 2012\n\
@@ -19,12 +21,16 @@ let main =
 			|  _  -> print_endline ("Unknown option " ^parameter);
 		end
 		else
-		if (Filename.check_suffix parameter ".dt" ) then
+		if (Filename.check_suffix parameter ".dt" ) || (Filename.check_suffix parameter ".dbt" )  then
 		begin
 			print_string "Loading ";
-			print_endline parameter;
-			cage#load parameter;
-			print_endline " ok";
+			print_string parameter;
+			try
+				cage#load parameter;
+				printf " - ok\n"
+			with
+			  Failure t            -> printf " - failed\n%s\n" t
+            | Parse_failure(t,l,c) -> printf " - failed\n%s at %d:%d\n" t l c
 		end
 	) Sys.argv;
 

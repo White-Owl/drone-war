@@ -1,30 +1,30 @@
 // make a variable named 'direction' and store value 0 in it
-0 >direction
+0 direction store
 
 main_loop:
 	// clean the stack (it can overflow by multiple calls to look)
 	dropall
 	// load value from the variable and do the look operation
-	<direction look
+	direction read look
 
 	// Look dumps a list of triplets distance-direction-type to objects found
 	// in the direction of look, we are interested only in the closest one.
 	isFoe
 	// if the object on top of the stack was a foe, jump to shootIt
-	shootIt?
+	shootIt jumpif
 
 	// else increment the value of the 'direction' variable by 10
-	<direction 10 + >direction
+	direction read 10 + direction store
 	// go to the beginning
-	main_loop>
+	main_loop jump
 
 // this sub program will work if drone saw an enemy
 shootIt:
 	// store the exact direction to the object for future ease of targeting
-	dup >direction
+	dup direction store
 	// shoot...
 	shoot
 	// wait for gun to cool down...
 	10 wait
 	// and go to the main loop
-	main_loop>
+	main_loop jump

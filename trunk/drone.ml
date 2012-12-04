@@ -1,5 +1,6 @@
 open Ast;;
 open Parser;;
+open Parser_dbt;;
 open Printf;;
 
 exception Error_in_AI of string * string * int;;
@@ -45,9 +46,9 @@ class drone =
 
 		(* maxmium bullet load is 5 can be displayed in the GUI *)
 		val mutable bullet_capacity = 5
-		(* every five steps reload one bullet *)
-		val mutable reload_timer = 0
 		val mutable has_bullet = true
+		(* set to 10 each time drone shoots. drone cannot shoot until gun_cooldown returns to zero *)
+		val mutable gun_cooldown = 0
 
 		method get_moving_direction = direction_of_the_body
 
@@ -75,75 +76,43 @@ class drone =
 
 		method belongs_to_team id = team_id <- id
 
-		method get_team_id = team_id 
+		method get_team_id = team_id
 
 		method get_moving_status = moving
 
-		method set_health h=health<-h
+		method set_health h = health <- max h 0
 
-		method add_found_target dist dire flag=
+
+		(* this method is called, by the engine's LOOK procedure *)
+		method found_target dist dire flag=
+			if flag<>End then
 			begin
 				Stack.push (Integer (dist)) stack;
 				Stack.push (Integer (dire)) stack;
-				Stack.push (Flag (flag)) stack;
+			end;
+			Stack.push (Flag (flag)) stack
 
-			end
-
-		method init =
-			begin
-				self#set_x_position (Random.float 1000.);
-				self#set_y_position (Random.float 1000.);
-				self#set_moving_direction (Random.int 360);
-				self#print_current_pos;
-			end
-
-
-		method hit_wall =
-			let mod_dire = direction_of_the_body mod 360 in
-			begin
-				health <- (health - 10);
-				direction_of_the_body <- (mod_dire + 180);
-			end
 
 		method move speed =
-			let mod_dire = (direction_of_the_body mod 360) in
-			if moving = true
-			then
-			if moving = true
-			then
+			if moving then
 			begin
-				if mod_dire >= 0 && mod_dire <= 90
-				then
-					y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(mod_dire) *. pi /. 180.)));
-					x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(mod_dire) *. pi /. 180.)));
-				if mod_dire > 90 && mod_dire <= 180
-				then
-					y_position <- y_position +. (float_of_int(speed) *. (sin (float_of_int(180 - mod_dire) *. pi /. 180.)));
-					x_position <- x_position -. (float_of_int(speed) *. (cos (float_of_int(180 - mod_dire) *. pi /. 180.)));
+				y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(direction_of_the_body) *. pi /. 180.)));
+				x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(direction_of_the_body) *. pi /. 180.)));
 
-				if mod_dire > 180 && mod_dire <= 270
-				then
-					y_position <- y_position -. (float_of_int(speed) *. (cos (float_of_int(270 - mod_dire) *. pi /. 180.)));
-					x_position <- x_position -. (float_of_int(speed) *. (sin (float_of_int(270 - mod_dire) *. pi /. 180.)));
-
-				if mod_dire > 270 && mod_dire < 360 
-				then
-					y_position <- y_position -. (float_of_int(speed) *. (sin (float_of_int(360 - mod_dire) *. pi /. 180.)));
-					x_position <- x_position +. (float_of_int(speed) *. (cos (float_of_int(360 - mod_dire) *. pi /. 180.)));
+				(* check did we hit a wall? *)
+				if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0. then
+				begin
+					self#set_health (health - 10);
+					if x_position > 1000. then x_position <- 1000.;
+					if x_position < 0. then x_position <- 0.;
+					if y_position > 1000. then y_position <- 1000.;
+					if y_position < 0. then y_position <- 0.;
+					(* this is still debated, what to do after hiting the wall, stop or bounce from it? *)
+					(* direction_of_the_body <- ((direction_of_the_body + 180) mod 360; (* bouncing adds more chaos to the battle *) *)
+					moving <- false;   (* stopping is more easy to predict and explain *)
+					if health=0 then moving <- false (* if drone died after hitting the wall, it definetely will not move anymore *)
+				end
 			end
-
-		method check_hit_wall =
-			if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0.
-			then true
-			else false
-
-		method update_hit_pos =
-		begin
-			if x_position > 1000. then x_position <- 1000.;
-			if x_position < 0. then x_position <- 0.;
-			if y_position > 1000. then y_position <- 1000.;
-			if y_position < 0. then y_position <- 0.;
-		end
 
 
 		method set_debug_output out_file =
@@ -183,8 +152,12 @@ class drone =
 			                          | _ -> x::acc
 			                         ) [] body_as_list in
 			let abs_jumps = List.map(fun x -> match x with
-			                           Jump(name) -> AbsJump( Hashtbl.find lbls name )
-			                         | JumpIf(name) -> AbsJumpIf( Hashtbl.find lbls name )
+			                           Jump(name) ->
+			                               if not (Hashtbl.mem lbls name) then raise (Failure ("Label "^name^" is not defined"));
+			                               AbsJump( Hashtbl.find lbls name )
+			                         | JumpIf(name) ->
+			                               if not (Hashtbl.mem lbls name) then raise (Failure ("Label "^name^" is not defined"));
+			                               AbsJumpIf( Hashtbl.find lbls name )
 			                         | _ -> x ) no_label in
 			Array.of_list (List.rev abs_jumps)
 
@@ -201,7 +174,11 @@ class drone =
 			drone_name <- Filename.chop_extension (Filename.basename file_name);
 			let chan_in = Pervasives.open_in file_name in
 			let lexbuf = Lexing.from_channel chan_in in
-			let program = Parser.program Scanner.token lexbuf in
+			let program =
+				(if (Filename.check_suffix file_name ".dt" ) then Parser.program Scanner.token lexbuf
+				 else if (Filename.check_suffix file_name ".dbt" ) then Parser_dbt.program Scanner_dbt.drone_basic lexbuf
+				 else ([],[])
+				) in
 			(* Parser will return two lists - list operations of main program and list of subs
 			   First we need to put "main" body of the program into the list of subs *)
 			Hashtbl.add subs "--" (self#link_jumps (List.rev (fst program)));
@@ -211,7 +188,12 @@ class drone =
 						Hashtbl.add subs sub.name (self#link_jumps (List.rev sub.body))
 			          ) (snd program);
 			(* Third step, check the existance of all called user funcitons *)
-			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs
+			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs;
+			(* Last step, set starting position for the drone *)
+			self#set_x_position (Random.float 1000.);
+			self#set_y_position (Random.float 1000.);
+			self#set_moving_direction (Random.int 360)
+			(* self#print_current_pos; *)
 
 
 		(* helping pop function which converts operand to integer *)
@@ -239,6 +221,7 @@ class drone =
 
 		method step =
 			tick_counter <- tick_counter+1;
+			if gun_cooldown>0 then gun_cooldown <- gun_cooldown-1;
     		if ticks_to_wait > 0 then begin
 				if debug_mode then begin
 					fprintf debug_out_file "%4d  waiting for %d ticks\n" tick_counter ticks_to_wait;
@@ -291,7 +274,8 @@ class drone =
 											let op = Stack.pop stack in Hashtbl.replace vars varName op;
     										No_Action
 
-						| Read(varName)  -> let op = Hashtbl.find vars varName in
+						| Read(varName)  -> if not (Hashtbl.mem vars varName) then self#freeze "Variable not defined";
+											let op = Hashtbl.find vars varName in
 											Stack.push op stack;
 											No_Action
 
@@ -306,7 +290,13 @@ class drone =
 						(* game specific operations *)
 						| Move      -> let direction=self#pop_int in direction_of_the_body <- direction; moving <- true; No_Action
 						| Stop      -> moving <- false; No_Action
-						| Shoot     -> let direction=self#pop_int and distance=self#pop_int in direction_of_the_gun<-direction; Do_Shoot(direction, distance)
+						| Shoot     -> let direction=self#pop_int and distance=self#pop_int in
+										direction_of_the_gun <- direction;
+										Stack.push (Boolean (gun_cooldown=0)) stack;
+										if gun_cooldown>0
+											then No_Action
+											else (gun_cooldown<-10; Do_Shoot(direction, distance))
+
 						| Look      -> let direction=self#pop_int in Do_Look(direction)
 						| IsFoe     -> let flag=self#pop_flag in Stack.push (Boolean (flag=Foe)) stack; No_Action
 						| IsAlly    -> let flag=self#pop_flag in Stack.push (Boolean (flag=Ally)) stack; No_Action
@@ -328,7 +318,7 @@ class drone =
 				end
 			end
 
-		method print_current_pos = 
+		method print_current_pos =
 			begin
 				print_endline drone_name;
 				print_float x_position;
@@ -353,6 +343,8 @@ class drone =
 			reason_for_coma <- explanation;
 			raise (Error_in_AI (explanation, current_sub, instruction_pointer));
 
+		method get_reason_for_coma = reason_for_coma
+
 		method print_current_state =
 			let sub_name = (if current_sub="--" then "" else current_sub) in
 			let body = (Hashtbl.find subs current_sub) in
@@ -371,39 +363,20 @@ class drone =
 				fprintf debug_out_file " ...\n"
 
 
-		(* for each shoot update bullet capacity and push boolean on the stack *)		
+		(* for each shoot update bullet capacity and push boolean on the stack *)
 		method update_bullet_load =
 			begin
 			(* shoot *)
 			if bullet_capacity > 0
-			then 
-				begin 
+			then
+				begin
 					bullet_capacity <- bullet_capacity - 1;
 					has_bullet <- true;
 				end
-			(* no bullet *)	
+			(* no bullet *)
 			else
 				has_bullet <- false;
 			end;
 			has_bullet
-
-		(* after each step for each drone, update the timer for reloading the bullet *)
-		method update_reload_timer = 
-			(* check reload time *)
-			if bullet_capacity < 5
-			then 
-				begin
-					if reload_timer < 5 
-					then 
-						reload_timer <- reload_timer + 1;
-
-					if reload_timer = 5
-					then
-						begin
-							bullet_capacity <- bullet_capacity + 1;
-							reload_timer <- 0;	
-						end
-				end
-
 
 end;;
