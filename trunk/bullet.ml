@@ -12,7 +12,6 @@ class bullet =
 	val mutable start_x_position = 0.
 	val mutable start_y_position = 0.
 	val mutable exploded = false
-	(* val mutable pi = 4. *. atan 1. *)
 
 	method get_pos_x = x_position
 
@@ -34,7 +33,7 @@ class bullet =
 	method move speed =
 		y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(direction) *. pi /. 180.)));
 		x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(direction) *. pi /. 180.)));
-		distance_traveled <- int_of_float(sqrt((x_position -. start_x_position)**2. +. (y_position -. start_y_position)**2.));
+		distance_traveled <- distance(x_position, y_position, start_x_position, start_y_position);
 		exploded <- (x_position > 1000.) || (x_position < 0.) || (y_position > 1000.) || (y_position < 0.);
 		if exploded
 			then self#update_position_if_flew_out_of_arena
