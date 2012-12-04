@@ -43,6 +43,11 @@ class drone =
 		val mutable y_position = 0.	  (* used by other drones to determine the position in the arena 0-360*)
 		val mutable pi = 4. *. atan 1.
 
+		(* maxmium bullet load is 5 can be displayed in the GUI *)
+		val mutable bullet_capacity = 5
+		(* every five steps reload one bullet *)
+		val mutable reload_timer = 0
+		val mutable has_bullet = true
 
 		method get_moving_direction = direction_of_the_body
 
@@ -336,6 +341,9 @@ class drone =
 				print_endline "Health: ";
 				print_int health;
 				print_endline "";
+				print_endline "Bullet load: ";
+				print_int bullet_capacity;
+				print_endline "";
 				print_endline "";
 			end
 
@@ -361,6 +369,41 @@ class drone =
 				fprintf debug_out_file " EOS\n"
 			else
 				fprintf debug_out_file " ...\n"
+
+
+		(* for each shoot update bullet capacity and push boolean on the stack *)		
+		method update_bullet_load =
+			begin
+			(* shoot *)
+			if bullet_capacity > 0
+			then 
+				begin 
+					bullet_capacity <- bullet_capacity - 1;
+					has_bullet <- true;
+				end
+			(* no bullet *)	
+			else
+				has_bullet <- false;
+			end;
+			has_bullet
+
+		(* after each step for each drone, update the timer for reloading the bullet *)
+		method update_reload_timer = 
+			(* check reload time *)
+			if bullet_capacity < 5
+			then 
+				begin
+					if reload_timer < 5 
+					then 
+						reload_timer <- reload_timer + 1;
+
+					if reload_timer = 5
+					then
+						begin
+							bullet_capacity <- bullet_capacity + 1;
+							reload_timer <- 0;	
+						end
+				end
 
 
 end;;

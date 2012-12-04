@@ -41,18 +41,24 @@ object (self)
 	method get_drone_count = List.length drones;
 
 
-	method add_bullet dire dist x_pos y_pos =
-		let b = new bullet in (
+	method add_bullet dist dire shoot_d =
+		let req_dis = if dist > 500 
+					  then 500 
+					  else dist and 
+			x_pos = shoot_d#get_x_position and 
+			y_pos = shoot_d#get_y_position and 
+			b = new bullet in (
 			begin
-			b#set_direction dire;
-			b#set_distance dist;
 			b#set_x_position x_pos;
 			b#set_y_position y_pos;
 			b#set_start_x_pos x_pos;
 			b#set_start_y_pos y_pos;
+			b#set_direction dire;
+			b#set_distance req_dis;
 			end;
 			bullets <- b :: bullets;
-	)
+			)
+
 
 	method run =
 		let steps = ref 1 in
@@ -179,7 +185,12 @@ object (self)
 			end
 		) bullets;
 
-	
+	method update_drone_reload_timer =
+		List.iter (fun d ->
+			d#update_reload_timer
+		) drones;
+
+
    	method explosion b d =
    	let 
    	d_x=d#get_x_position and
@@ -209,21 +220,29 @@ object (self)
 				  No_Action                     -> ()
 				(* TO DO ! check what the drone sees and put the result into drone's stack *)
 				| Do_Look(direction)            -> 
-				begin
-				self#look_end d;
-				self#look_wall direction d;
-				List.iter (fun dd -> self#look_one_drone direction d dd) drones;
-				end
+													begin
+													self#look_end d;
+													self#look_wall direction d;
+													List.iter (fun dd -> self#look_one_drone direction d dd) drones;
+													end
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)
-				| Do_Shoot(direction, distance) -> if distance > 500 then self#add_bullet direction 500 d#get_x_position d#get_y_position 
-																	 else self#add_bullet direction distance d#get_x_position d#get_y_position 
+				| Do_Shoot(direction, distance) -> begin
+												   let success = d#update_bullet_load in
+												   (* check if has bullet or in reloading *)
+												   if 
+												   		success = true
+												   then
+												  		self#add_bullet distance direction d;
+												   end
+ 			
  			with Error_in_AI ("Main program terminated", "--", _) -> printf "%s: find call_stack is currently empty, moving on...\n" d#get_drone_name
 
 		) drones;
-
 		(* update position for all drones *)
 		self#update_drone_position;
 		self#update_bullet_position;
+		(* update reloading time *)
+		self#update_drone_reload_timer;
 
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
