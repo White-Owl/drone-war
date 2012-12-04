@@ -10,7 +10,7 @@ object (self)
 	val mutable debug_mode = false
 
 	val mutable pi = 4. *. atan 1.
-	val mutable look_range = 30 		(*+30 and -30 on the given degree*)
+	val mutable look_range = 180 		(*+30 and -30 on the given degree*)
 	val mutable bullet_speed = 50
 	val mutable drone_speed = 10
 
@@ -88,8 +88,8 @@ object (self)
 			
 			let flag=
 			if(d_shoot#get_team_id=d_target#get_team_id)
-			then Foe
-			else Ally
+			then Ally
+			else Foe
 			in
 			if
 				target_dire < (dire + look_range) && target_dire > (dire - look_range)
@@ -101,13 +101,43 @@ object (self)
 	d_look_x=d_look#get_x_position and
 	d_look_y=d_look#get_y_position in
 	let 
-	wall_x=(float_of_int(area_map_y) -. d_look_y) /. tan(float_of_int(dire) /. 180. *. pi) +. d_look_x and
-	wall_y=(float_of_int(area_map_x) -. d_look_x) *. tan(float_of_int(dire) /. 180. *. pi) +. d_look_y in
+	k=tan(float_of_int(dire)) in
+	let 
+	intercept=d_look_x -. k *. d_look_y in
+	let mod_dire=dire mod 360 in
+	let (wall_x ,wall_y )=
+	
+	if mod_dire > 0 && mod_dire<=90 then 
+	if (float_of_int(area_map_y)) *. k +. intercept > ((float_of_int(area_map_x)) -. intercept )/. k
+	then
+	 	((float_of_int(area_map_x)),((float_of_int(area_map_x)) -. intercept )/. k)
+	else 
+	 	(((float_of_int(area_map_y)) -. intercept )/. k,(float_of_int(area_map_y)))
+	else if mod_dire > 90 && mod_dire<=180 then 
+	if (float_of_int(area_map_y)) *. k +. intercept<0. 
+	then
+	 	(0. ,(0. -. intercept )/. k)
+	else 
+	 	(((float_of_int(area_map_y)) -. intercept )/. k,(float_of_int(area_map_y))) 
+	else if mod_dire > 180 && mod_dire<=270 then 
+	if  intercept > 0.
+	then
+	 	(intercept,0.)
+	 else 
+	 	(0.,intercept /.(0.-.k))
+	else 
+	if  intercept >float_of_int(area_map_x)
+	then
+		(float_of_int(area_map_x),(float_of_int(area_map_x)-.intercept)/.k)
+	 else 
+	 	(intercept,0.)
+	 in
 	let 
 	dist = self#get_distance d_look_x d_look_y wall_x wall_y
 	in
-	d_look#add_found_target dist dire Wall 
+	d_look#add_found_target dist dire Wall ;
 
+	
 
 	method update_drone_position =
 		List.iter (fun d ->
@@ -177,8 +207,8 @@ object (self)
 				(* TO DO ! check what the drone sees and put the result into drone's stack *)
 				| Do_Look(direction)            -> 
 				begin
-				List.iter (fun dd -> self#look_one_drone direction d dd) drones;
 				self#look_wall direction d;
+				List.iter (fun dd -> self#look_one_drone direction d dd) drones;
 				end
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)
 				| Do_Shoot(direction, distance) -> if distance > 500 then self#add_bullet direction 500 d#get_x_position d#get_y_position 

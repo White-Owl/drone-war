@@ -96,12 +96,14 @@ class drone =
 		method hit_wall =
 			let mod_dire = direction_of_the_body mod 360 in
 			begin
-				health <- (health - 10);
+				(* health <- (health - 10); *)
 				direction_of_the_body <- (mod_dire + 180);
 			end
 
 		method move speed =
 			let mod_dire = (direction_of_the_body mod 360) in
+			if moving = true
+			then
 			if moving = true
 			then
 			begin
@@ -124,7 +126,6 @@ class drone =
 					y_position <- y_position -. (float_of_int(speed) *. (sin (float_of_int(360 - mod_dire) *. pi /. 180.)));
 					x_position <- x_position +. (float_of_int(speed) *. (cos (float_of_int(360 - mod_dire) *. pi /. 180.)));
 			end
-
 
 		method check_hit_wall =
 			if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0.
