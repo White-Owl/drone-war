@@ -1,9 +1,10 @@
 TARGET=DroneWar
-ML=ast.ml bullet.ml drone.ml arena.ml main.ml 
-MLY=parser.mly
-MLL=scanner.mll
+ML1=ast.ml utils.ml
+ML2=bullet.ml drone.ml arena.ml main.ml
+MLY=parser_dbt.mly parser.mly
+MLL=scanner_dbt.mll scanner.mll
 LIBS=
-OBJS=$(MLL:.mll=.cmo) $(MLY:.mly=.cmo) $(ML:.ml=.cmo)
+OBJS=$(ML1:.ml=.cmo) $(MLL:.mll=.cmo) $(MLY:.mly=.cmo) $(ML2:.ml=.cmo)
 
 # uncomment and recompile to see the full parser log
 #DEBUG=yes
@@ -21,7 +22,7 @@ all: $(TARGET)
 ifeq ($(DEBUG), yes)
 	export OCAMLRUNPARAM='p' && ./$(TARGET) AI_DRONE1.dt > stdout 2> stderr
 else
-	./$(TARGET) -D AI_DRONE1.dt AI_DRONE2.dt AI_DRONE3.dt AI_DRONE4.dt AI_DRONE5.dt AI_DRONE6.dt AI_DRONE7.dt AI_DRONE8.dt
+	./$(TARGET) -D drones/berserk.dt drones/rabbit.dt drones/turret.dt test.dbt
 endif
 
 $(TARGET): $(OBJS)
@@ -61,7 +62,7 @@ clean:
 	rm -f $(MLL:.mll=.ml) $(MLL:.mll=.mli)
 	rm -f .depend
 	rm -f stdout stderr
-	rm -f *.debug *.decompiled
+	rm -f *.debug *.decompiled drones/*.debug drones/*.decompiled
 
 redo: clean
 	make

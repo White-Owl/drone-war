@@ -4,26 +4,21 @@
 // leave the the zone of danger. Then stop and wait until
 // it again recieve some damage.
 
-100 >health                      // set variable health to 100
+100 health  store                    // set variable health to 100
 
 main_loop:
 	10 wait                           // wait for 0.1 of the second
 
 	// read the stored value of health
 	// read the current health and compare it with the old value
-	<health getHealth =
-    // inverse boolean value, and jump to the I_was_hurt if the result is true
-	not I_was_hurt?
+	health read getHealth =
+    // repeat indefinetely if no one harmed the drone
+	main_loop jumpif
 
-	// repeat indefinetely
-	main_loop>
-
-
-// sub program, what to do if drone recieved some damage
-I_was_hurt:
+	// what to do if drone recieved some damage
 	0 359 random		// get a random value in the range 1-360
 	move                // move in the random direction
 	10 wait             // wait for 0.1 seconds
 	stop                // stop
 
-	main_loop>          // and go back to the main loop
+	main_loop jump      // and go back to the beginning
