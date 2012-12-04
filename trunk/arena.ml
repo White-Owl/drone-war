@@ -223,7 +223,7 @@ object (self)
 													begin
 													self#look_end d;
 													self#look_wall direction d;
-													List.iter (fun dd -> self#look_one_drone direction d dd) drones;
+													List.iter (fun dd -> self#look_one_drone direction d dd) (List.rev(self#sort_by_dist d drones));
 													end
 				(* TO DO ! create object 'bullet' with initial position the same as drone's *)
 				| Do_Shoot(direction, distance) -> begin
@@ -246,6 +246,20 @@ object (self)
 
 		(* TO DO! For all drones and bullets: update position, call GUI if needed *)
 		!live_drones
+
+	method ins d drone d_list =
+	let rec insert d e elements =
+    match elements with
+      [] -> [e]
+    | head :: tail -> if self#get_distance d#get_x_position d#get_y_position e#get_x_position e#get_y_position <= self#get_distance head#get_x_position head#get_y_position d#get_x_position d#get_y_position then e :: elements else head :: insert d e tail
+  	in insert d drone d_list
+
+	method sort_by_dist d d_list=
+		let rec sort d elements =
+	    match elements with
+	      [] -> []
+	    | head :: tail -> self#ins d head (sort d tail)
+	in sort d d_list
 
 	method start_a_team =
 		team_counter <- team_counter+1;
