@@ -56,7 +56,7 @@ object (self)
 
 	method run =
 		let steps = ref 1 in
-		while (self#step > 1) && (!steps < 100) do
+		while (self#step > 1) && (!steps < 300) do
 			incr steps
 		done;
 		printf "Results:\n";
@@ -92,9 +92,12 @@ object (self)
 			else Foe
 			in
 			if
-				target_dire < (dire + look_range) && target_dire > (dire - look_range)
+				target_dire < (dire + look_range) && target_dire > (dire - look_range) &&d_shoot#get_drone_name!=d_target#get_drone_name
 			then 
 				d_shoot#add_found_target distance target_dire flag
+
+	method look_end d_look =
+	d_look#add_found_target 0 0 End;
 
 	method look_wall dire d_look=
 	let 
@@ -207,6 +210,7 @@ object (self)
 				(* TO DO ! check what the drone sees and put the result into drone's stack *)
 				| Do_Look(direction)            -> 
 				begin
+				self#look_end d;
 				self#look_wall direction d;
 				List.iter (fun dd -> self#look_one_drone direction d dd) drones;
 				end
