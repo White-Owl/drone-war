@@ -22,7 +22,7 @@ let report_error error_starts_at message =
 %token CR
 %token IF THEN ELSE
 %token DO LOOP WHILE UNTIL EXIT
-%token SUB
+%token SUB FUNCTION CALL
 %token END
 %token FOR TO STEP NEXT
 %token GOTO
@@ -34,6 +34,7 @@ let report_error error_starts_at message =
 %token EQUAL NOT_EQUAL
 %token LESS GREATER LESS_EQUAL GREATER_EQUAL
 %token AND OR NOT
+%token SLEEP MOVE STOP SHOOT RANDOM HEALTH WALL FOE ALLY
 %token EOF
 
 %left AND OR NOT
@@ -49,6 +50,7 @@ let report_error error_starts_at message =
 %%
 
 program: {[],[]} /* at the begining we have nothing */
+  | program CR                   { $1 }
   | program statement            { ($2 @ fst $1), snd $1 }
   | program compaund_statement   { ($2 @ fst $1), snd $1 }
   | program sub                  { fst $1, ($2 :: snd $1) }        /* add user function to the list of subs */
@@ -67,6 +69,11 @@ statement:
   | EXIT FOR CR               { [ Jump("--ExitFor") ] }
   | GOTO ID CR                { [ Jump($2) ] }
   | ID COLON                  { [ Label($1) ] }
+  | CALL ID LPAREN parameters RPAREN CR     { Call($2) :: $4 }
+  | CALL SLEEP LPAREN math_expr RPAREN CR   { Wait :: $4 }
+  | CALL MOVE LPAREN math_expr RPAREN CR	{ Move :: $4 }
+  | CALL STOP LPAREN RPAREN CR	            { [ Stop ] }
+  | CALL SHOOT LPAREN math_expr COMMA math_expr RPAREN CR { Shoot :: ($6 @ $4) }
   | error CR                  { report_error (Parsing.rhs_start_pos 1) "Syntax error" }
 
 
@@ -85,9 +92,9 @@ compaund_statement:
 		  Label(lblEndIf) :: ( $5 @ (Label(lblTrue) :: Jump(lblEndIf) :: ( $8 @ ( JumpIf(lblTrue) :: $2) ) ) )
 		}
   | DO WHILE condition CR statements LOOP
-		{ let lblStart = make_label() and lblCheck = make_label() and lblDone = make_label() in
+		{ let lblStart = make_label() and lblDone = make_label() in
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) $5 in
-		  Label(lblDone) :: JumpIf(lblStart) :: (block @ ([ Label(lblCheck) ] @ ($3 @ [Label(lblStart); Jump(lblCheck)])))
+		  Label(lblDone) :: Jump(lblStart) :: (block @ ([ JumpIf(lblDone) ; Not ] @ ($3 @ [Label(lblStart)])))
 		}
   | DO statements LOOP WHILE condition
 		{ let lblStart = make_label() and lblDone = make_label() in
@@ -117,18 +124,30 @@ compaund_statement:
 
 sub:
     SUB ID LPAREN args RPAREN CR statements END SUB CR
-		{ let sub_body = List.map(fun x -> match x with
+		{ let read_arguments = List.map (fun arg -> Store(arg)) $4 in
+		  let sub_body = List.map(fun x -> match x with
 		                            Read(name) -> if List.exists (fun arg -> arg=name) $4 then Read($2^"-"^name) else Read(name)
 		                          | Store(name) -> if List.exists (fun arg -> arg=name) $4 then Store($2^"-"^name) else Store(name)
-		                          | _ -> x) $7 in
+		                          | _ -> x) ($7 @ read_arguments) in
 		  { name = $2; body = sub_body; }
 		}
-
+  | FUNCTION ID LPAREN args RPAREN CR statements END FUNCTION CR
+		{ let read_arguments = List.map (fun arg -> Store(arg)) $4 in
+		  let sub_body = List.map(fun x -> match x with
+		                            Read(name) -> if List.exists (fun arg -> arg=name) $4 then Read($2^"-"^name) else Read(name)
+		                          | Store(name) -> if List.exists (fun arg -> arg=name) $4 then Store($2^"-"^name) else Store(name)
+		                          | _ -> x) ($7 @ read_arguments) in
+		  { name = $2; body = Read($2) :: sub_body; }
+		}
 
 args: { [] }
   | ID            { [ $1 ] }
   | args COMMA ID { $3 :: $1 }
 
+
+parameters: { [] }
+  | math_expr { $1 }
+  | parameters COMMA math_expr { $3 @ $1 }
 
 condition:
     logic_expr                     { $1 }
@@ -142,6 +161,7 @@ logic_expr:
     BOOL                               { [ Bool($1) ] }
   | LPAREN logic_expr RPAREN           { $2 }
   | math_expr math_relation math_expr  { $2 @ ( $3 @ $1) }
+  | SHOOT LPAREN math_expr COMMA math_expr RPAREN { Shoot :: ($5 @ $3) }
 
 
 math_relation:
@@ -155,10 +175,15 @@ math_relation:
 
 math_expr:
     INT                          { [ Int($1) ] }
+  | ID LPAREN parameters RPAREN  { Call($1) :: $3 }
   | ID                           { [ Read($1) ] }
   | math_expr PLUS math_expr     { Plus :: ( $3 @ $1) }
   | math_expr MINUS math_expr    { Minus :: ( $3 @ $1) }
   | math_expr TIMES math_expr    { Times :: ( $3 @ $1) }
   | math_expr DIVIDE math_expr   { Divide :: ( $3 @ $1) }
   | LPAREN math_expr RPAREN      { $2 }
-  | error                          { report_error (Parsing.rhs_start_pos 1) "Malformed math expression" }
+  | RANDOM LPAREN math_expr COMMA math_expr RPAREN { Random :: ($5 @ $3) }
+  | HEALTH LPAREN RPAREN         { [ GetHealth ] }
+  | WALL LPAREN math_expr RPAREN { let lbl1=make_label() and lbl2=make_label() in
+									Drop :: Swap :: Drop :: Label(lbl2) :: Jump(lbl1) :: Drop :: Drop :: JumpIf(lbl2) :: IsWall :: Label(lbl1) :: Look :: $3 }
+  | error                        { report_error (Parsing.rhs_start_pos 1) "Malformed math expression" }
