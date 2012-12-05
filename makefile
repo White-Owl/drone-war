@@ -7,7 +7,7 @@ LIBS=
 OBJS=$(ML1:.ml=.cmo) $(MLL:.mll=.cmo) $(MLY:.mly=.cmo) $(ML2:.ml=.cmo)
 
 # uncomment and recompile to see the full parser log
-#DEBUG=yes
+DEBUG=yes
 
 ifeq ($(OS),Windows_NT)
 TARGET:=$(TARGET).exe
@@ -20,7 +20,7 @@ endif
 
 all: $(TARGET)
 ifeq ($(DEBUG), yes)
-	export OCAMLRUNPARAM='p' && ./$(TARGET) AI_DRONE1.dt > stdout 2> stderr
+	export OCAMLRUNPARAM='p' && ./$(TARGET) -D test.dbt drones/rabbit.dt  2> stderr
 else
 	./$(TARGET) -D drones/berserk.dt drones/rabbit.dt drones/turret.dt test.dbt
 endif
@@ -47,14 +47,8 @@ endif
 %.mli: %.ml
 	ocamlc -i $< >$@
 
-.depend: $(ML) $(MLY:.mly=.ml) $(MLL:.mll=.ml) makefile
-ifeq ($(OS),Windows_NT)
-	@attrib -H $@
-endif
-	ocamldep $(OCAMLDEP_FLAGS) $(ML) $(MLY:.mly=.ml) $(MLY:.mly=.mli) $(MLL:.mll=.ml) $(MLL:.mll=.mli) | grep -v ".cmx" > .depend
-ifeq ($(OS),Windows_NT)
-	@attrib +H $@
-endif
+.depend: $(ML1) $(MLY:.mly=.ml) $(MLL:.mll=.ml) $(ML2) makefile
+	ocamldep $(OCAMLDEP_FLAGS) $(ML1) $(MLY:.mly=.ml) $(MLY:.mly=.mli) $(MLL:.mll=.ml) $(MLL:.mll=.mli) $(ML2) | grep -v ".cmx" > .depend
 
 clean:
 	rm -f $(OBJS) $(OBJS:.cmo=.cmi) $(TARGET)

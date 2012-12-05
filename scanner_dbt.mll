@@ -10,26 +10,38 @@ let create_hashtable size init =
 
 let keyword_table =
 	create_hashtable 8 [
-		("if", IF);
-		("then", THEN);
-		("else", ELSE);
-		("do", DO);
-		("loop", LOOP);
-		("while", WHILE);
-		("until", UNTIL);
-		("exit", EXIT);
-		("sub", SUB);
-		("end", END);
-		("for", FOR);
-		("to", TO);
-		("step", STEP);
-		("next", NEXT);
-		("goto", GOTO);
-		("true", BOOL(true));
-		("false", BOOL(false));
-		("and", AND);
-		("or", OR);
-		("not", NOT);
+		("if",       IF);
+		("then",     THEN);
+		("else",     ELSE);
+		("do",       DO);
+		("loop",     LOOP);
+		("while",    WHILE);
+		("until",    UNTIL);
+		("exit",     EXIT);
+		("sub",      SUB);
+		("function", FUNCTION);
+		("call",     CALL);
+		("end",      END);
+		("for",      FOR);
+		("to",       TO);
+		("step",     STEP);
+		("next",     NEXT);
+		("goto",     GOTO);
+		("true",     BOOL(true));
+		("false",    BOOL(false));
+		("and",      AND);
+		("or",       OR);
+		("not",      NOT);
+
+		("sleep",  SLEEP);
+		("move",   MOVE);
+		("stop",   STOP);
+		("shoot",  SHOOT);
+		("rnd",    RANDOM);
+		("health", HEALTH);
+		("wall",   WALL);
+		("foe",    FOE);
+		("ally",   ALLY);
 	]
 
 exception Unknown_token of string * int * int;;
