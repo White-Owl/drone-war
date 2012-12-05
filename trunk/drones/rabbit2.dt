@@ -1,0 +1,24 @@
+// The extremely harmless drone.
+// It sits on one place and checks its health
+// If damage detected - run somewhere for several ticks in hope to
+// leave the the zone of danger. Then stop and wait until
+// it again receive some damage.
+//
+// This is a version of the drone with control structures.
+// For the original version with labels and jumps, look at the rabbit.dt
+
+100 health store          // set variable health to 100
+
+begin
+	10 wait             // wait for 10 ticks
+
+	// read the stored value of health
+	// read the current health and compare it with the old value
+	health read gethealth =	if
+		// what to do if drone received some damage
+		0 359 random        // get a random value in the range 1-360
+		move                // move in the random direction
+		10 wait             // wait for ten ticks, while drone is moving
+		stop                // stop
+	endif
+again    // and start from the beginning
