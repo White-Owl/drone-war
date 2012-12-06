@@ -2,6 +2,7 @@ open Drone;;
 open Printf;;
 open Bullet;;
 open Ast;;
+open Utils;;
 
 class arena =
 object (self)
@@ -9,7 +10,6 @@ object (self)
 	val mutable bullets : bullet list = []
 	val mutable debug_mode = false
 
-	val mutable pi = 4. *. atan 1.
 	val mutable look_range = 180 		(* +30 and -30 on the given degree *)
 	val mutable bullet_speed = 50
 	val mutable drone_speed = 10
@@ -63,21 +63,29 @@ object (self)
 		) drones
 
 
-	method get_distance x1 y1 x2 y2 =
-		int_of_float(sqrt((x1 -. x2)*.(x1 -. x2) +. (y1 -. y2)*.(y1 -. y2)))
-
-
    	method look_one_drone dire d_shoot d_target =
 	   	let	d_shoot_x=d_shoot#get_x_position and d_shoot_y=d_shoot#get_y_position and
 				d_target_x=d_target#get_x_position and d_target_y=d_target#get_y_position in
 		let target_dire = int_of_float(atan( (d_target_y -. d_shoot_y) /. (d_target_x  -. d_shoot_x)) *. 180. /. pi) and
-				distance = self#get_distance d_target_x d_target_y d_shoot_x d_shoot_y	in
+				dist = distance (d_target_x, d_target_y, d_shoot_x, d_shoot_y)	in
 		let flag=(if (d_shoot#get_team_id=d_target#get_team_id) then Ally else Foe) in
 		if (target_dire < (dire + look_range)) && (target_dire > (dire - look_range)) && (not (d_shoot == d_target))
-			then d_shoot#found_target distance target_dire flag
+			then d_shoot#found_target dist target_dire flag
 
 
 	(* get a distance to the wall in the exact direction of the drone's look *)
+	method look_wall dire d_look=
+		let x=d_look#get_x_position and y=d_look#get_y_position in
+		let md = dire mod 360 in
+		let rd = radian_of_degree md in
+		let dh = max (int_of_float ((0. -. x) /. (cos rd))) (int_of_float ((1000. -. x) /. (cos rd))) in
+		let dv = max (int_of_float ((0. -. y) /. (sin rd))) (int_of_float ((1000. -. y) /. (sin rd))) in
+		let dist = if md=0 || md=180 then dh
+					else if md=90 || md=270 then dv
+					else min dh dv in
+        d_look#found_target dist dire Wall
+
+(*  That method is extremly complicated and therefore prone to mistakes...
 	method look_wall dire d_look=
 		let d_look_x=d_look#get_x_position and d_look_y=d_look#get_y_position in
 		let	k=tan(float_of_int(dire)) in
@@ -110,15 +118,15 @@ object (self)
 				 	(intercept,0.)
 		in
 		let dist = self#get_distance d_look_x d_look_y wall_x wall_y in
-		d_look#found_target dist dire Wall
+		d_look#found_target dist dire Wall *)
 
 
 
 
    	method explosion b d =
    		let d_x=d#get_x_position and d_y=d#get_y_position and exp_x=b#get_pos_x and exp_y=b#get_pos_y in
-		let distance = self#get_distance d_x d_y exp_x exp_y in
-		if distance < 50 then d#set_health (d#get_health - 50 + distance)
+		let dist = distance (d_x, d_y, exp_x, exp_y) in
+		if dist < 50 then d#set_health (d#get_health - 50 + dist)
 
 
 
@@ -154,7 +162,8 @@ object (self)
 		let rec insert d e elements =
 			match elements with
 			  [] -> [e]
-			| head :: tail -> if self#get_distance d#get_x_position d#get_y_position e#get_x_position e#get_y_position <= self#get_distance head#get_x_position head#get_y_position d#get_x_position d#get_y_position
+			| head :: tail -> if distance (d#get_x_position, d#get_y_position, e#get_x_position, e#get_y_position) <=
+								 distance (head#get_x_position, head#get_y_position, d#get_x_position, d#get_y_position)
 							  then e :: elements
 							  else head :: insert d e tail
 			in

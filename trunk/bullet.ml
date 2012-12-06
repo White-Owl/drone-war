@@ -31,13 +31,13 @@ class bullet =
 
 
 	method move speed =
-		y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(direction) *. pi /. 180.)));
-		x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(direction) *. pi /. 180.)));
+		y_position <- y_position +. (float_of_int(speed) *. (sin (float_of_int(direction) *. pi /. 180.)));
+		x_position <- x_position +. (float_of_int(speed) *. (cos (float_of_int(direction) *. pi /. 180.)));
 		distance_traveled <- distance(x_position, y_position, start_x_position, start_y_position);
 		exploded <- (x_position > 1000.) || (x_position < 0.) || (y_position > 1000.) || (y_position < 0.);
 		if exploded
 			then self#update_position_if_flew_out_of_arena
-			else exploded <- distance_traveled < distance_to_fly
+			else exploded <- distance_traveled >= distance_to_fly
 
 
 	method update_position_if_flew_out_of_arena =

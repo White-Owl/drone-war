@@ -96,8 +96,8 @@ class drone =
 		method move speed =
 			if moving then
 			begin
-				y_position <- y_position +. (float_of_int(speed) *. (cos (float_of_int(direction_of_the_body) *. pi /. 180.)));
-				x_position <- x_position +. (float_of_int(speed) *. (sin (float_of_int(direction_of_the_body) *. pi /. 180.)));
+				y_position <- y_position +. (float_of_int(speed) *. (sin (float_of_int(direction_of_the_body) *. pi /. 180.)));
+				x_position <- x_position +. (float_of_int(speed) *. (cos (float_of_int(direction_of_the_body) *. pi /. 180.)));
 
 				(* check did we hit a wall? *)
 				if x_position > 1000. || x_position < 0. || y_position > 1000. || y_position < 0. then
@@ -283,7 +283,7 @@ class drone =
 						| Drop    -> ignore(Stack.pop stack); No_Action
 						| Dropall -> Stack.clear stack; No_Action
     					| Dup     -> let op=Stack.top stack in Stack.push op stack; No_Action
-						| Swap    -> let op2=Stack.pop stack and op1=Stack.pop stack in begin Stack.push op1 stack; Stack.push op2 stack end; No_Action
+						| Swap    -> let op2=Stack.pop stack and op1=Stack.pop stack in begin Stack.push op2 stack; Stack.push op1 stack end; No_Action
 						| Over    -> let op2=Stack.pop stack and op1=Stack.top stack in begin Stack.push op1 stack; Stack.push op2 stack end; No_Action
 						| Rot     -> let op3=Stack.pop stack and op2=Stack.top stack and op1=Stack.top stack in begin Stack.push op2 stack; Stack.push op3 stack; Stack.push op1 stack end; No_Action
 

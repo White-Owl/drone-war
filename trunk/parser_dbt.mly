@@ -64,17 +64,17 @@ statements:
 
 
 statement:
-    ID EQUAL math_expr CR     { Store($1) :: $3 }
-  | EXIT DO CR                { [ Jump("--ExitDo") ] }
-  | EXIT FOR CR               { [ Jump("--ExitFor") ] }
-  | GOTO ID CR                { [ Jump($2) ] }
-  | ID COLON                  { [ Label($1) ] }
-  | CALL ID LPAREN parameters RPAREN CR     { Call($2) :: $4 }
-  | CALL SLEEP LPAREN math_expr RPAREN CR   { Wait :: $4 }
-  | CALL MOVE LPAREN math_expr RPAREN CR	{ Move :: $4 }
-  | CALL STOP LPAREN RPAREN CR	            { [ Stop ] }
-  | CALL SHOOT LPAREN math_expr COMMA math_expr RPAREN CR { Shoot :: ($6 @ $4) }
-  | error CR                  { report_error (Parsing.rhs_start_pos 1) "Syntax error" }
+    ID EQUAL math_expr CR                                 { Store($1) :: $3 }
+  | EXIT DO CR                                            { [ Jump("--ExitDo") ] }
+  | EXIT FOR CR                                           { [ Jump("--ExitFor") ] }
+  | GOTO ID CR                                            { [ Jump($2) ] }
+  | ID COLON                                              { [ Label($1) ] }
+  | CALL ID LPAREN parameters RPAREN CR                   { Call($2) :: $4 }
+  | CALL SLEEP LPAREN math_expr RPAREN CR                 { Wait :: $4 }
+  | CALL MOVE LPAREN math_expr RPAREN CR                  { Move :: $4 }
+  | CALL STOP LPAREN RPAREN CR	                          { [ Stop ] }
+  | CALL SHOOT LPAREN math_expr COMMA math_expr RPAREN CR { Drop :: Shoot :: ($4 @ $6) }
+  | error CR                                              { report_error (Parsing.rhs_start_pos 1) "Syntax error" }
 
 
 compaund_statement:
@@ -92,9 +92,9 @@ compaund_statement:
 		  Label(lblEndIf) :: ( $5 @ (Label(lblTrue) :: Jump(lblEndIf) :: ( $8 @ ( JumpIf(lblTrue) :: $2) ) ) )
 		}
   | DO WHILE condition CR statements LOOP
-		{ let lblStart = make_label() and lblDone = make_label() in
+		{ let lblStart = make_label() and lblCheckCondition = make_label() and lblDone = make_label() in
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) $5 in
-		  Label(lblDone) :: Jump(lblStart) :: (block @ ([ JumpIf(lblDone) ; Not ] @ ($3 @ [Label(lblStart)])))
+		  Label(lblDone) :: JumpIf(lblStart) :: ($3 @ (Label(lblCheckCondition) :: (block @ [Label(lblStart); Jump(lblCheckCondition) ])))
 		}
   | DO statements LOOP WHILE condition
 		{ let lblStart = make_label() and lblDone = make_label() in
@@ -102,9 +102,9 @@ compaund_statement:
 		  Label(lblDone) :: JumpIf(lblStart) :: ($5 @ (block @ [Label(lblStart)]))
 		}
   | DO UNTIL condition CR statements LOOP
-		{ let lblStart = make_label() and lblCheck = make_label() and lblDone = make_label() in
+		{ let lblCheckCondition = make_label() and lblDone = make_label() in
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) $5 in
-		  Label(lblDone) :: JumpIf(lblStart) :: Not :: ($3 @ ([ Label(lblCheck) ] @ (block @ [Label(lblStart); Jump(lblCheck)])))
+		  Label(lblDone) :: Jump(lblCheckCondition) :: (block @ ( JumpIf(lblDone) :: ($3 @ [Label(lblCheckCondition)])))
 		}
   | DO statements LOOP UNTIL condition
 		{ let lblStart = make_label() and lblDone = make_label() in
@@ -161,7 +161,7 @@ logic_expr:
     BOOL                               { [ Bool($1) ] }
   | LPAREN logic_expr RPAREN           { $2 }
   | math_expr math_relation math_expr  { $2 @ ( $3 @ $1) }
-  | SHOOT LPAREN math_expr COMMA math_expr RPAREN { Shoot :: ($5 @ $3) }
+  | SHOOT LPAREN math_expr COMMA math_expr RPAREN { Shoot :: ($3 @ $5) }
 
 
 math_relation:

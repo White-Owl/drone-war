@@ -1,0 +1,17 @@
+  0: Int(1)
+  1: Store(a)
+  2: Read(a)
+  3: Int(1)
+  4: Plus
+  5: Store(a)
+  6: Read(a)
+  7: Int(5)
+  8: Equal
+  9: Not
+ 10: AbsJumpIf(12)
+ 11: AbsJump(16)
+ 12: Read(a)
+ 13: Int(10)
+ 14: Less
+ 15: AbsJumpIf(2)
+ 16: AbsJump(0)
