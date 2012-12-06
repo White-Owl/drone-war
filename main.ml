@@ -31,6 +31,7 @@ let main =
 			with
 			  Failure t            -> printf " - failed\n%s\n" t
             | Parse_failure(t,l,c) -> printf " - failed\n%s at %d:%d\n" t l c
+			| Sys_error t          -> printf " - file error\n%s\n" t
 		end
 	) Sys.argv;
 

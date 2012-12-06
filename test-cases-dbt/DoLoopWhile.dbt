@@ -1,0 +1,7 @@
+start:
+a=1
+do
+	a = a+1
+	if a = 5 then exit do
+loop while a<10
+goto start

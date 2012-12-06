@@ -1,0 +1,35 @@
+' go to the center of the arena
+' stay in the center and shoot everywhere
+
+
+' correct horizontal position
+do while wall(0) > 600
+	call move(0)
+	call sleep(10)
+loop
+call stop()
+
+do while wall(180) > 600
+	call move(180)
+	call sleep(10)
+loop
+call stop()
+
+' correct vertical position
+do while wall(90) > 600
+	call move(90)
+	call sleep(10)
+loop
+call stop()
+
+do while wall(270) > 600
+	call move(270)
+	call sleep(10)
+loop
+call stop()
+' now we are close enough to the center of the arena
+
+' start shooting everywhere
+do while true
+	call shoot( rnd(0,360), rnd(100, 500) )
+loop
