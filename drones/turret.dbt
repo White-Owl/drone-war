@@ -1,0 +1,16 @@
+' The turret
+' this time it is written in the Drone-Basic dialect
+
+direction=0
+
+start:
+    drone = startScan(direction)
+    if drone.isfoe then
+        direction = drone.direction
+        call shoot(drone.direction, drone.distance)
+        call sleep(10)
+    else
+        direction = direction + 10
+    end if
+    call cancelScan()
+goto start

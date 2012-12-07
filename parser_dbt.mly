@@ -34,7 +34,9 @@ let report_error error_starts_at message =
 %token EQUAL NOT_EQUAL
 %token LESS GREATER LESS_EQUAL GREATER_EQUAL
 %token AND OR NOT
-%token SLEEP MOVE STOP SHOOT RANDOM HEALTH WALL FOE ALLY
+%token SLEEP MOVE STOP SHOOT RANDOM HEALTH
+%token STARTSCAN NEXTSCAN CANCELSCAN
+%token ISEND ISWALL ISFOE ISALLY DISTANCE DIRECTION
 %token EOF
 
 %left AND OR NOT
@@ -74,6 +76,10 @@ statement:
   | CALL MOVE LPAREN math_expr RPAREN CR                  { Move :: $4 }
   | CALL STOP LPAREN RPAREN CR	                          { [ Stop ] }
   | CALL SHOOT LPAREN math_expr COMMA math_expr RPAREN CR { Drop :: Shoot :: ($4 @ $6) }
+  | ID EQUAL STARTSCAN LPAREN math_expr RPAREN CR         { [ Store($1^".distance"); Store($1^".direction"); Store($1^".flag"); Look ] @ $5 }
+  | ID EQUAL NEXTSCAN LPAREN RPAREN CR                    { [ Store($1^".distance"); Store($1^".direction"); Store($1^".flag"); ] }
+  | CALL CANCELSCAN LPAREN RPAREN CR                      { let lblAgain=make_label() and lblDone=make_label() in
+                                                            [ Label(lblDone); Jump(lblAgain); Drop; Drop; JumpIf(lblDone); IsEnd;  Label(lblAgain)] }
   | error CR                                              { report_error (Parsing.rhs_start_pos 1) "Syntax error" }
 
 
@@ -135,9 +141,9 @@ sub:
 		{ let read_arguments = List.map (fun arg -> Store(arg)) $4 in
 		  let sub_body = List.map(fun x -> match x with
 		                            Read(name) -> if List.exists (fun arg -> arg=name) $4 then Read($2^"-"^name) else Read(name)
-		                          | Store(name) -> if List.exists (fun arg -> arg=name) $4 then Store($2^"-"^name) else Store(name)
+		                          | Store(name) -> if List.exists (fun arg -> arg=name) $4 then Store($2^"-"^name) else if name=$2 then Store($2^"-") else Store(name)
 		                          | _ -> x) ($7 @ read_arguments) in
-		  { name = $2; body = Read($2) :: sub_body; }
+		  { name = $2; body = Read($2^"-") :: sub_body; }
 		}
 
 args: { [] }
@@ -158,10 +164,14 @@ condition:
 
 
 logic_expr:
-    BOOL                               { [ Bool($1) ] }
-  | LPAREN logic_expr RPAREN           { $2 }
-  | math_expr math_relation math_expr  { $2 @ ( $3 @ $1) }
-  | SHOOT LPAREN math_expr COMMA math_expr RPAREN { Shoot :: ($3 @ $5) }
+    BOOL                                           { [ Bool($1) ] }
+  | LPAREN logic_expr RPAREN                       { $2 }
+  | math_expr math_relation math_expr              { $2 @ ( $3 @ $1) }
+  | SHOOT LPAREN math_expr COMMA math_expr RPAREN  { Shoot :: ($3 @ $5) }
+  | ID ISFOE                                       { [ IsFoe; Read($1^".flag") ] }
+  | ID ISALLY                                      { [ IsAlly; Read($1^".flag") ] }
+  | ID ISWALL                                      { [ IsWall; Read($1^".flag") ] }
+  | ID ISEND                                       { [ IsEnd; Read($1^".flag") ] }
 
 
 math_relation:
@@ -184,6 +194,6 @@ math_expr:
   | LPAREN math_expr RPAREN      { $2 }
   | RANDOM LPAREN math_expr COMMA math_expr RPAREN { Random :: ($5 @ $3) }
   | HEALTH LPAREN RPAREN         { [ GetHealth ] }
-  | WALL LPAREN math_expr RPAREN { let lbl1=make_label() and lbl2=make_label() in
-									Drop :: Swap :: Drop :: Label(lbl2) :: Jump(lbl1) :: Drop :: Drop :: JumpIf(lbl2) :: IsWall :: Label(lbl1) :: Look :: $3 }
+  | ID DISTANCE                  { [ Read($1^".distance") ] }
+  | ID DIRECTION                 { [ Read($1^".direction") ] }
   | error                        { report_error (Parsing.rhs_start_pos 1) "Malformed math expression" }
