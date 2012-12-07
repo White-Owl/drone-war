@@ -10,38 +10,45 @@ let create_hashtable size init =
 
 let keyword_table =
 	create_hashtable 8 [
-		("if",       IF);
-		("then",     THEN);
-		("else",     ELSE);
-		("do",       DO);
-		("loop",     LOOP);
-		("while",    WHILE);
-		("until",    UNTIL);
-		("exit",     EXIT);
-		("sub",      SUB);
-		("function", FUNCTION);
-		("call",     CALL);
-		("end",      END);
-		("for",      FOR);
-		("to",       TO);
-		("step",     STEP);
-		("next",     NEXT);
-		("goto",     GOTO);
-		("true",     BOOL(true));
-		("false",    BOOL(false));
-		("and",      AND);
-		("or",       OR);
-		("not",      NOT);
+		("if",          IF);
+		("then",        THEN);
+		("else",        ELSE);
+		("do",          DO);
+		("loop",        LOOP);
+		("while",       WHILE);
+		("until",       UNTIL);
+		("exit",        EXIT);
+		("sub",         SUB);
+		("function",    FUNCTION);
+		("call",        CALL);
+		("end",         END);
+		("for",         FOR);
+		("to",          TO);
+		("step",        STEP);
+		("next",        NEXT);
+		("goto",        GOTO);
+		("true",        BOOL(true));
+		("false",       BOOL(false));
+		("and",         AND);
+		("or",          OR);
+		("not",         NOT);
 
-		("sleep",  SLEEP);
-		("move",   MOVE);
-		("stop",   STOP);
-		("shoot",  SHOOT);
-		("rnd",    RANDOM);
-		("health", HEALTH);
-		("wall",   WALL);
-		("foe",    FOE);
-		("ally",   ALLY);
+		("sleep",       SLEEP);
+		("move",        MOVE);
+		("stop",        STOP);
+		("shoot",       SHOOT);
+		("rnd",         RANDOM);
+		("health",      HEALTH);
+
+		("startscan",   STARTSCAN);
+		("nextscan",    NEXTSCAN);
+		("cancelscan",  CANCELSCAN);
+		(".isend",      ISEND);
+		(".iswall",     ISWALL);
+		(".isfoe",      ISFOE);
+		(".isally",     ISALLY);
+		(".distance",   DISTANCE);
+		(".direction",  DIRECTION);
 	]
 
 exception Unknown_token of string * int * int;;
@@ -55,7 +62,7 @@ let incr_lineno lexbuf =
 }
 
 let digit = ['0' - '9']
-let id = ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9']*
+let id = ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9']* | '.' ['a'-'z' 'A'-'Z']+
 let space = [' ' '\t' '\r']
 let not_space = [^ ' ' '\t' '\r']
 

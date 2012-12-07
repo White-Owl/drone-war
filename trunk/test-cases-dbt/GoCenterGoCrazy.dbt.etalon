@@ -1,87 +1,293 @@
-  0: AbsJump(5)
-  1: Int(0)
-  2: Move
-  3: Int(10)
-  4: Wait
-  5: Int(0)
-  6: Look
-  7: IsWall
-  8: AbsJumpIf(12)
-  9: Drop
- 10: Drop
- 11: AbsJump(7)
- 12: Drop
- 13: Swap
- 14: Drop
- 15: Int(600)
- 16: Greater
- 17: AbsJumpIf(1)
- 18: Stop
- 19: AbsJump(24)
- 20: Int(180)
- 21: Move
- 22: Int(10)
- 23: Wait
- 24: Int(180)
- 25: Look
- 26: IsWall
- 27: AbsJumpIf(31)
- 28: Drop
- 29: Drop
- 30: AbsJump(26)
- 31: Drop
- 32: Swap
- 33: Drop
- 34: Int(600)
- 35: Greater
- 36: AbsJumpIf(20)
- 37: Stop
- 38: AbsJump(43)
- 39: Int(90)
- 40: Move
- 41: Int(10)
- 42: Wait
- 43: Int(90)
- 44: Look
- 45: IsWall
- 46: AbsJumpIf(50)
- 47: Drop
- 48: Drop
- 49: AbsJump(45)
- 50: Drop
- 51: Swap
- 52: Drop
- 53: Int(600)
- 54: Greater
- 55: AbsJumpIf(39)
- 56: Stop
- 57: AbsJump(62)
- 58: Int(270)
- 59: Move
- 60: Int(10)
- 61: Wait
- 62: Int(270)
- 63: Look
- 64: IsWall
- 65: AbsJumpIf(69)
- 66: Drop
- 67: Drop
- 68: AbsJump(64)
- 69: Drop
- 70: Swap
- 71: Drop
- 72: Int(600)
- 73: Greater
- 74: AbsJumpIf(58)
- 75: Stop
- 76: AbsJump(85)
- 77: Int(100)
- 78: Int(500)
- 79: Random
- 80: Int(0)
- 81: Int(360)
- 82: Random
- 83: Shoot
- 84: Drop
- 85: Bool(true)
- 86: AbsJumpIf(77)
+   1                     [  0]           AbsJump(5)  | EOS
+   2                     [  5]               Int(0)  | EOS
+   3                     [  6]           Call(wall)  | 0 EOS
+   4                 wall[  0] Store(wall-direction)  | 0 EOS
+   5                 wall[  1] Read(wall-direction)  | EOS
+   6                 wall[  2]                 Look  | 0 EOS
+   7                 wall[  3]        Store(d.flag)  | Foe 15 205 Wall 0 271 End EOS
+   8                 wall[  4]   Store(d.direction)  | 15 205 Wall 0 271 End EOS
+   9                 wall[  5]    Store(d.distance)  | 205 Wall 0 271 End EOS
+  10                 wall[  6]          AbsJump(10)  | Wall 0 271 End EOS
+  11                 wall[ 10]         Read(d.flag)  | Wall 0 271 End EOS
+  12                 wall[ 11]               IsWall  | Foe Wall 0 271 End EOS
+  13                 wall[ 12]                  Not  | false Wall 0 271 End EOS
+  14                 wall[ 13]         AbsJumpIf(7)  | true Wall 0 271 End EOS
+  15                 wall[  7]        Store(d.flag)  | Wall 0 271 End EOS
+  16                 wall[  8]   Store(d.direction)  | 0 271 End EOS
+  17                 wall[  9]    Store(d.distance)  | 271 End EOS
+  18                 wall[ 10]         Read(d.flag)  | End EOS
+  19                 wall[ 11]               IsWall  | Wall End EOS
+  20                 wall[ 12]                  Not  | true End EOS
+  21                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+  22                 wall[ 14]     Read(d.distance)  | End EOS
+  23                 wall[ 15]         Store(wall-)  | 271 End EOS
+  24                 wall[ 16]                IsEnd  | End EOS
+  25                 wall[ 17]        AbsJumpIf(21)  | true EOS
+  26                 wall[ 21]          Read(wall-)  | EOS
+  28                     [  7]             Int(600)  | 271 EOS
+  29                     [  8]              Greater  | 600 271 EOS
+  30                     [  9]         AbsJumpIf(1)  | false EOS
+  31                     [ 10]                 Stop  | EOS
+  32                     [ 11]          AbsJump(16)  | EOS
+  33                     [ 16]             Int(180)  | EOS
+  34                     [ 17]           Call(wall)  | 180 EOS
+  35                 wall[  0] Store(wall-direction)  | 180 EOS
+  36                 wall[  1] Read(wall-direction)  | EOS
+  37                 wall[  2]                 Look  | 180 EOS
+  38                 wall[  3]        Store(d.flag)  | Foe 15 205 Wall 180 728 End EOS
+  39                 wall[  4]   Store(d.direction)  | 15 205 Wall 180 728 End EOS
+  40                 wall[  5]    Store(d.distance)  | 205 Wall 180 728 End EOS
+  41                 wall[  6]          AbsJump(10)  | Wall 180 728 End EOS
+  42                 wall[ 10]         Read(d.flag)  | Wall 180 728 End EOS
+  43                 wall[ 11]               IsWall  | Foe Wall 180 728 End EOS
+  44                 wall[ 12]                  Not  | false Wall 180 728 End EOS
+  45                 wall[ 13]         AbsJumpIf(7)  | true Wall 180 728 End EOS
+  46                 wall[  7]        Store(d.flag)  | Wall 180 728 End EOS
+  47                 wall[  8]   Store(d.direction)  | 180 728 End EOS
+  48                 wall[  9]    Store(d.distance)  | 728 End EOS
+  49                 wall[ 10]         Read(d.flag)  | End EOS
+  50                 wall[ 11]               IsWall  | Wall End EOS
+  51                 wall[ 12]                  Not  | true End EOS
+  52                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+  53                 wall[ 14]     Read(d.distance)  | End EOS
+  54                 wall[ 15]         Store(wall-)  | 728 End EOS
+  55                 wall[ 16]                IsEnd  | End EOS
+  56                 wall[ 17]        AbsJumpIf(21)  | true EOS
+  57                 wall[ 21]          Read(wall-)  | EOS
+  59                     [ 18]             Int(600)  | 728 EOS
+  60                     [ 19]              Greater  | 600 728 EOS
+  61                     [ 20]        AbsJumpIf(12)  | true EOS
+  62                     [ 12]             Int(180)  | EOS
+  63                     [ 13]                 Move  | 180 EOS
+  64                     [ 14]              Int(10)  | EOS
+  65                     [ 15]                 Wait  | 10 EOS
+  66  waiting for 10 ticks
+  67  waiting for 9 ticks
+  68  waiting for 8 ticks
+  69  waiting for 7 ticks
+  70  waiting for 6 ticks
+  71  waiting for 5 ticks
+  72  waiting for 4 ticks
+  73  waiting for 3 ticks
+  74  waiting for 2 ticks
+  75  waiting for 1 ticks
+  76                     [ 16]             Int(180)  | EOS
+  77                     [ 17]           Call(wall)  | 180 EOS
+  78                 wall[  0] Store(wall-direction)  | 180 EOS
+  79                 wall[  1] Read(wall-direction)  | EOS
+  80                 wall[  2]                 Look  | 180 EOS
+  81                 wall[  3]        Store(d.flag)  | Foe 8 371 Wall 180 558 End EOS
+  82                 wall[  4]   Store(d.direction)  | 8 371 Wall 180 558 End EOS
+  83                 wall[  5]    Store(d.distance)  | 371 Wall 180 558 End EOS
+  84                 wall[  6]          AbsJump(10)  | Wall 180 558 End EOS
+  85                 wall[ 10]         Read(d.flag)  | Wall 180 558 End EOS
+  86                 wall[ 11]               IsWall  | Foe Wall 180 558 End EOS
+  87                 wall[ 12]                  Not  | false Wall 180 558 End EOS
+  88                 wall[ 13]         AbsJumpIf(7)  | true Wall 180 558 End EOS
+  89                 wall[  7]        Store(d.flag)  | Wall 180 558 End EOS
+  90                 wall[  8]   Store(d.direction)  | 180 558 End EOS
+  91                 wall[  9]    Store(d.distance)  | 558 End EOS
+  92                 wall[ 10]         Read(d.flag)  | End EOS
+  93                 wall[ 11]               IsWall  | Wall End EOS
+  94                 wall[ 12]                  Not  | true End EOS
+  95                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+  96                 wall[ 14]     Read(d.distance)  | End EOS
+  97                 wall[ 15]         Store(wall-)  | 558 End EOS
+  98                 wall[ 16]                IsEnd  | End EOS
+  99                 wall[ 17]        AbsJumpIf(21)  | true EOS
+ 100                 wall[ 21]          Read(wall-)  | EOS
+ 102                     [ 18]             Int(600)  | 558 EOS
+ 103                     [ 19]              Greater  | 600 558 EOS
+ 104                     [ 20]        AbsJumpIf(12)  | false EOS
+ 105                     [ 21]                 Stop  | EOS
+ 106                     [ 22]          AbsJump(27)  | EOS
+ 107                     [ 27]              Int(90)  | EOS
+ 108                     [ 28]           Call(wall)  | 90 EOS
+ 109                 wall[  0] Store(wall-direction)  | 90 EOS
+ 110                 wall[  1] Read(wall-direction)  | EOS
+ 111                 wall[  2]                 Look  | 90 EOS
+ 112                 wall[  3]        Store(d.flag)  | Foe 5 620 Wall 90 712 End EOS
+ 113                 wall[  4]   Store(d.direction)  | 5 620 Wall 90 712 End EOS
+ 114                 wall[  5]    Store(d.distance)  | 620 Wall 90 712 End EOS
+ 115                 wall[  6]          AbsJump(10)  | Wall 90 712 End EOS
+ 116                 wall[ 10]         Read(d.flag)  | Wall 90 712 End EOS
+ 117                 wall[ 11]               IsWall  | Foe Wall 90 712 End EOS
+ 118                 wall[ 12]                  Not  | false Wall 90 712 End EOS
+ 119                 wall[ 13]         AbsJumpIf(7)  | true Wall 90 712 End EOS
+ 120                 wall[  7]        Store(d.flag)  | Wall 90 712 End EOS
+ 121                 wall[  8]   Store(d.direction)  | 90 712 End EOS
+ 122                 wall[  9]    Store(d.distance)  | 712 End EOS
+ 123                 wall[ 10]         Read(d.flag)  | End EOS
+ 124                 wall[ 11]               IsWall  | Wall End EOS
+ 125                 wall[ 12]                  Not  | true End EOS
+ 126                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+ 127                 wall[ 14]     Read(d.distance)  | End EOS
+ 128                 wall[ 15]         Store(wall-)  | 712 End EOS
+ 129                 wall[ 16]                IsEnd  | End EOS
+ 130                 wall[ 17]        AbsJumpIf(21)  | true EOS
+ 131                 wall[ 21]          Read(wall-)  | EOS
+ 133                     [ 29]             Int(600)  | 712 EOS
+ 134                     [ 30]              Greater  | 600 712 EOS
+ 135                     [ 31]        AbsJumpIf(23)  | true EOS
+ 136                     [ 23]              Int(90)  | EOS
+ 137                     [ 24]                 Move  | 90 EOS
+ 138                     [ 25]              Int(10)  | EOS
+ 139                     [ 26]                 Wait  | 10 EOS
+ 140  waiting for 10 ticks
+ 141  waiting for 9 ticks
+ 142  waiting for 8 ticks
+ 143  waiting for 7 ticks
+ 144  waiting for 6 ticks
+ 145  waiting for 5 ticks
+ 146  waiting for 4 ticks
+ 147  waiting for 3 ticks
+ 148  waiting for 2 ticks
+ 149  waiting for 1 ticks
+ 150                     [ 27]              Int(90)  | EOS
+ 151                     [ 28]           Call(wall)  | 90 EOS
+ 152                 wall[  0] Store(wall-direction)  | 90 EOS
+ 153                 wall[  1] Read(wall-direction)  | EOS
+ 154                 wall[  2]                 Look  | 90 EOS
+ 155                 wall[  3]        Store(d.flag)  | Foe -10 628 Wall 90 542 End EOS
+ 156                 wall[  4]   Store(d.direction)  | -10 628 Wall 90 542 End EOS
+ 157                 wall[  5]    Store(d.distance)  | 628 Wall 90 542 End EOS
+ 158                 wall[  6]          AbsJump(10)  | Wall 90 542 End EOS
+ 159                 wall[ 10]         Read(d.flag)  | Wall 90 542 End EOS
+ 160                 wall[ 11]               IsWall  | Foe Wall 90 542 End EOS
+ 161                 wall[ 12]                  Not  | false Wall 90 542 End EOS
+ 162                 wall[ 13]         AbsJumpIf(7)  | true Wall 90 542 End EOS
+ 163                 wall[  7]        Store(d.flag)  | Wall 90 542 End EOS
+ 164                 wall[  8]   Store(d.direction)  | 90 542 End EOS
+ 165                 wall[  9]    Store(d.distance)  | 542 End EOS
+ 166                 wall[ 10]         Read(d.flag)  | End EOS
+ 167                 wall[ 11]               IsWall  | Wall End EOS
+ 168                 wall[ 12]                  Not  | true End EOS
+ 169                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+ 170                 wall[ 14]     Read(d.distance)  | End EOS
+ 171                 wall[ 15]         Store(wall-)  | 542 End EOS
+ 172                 wall[ 16]                IsEnd  | End EOS
+ 173                 wall[ 17]        AbsJumpIf(21)  | true EOS
+ 174                 wall[ 21]          Read(wall-)  | EOS
+ 176                     [ 29]             Int(600)  | 542 EOS
+ 177                     [ 30]              Greater  | 600 542 EOS
+ 178                     [ 31]        AbsJumpIf(23)  | false EOS
+ 179                     [ 32]                 Stop  | EOS
+ 180                     [ 33]          AbsJump(38)  | EOS
+ 181                     [ 38]             Int(270)  | EOS
+ 182                     [ 39]           Call(wall)  | 270 EOS
+ 183                 wall[  0] Store(wall-direction)  | 270 EOS
+ 184                 wall[  1] Read(wall-direction)  | EOS
+ 185                 wall[  2]                 Look  | 270 EOS
+ 186                 wall[  3]        Store(d.flag)  | Wall 270 707 End EOS
+ 187                 wall[  4]   Store(d.direction)  | 270 707 End EOS
+ 188                 wall[  5]    Store(d.distance)  | 707 End EOS
+ 189                 wall[  6]          AbsJump(10)  | End EOS
+ 190                 wall[ 10]         Read(d.flag)  | End EOS
+ 191                 wall[ 11]               IsWall  | Wall End EOS
+ 192                 wall[ 12]                  Not  | true End EOS
+ 193                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+ 194                 wall[ 14]     Read(d.distance)  | End EOS
+ 195                 wall[ 15]         Store(wall-)  | 707 End EOS
+ 196                 wall[ 16]                IsEnd  | End EOS
+ 197                 wall[ 17]        AbsJumpIf(21)  | true EOS
+ 198                 wall[ 21]          Read(wall-)  | EOS
+ 200                     [ 40]             Int(600)  | 707 EOS
+ 201                     [ 41]              Greater  | 600 707 EOS
+ 202                     [ 42]        AbsJumpIf(34)  | true EOS
+ 203                     [ 34]             Int(270)  | EOS
+ 204                     [ 35]                 Move  | 270 EOS
+ 205                     [ 36]              Int(10)  | EOS
+ 206                     [ 37]                 Wait  | 10 EOS
+ 207  waiting for 10 ticks
+ 208  waiting for 9 ticks
+ 209  waiting for 8 ticks
+ 210  waiting for 7 ticks
+ 211  waiting for 6 ticks
+ 212  waiting for 5 ticks
+ 213  waiting for 4 ticks
+ 214  waiting for 3 ticks
+ 215  waiting for 2 ticks
+ 216  waiting for 1 ticks
+ 217                     [ 38]             Int(270)  | EOS
+ 218                     [ 39]           Call(wall)  | 270 EOS
+ 219                 wall[  0] Store(wall-direction)  | 270 EOS
+ 220                 wall[  1] Read(wall-direction)  | EOS
+ 221                 wall[  2]                 Look  | 270 EOS
+ 222                 wall[  3]        Store(d.flag)  | Wall 270 537 End EOS
+ 223                 wall[  4]   Store(d.direction)  | 270 537 End EOS
+ 224                 wall[  5]    Store(d.distance)  | 537 End EOS
+ 225                 wall[  6]          AbsJump(10)  | End EOS
+ 226                 wall[ 10]         Read(d.flag)  | End EOS
+ 227                 wall[ 11]               IsWall  | Wall End EOS
+ 228                 wall[ 12]                  Not  | true End EOS
+ 229                 wall[ 13]         AbsJumpIf(7)  | false End EOS
+ 230                 wall[ 14]     Read(d.distance)  | End EOS
+ 231                 wall[ 15]         Store(wall-)  | 537 End EOS
+ 232                 wall[ 16]                IsEnd  | End EOS
+ 233                 wall[ 17]        AbsJumpIf(21)  | true EOS
+ 234                 wall[ 21]          Read(wall-)  | EOS
+ 236                     [ 40]             Int(600)  | 537 EOS
+ 237                     [ 41]              Greater  | 600 537 EOS
+ 238                     [ 42]        AbsJumpIf(34)  | false EOS
+ 239                     [ 43]                 Stop  | EOS
+ 240                     [ 44]          AbsJump(53)  | EOS
+ 241                     [ 53]           Bool(true)  | EOS
+ 242                     [ 54]        AbsJumpIf(45)  | true EOS
+ 243                     [ 45]             Int(100)  | EOS
+ 244                     [ 46]             Int(500)  | 100 EOS
+ 245                     [ 47]               Random  | 500 100 EOS
+ 246                     [ 48]               Int(0)  | 236 EOS
+ 247                     [ 49]             Int(360)  | 0 236 EOS
+ 248                     [ 50]               Random  | 360 0 236 EOS
+ 249                     [ 51]                Shoot  | 97 236 EOS
+ 250                     [ 52]                 Drop  | true EOS
+ 251                     [ 53]           Bool(true)  | EOS
+ 252                     [ 54]        AbsJumpIf(45)  | true EOS
+ 253                     [ 45]             Int(100)  | EOS
+ 254                     [ 46]             Int(500)  | 100 EOS
+ 255                     [ 47]               Random  | 500 100 EOS
+ 256                     [ 48]               Int(0)  | 262 EOS
+ 257                     [ 49]             Int(360)  | 0 262 EOS
+ 258                     [ 50]               Random  | 360 0 262 EOS
+ 259                     [ 51]                Shoot  | 165 262 EOS
+ 260                     [ 52]                 Drop  | true EOS
+ 261                     [ 53]           Bool(true)  | EOS
+ 262                     [ 54]        AbsJumpIf(45)  | true EOS
+ 263                     [ 45]             Int(100)  | EOS
+ 264                     [ 46]             Int(500)  | 100 EOS
+ 265                     [ 47]               Random  | 500 100 EOS
+ 266                     [ 48]               Int(0)  | 320 EOS
+ 267                     [ 49]             Int(360)  | 0 320 EOS
+ 268                     [ 50]               Random  | 360 0 320 EOS
+ 269                     [ 51]                Shoot  | 279 320 EOS
+ 270                     [ 52]                 Drop  | true EOS
+ 271                     [ 53]           Bool(true)  | EOS
+ 272                     [ 54]        AbsJumpIf(45)  | true EOS
+ 273                     [ 45]             Int(100)  | EOS
+ 274                     [ 46]             Int(500)  | 100 EOS
+ 275                     [ 47]               Random  | 500 100 EOS
+ 276                     [ 48]               Int(0)  | 293 EOS
+ 277                     [ 49]             Int(360)  | 0 293 EOS
+ 278                     [ 50]               Random  | 360 0 293 EOS
+ 279                     [ 51]                Shoot  | 175 293 EOS
+ 280                     [ 52]                 Drop  | true EOS
+ 281                     [ 53]           Bool(true)  | EOS
+ 282                     [ 54]        AbsJumpIf(45)  | true EOS
+ 283                     [ 45]             Int(100)  | EOS
+ 284                     [ 46]             Int(500)  | 100 EOS
+ 285                     [ 47]               Random  | 500 100 EOS
+ 286                     [ 48]               Int(0)  | 446 EOS
+ 287                     [ 49]             Int(360)  | 0 446 EOS
+ 288                     [ 50]               Random  | 360 0 446 EOS
+ 289                     [ 51]                Shoot  | 352 446 EOS
+ 290                     [ 52]                 Drop  | true EOS
+ 291                     [ 53]           Bool(true)  | EOS
+ 292                     [ 54]        AbsJumpIf(45)  | true EOS
+ 293                     [ 45]             Int(100)  | EOS
+ 294                     [ 46]             Int(500)  | 100 EOS
+ 295                     [ 47]               Random  | 500 100 EOS
+ 296                     [ 48]               Int(0)  | 411 EOS
+ 297                     [ 49]             Int(360)  | 0 411 EOS
+ 298                     [ 50]               Random  | 360 0 411 EOS
+ 299                     [ 51]                Shoot  | 65 411 EOS
+ 300                     [ 52]                 Drop  | true EOS
