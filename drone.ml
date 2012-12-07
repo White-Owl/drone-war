@@ -175,19 +175,13 @@ class drone =
 			let chan_in = Pervasives.open_in file_name in
 			let lexbuf = Lexing.from_channel chan_in in
 			let program =
-				(if (Filename.check_suffix file_name ".dt" ) then Parser.program Scanner.token lexbuf
-				 else if (Filename.check_suffix file_name ".dbt" ) then Parser_dbt.program Scanner_dbt.drone_basic lexbuf
-				 else ([],[])
+				(if (Filename.check_suffix file_name ".dt" ) then Parser.drone Scanner.token lexbuf
+				 else if (Filename.check_suffix file_name ".dbt" ) then Parser_dbt.drone Scanner_dbt.drone_basic lexbuf
+				 else ([])
 				) in
-			(* Parser will return two lists - list operations of main program and list of subs
-			   First we need to put "main" body of the program into the list of subs *)
-			Hashtbl.add subs "--" (self#link_jumps (List.rev (fst program)));
-			(* Second, we add all subs recognized by parser into the list of subs, as a side effect - check for duplicate subs *)
-			List.iter (fun sub ->
-			            if Hashtbl.mem subs sub.name then raise (Failure ("Sub "^sub.name^" defined twice"));
-						Hashtbl.add subs sub.name (self#link_jumps (List.rev sub.body))
-			          ) (snd program);
-			(* Third step, check the existance of all called user funcitons *)
+			(* First convert all jumps to the label into absolute jumps *)
+			List.iter (fun sub -> Hashtbl.add subs sub.name (self#link_jumps sub.body)) program;
+			(* Next step, check the existance of all called user funcitons *)
 			Hashtbl.iter (fun name body -> (self#check_sub_existance body)) subs;
 			(* Last step, set starting position for the drone *)
 			self#set_x_position (Random.float 1000.);

@@ -25,15 +25,14 @@ let auto_label_counter = ref 0;;
 %token MOVE STOP SHOOT LOOK ISFOE ISALLY ISWALL ISEND WAIT GETHEALTH RANDOM
 %token EOF
 
-/*
-%start operations
-%type <Ast.bytecode list> operations
-*/
-
-%start program
-%type <Ast.program> program
+%start drone
+%type <Ast.sub list> drone
 
 %%
+
+drone:
+  program { let main_sub = { name="--"; body = List.rev (fst $1); } in
+			main_sub :: snd $1 }
 
 program:
 	{ [], [] }                                      /* two lists for main body  of the program and for functions defined by users */
@@ -42,7 +41,7 @@ program:
 	| program if_block { ($2 @ fst $1), snd $1 }
 
 sub:
-	SUB NAME operations END_SUB  { { name = $2; body = $3; } } /* store the function name and function operations between "sub" and "esub" */
+	SUB NAME operations END_SUB  { { name = $2; body = List.rev $3; } } /* store the function name and function operations between "sub" and "esub" */
 
 
 operations:
