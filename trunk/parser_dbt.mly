@@ -46,10 +46,15 @@ let report_error error_starts_at message =
 %left TIMES DIVIDE
 
 
-%start program
-%type <Ast.program> program
+%start drone
+%type <Ast.sub list> drone
 
 %%
+
+drone:
+  program { let main_sub = { name="--"; body = List.rev (fst $1); } in
+			main_sub :: snd $1 }
+
 
 program: {[],[]} /* at the begining we have nothing */
   | program CR                   { $1 }
@@ -135,7 +140,7 @@ sub:
 		                            Read(name) -> if List.exists (fun arg -> arg=name) $4 then Read($2^"-"^name) else Read(name)
 		                          | Store(name) -> if List.exists (fun arg -> arg=name) $4 then Store($2^"-"^name) else Store(name)
 		                          | _ -> x) ($7 @ read_arguments) in
-		  { name = $2; body = sub_body; }
+		  { name = $2; body = List.rev sub_body; }
 		}
   | FUNCTION ID LPAREN args RPAREN CR statements END FUNCTION CR
 		{ let read_arguments = List.map (fun arg -> Store(arg)) $4 in
@@ -143,7 +148,7 @@ sub:
 		                            Read(name) -> if List.exists (fun arg -> arg=name) $4 then Read($2^"-"^name) else Read(name)
 		                          | Store(name) -> if List.exists (fun arg -> arg=name) $4 then Store($2^"-"^name) else if name=$2 then Store($2^"-") else Store(name)
 		                          | _ -> x) ($7 @ read_arguments) in
-		  { name = $2; body = Read($2^"-") :: sub_body; }
+		  { name = $2; body = List.rev (Read($2^"-") :: sub_body); }
 		}
 
 args: { [] }
