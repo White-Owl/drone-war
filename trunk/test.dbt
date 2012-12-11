@@ -1,11 +1,16 @@
-' The rabbit drone.
+' The turret
 ' this time it is written in the Drone-Basic dialect
 
-MyHealth = health()
+direction=0
+
 start:
-	do
-		call sleep(10)
-	loop while MyHealth = health()
-	call move(rnd(0, 360))
-	call sleep(10)
+    drone = startScan(direction)
+    if drone.isfoe then
+        direction = drone.direction
+        call shoot(drone.direction, drone.distance)
+        call sleep(10)
+    else
+        direction = direction + 10
+    end if
+    call cancelScan()
 goto start
