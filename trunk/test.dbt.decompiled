@@ -1,0 +1,15 @@
+  0: GetHealth
+  1: Store(myhealth)
+  2: Int(10)
+  3: Wait
+  4: Read(myhealth)
+  5: GetHealth
+  6: Equal
+  7: AbsJumpIf(2)
+  8: Int(0)
+  9: Int(360)
+ 10: Random
+ 11: Move
+ 12: Int(10)
+ 13: Wait
+ 14: AbsJump(2)

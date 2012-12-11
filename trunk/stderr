@@ -1,0 +1,443 @@
+State 0: shift to state 1
+State 1: reduce by rule 2
+State 4: read token CR
+State 4: shift to state 6
+State 6: reduce by rule 3
+State 4: read token CR
+State 4: shift to state 6
+State 6: reduce by rule 3
+State 4: read token CR
+State 4: shift to state 6
+State 6: reduce by rule 3
+State 4: read token ID(myhealth)
+State 4: shift to state 15
+State 15: read token EQUAL
+State 15: shift to state 48
+State 48: read token HEALTH
+State 48: shift to state 28
+State 28: read token LPAREN
+State 28: shift to state 62
+State 62: read token RPAREN
+State 62: shift to state 106
+State 106: reduce by rule 70
+State 99: read token CR
+State 99: shift to state 133
+State 133: reduce by rule 11
+State 16: reduce by rule 4
+State 4: read token ID(start)
+State 4: shift to state 15
+State 15: read token COLON
+State 15: shift to state 47
+State 47: reduce by rule 15
+State 16: reduce by rule 4
+State 4: read token CR
+State 4: shift to state 6
+State 6: reduce by rule 3
+State 4: read token DO
+State 4: shift to state 8
+State 8: read token CR
+State 8: reduce by rule 7
+State 34: shift to state 79
+State 79: reduce by rule 8
+State 34: read token CALL
+State 34: shift to state 12
+State 12: read token SLEEP
+State 12: shift to state 40
+State 40: read token LPAREN
+State 40: shift to state 88
+State 88: read token INT(10)
+State 88: shift to state 23
+State 23: reduce by rule 61
+State 124: read token RPAREN
+State 124: shift to state 147
+State 147: read token CR
+State 147: shift to state 166
+State 166: reduce by rule 17
+State 81: reduce by rule 9
+State 34: read token LOOP
+State 34: shift to state 80
+State 80: read token WHILE
+State 80: shift to state 118
+State 118: read token ID(myhealth)
+State 118: shift to state 22
+State 22: read token EQUAL
+State 22: reduce by rule 63
+State 29: shift to state 67
+State 67: reduce by rule 55
+State 73: read token HEALTH
+State 73: shift to state 28
+State 28: read token LPAREN
+State 28: shift to state 62
+State 62: read token RPAREN
+State 62: shift to state 106
+State 106: reduce by rule 70
+State 111: read token CR
+State 111: reduce by rule 49
+State 31: reduce by rule 42
+State 141: reduce by rule 29
+State 17: reduce by rule 5
+State 4: shift to state 6
+State 6: reduce by rule 3
+State 4: read token CALL
+State 4: shift to state 12
+State 12: read token MOVE
+State 12: shift to state 41
+State 41: read token LPAREN
+State 41: shift to state 89
+State 89: read token RANDOM
+State 89: shift to state 27
+State 27: read token LPAREN
+State 27: shift to state 61
+State 61: read token INT(0)
+State 61: shift to state 23
+State 23: reduce by rule 61
+State 105: read token COMMA
+State 105: shift to state 137
+State 137: read token INT(360)
+State 137: shift to state 23
+State 23: reduce by rule 61
+State 157: read token RPAREN
+State 157: shift to state 173
+State 173: reduce by rule 69
+State 125: read token RPAREN
+State 125: shift to state 148
+State 148: read token CR
+State 148: shift to state 167
+State 167: reduce by rule 18
+State 16: reduce by rule 4
+State 4: read token CALL
+State 4: shift to state 12
+State 12: read token SLEEP
+State 12: shift to state 40
+State 40: read token LPAREN
+State 40: shift to state 88
+State 88: read token INT(10)
+State 88: shift to state 23
+State 23: reduce by rule 61
+State 124: read token RPAREN
+State 124: shift to state 147
+State 147: read token CR
+State 147: shift to state 166
+State 166: reduce by rule 17
+State 16: reduce by rule 4
+State 4: read token GOTO
+State 4: shift to state 14
+State 14: read token ID(start)
+State 14: shift to state 46
+State 46: read token CR
+State 46: shift to state 94
+State 94: reduce by rule 14
+State 16: reduce by rule 4
+State 4: read token EOF
+State 4: reduce by rule 1
+State 3: reduce by rule 74
+State 0: shift to state 1
+State 1: reduce by rule 2
+State 4: read token INTEGER(0)
+State 4: shift to state 10
+State 10: reduce by rule 15
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token STORE
+State 9: shift to state 48
+State 48: reduce by rule 30
+State 41: reduce by rule 3
+State 4: read token LABEL(main_loop)
+State 4: shift to state 8
+State 8: reduce by rule 37
+State 41: reduce by rule 3
+State 4: read token DROPALL
+State 4: shift to state 25
+State 25: reduce by rule 32
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token READ
+State 9: shift to state 47
+State 47: reduce by rule 29
+State 41: reduce by rule 3
+State 4: read token LOOK
+State 4: shift to state 33
+State 33: reduce by rule 44
+State 41: reduce by rule 3
+State 4: read token ISFOE
+State 4: shift to state 34
+State 34: reduce by rule 45
+State 41: reduce by rule 3
+State 4: read token NAME(shootIt)
+State 4: shift to state 9
+State 9: read token JUMPIF
+State 9: shift to state 50
+State 50: reduce by rule 39
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token READ
+State 9: shift to state 47
+State 47: reduce by rule 29
+State 41: reduce by rule 3
+State 4: read token INTEGER(10)
+State 4: shift to state 10
+State 10: reduce by rule 15
+State 41: reduce by rule 3
+State 4: read token PLUS
+State 4: shift to state 11
+State 11: reduce by rule 16
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token STORE
+State 9: shift to state 48
+State 48: reduce by rule 30
+State 41: reduce by rule 3
+State 4: read token NAME(main_loop)
+State 4: shift to state 9
+State 9: read token JUMP
+State 9: shift to state 49
+State 49: reduce by rule 38
+State 41: reduce by rule 3
+State 4: read token LABEL(shootIt)
+State 4: shift to state 8
+State 8: reduce by rule 37
+State 41: reduce by rule 3
+State 4: read token DUP
+State 4: shift to state 26
+State 26: reduce by rule 33
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token STORE
+State 9: shift to state 48
+State 48: reduce by rule 30
+State 41: reduce by rule 3
+State 4: read token SHOOT
+State 4: shift to state 32
+State 32: reduce by rule 43
+State 41: reduce by rule 3
+State 4: read token INTEGER(10)
+State 4: shift to state 10
+State 10: reduce by rule 15
+State 41: reduce by rule 3
+State 4: read token WAIT
+State 4: shift to state 38
+State 38: reduce by rule 49
+State 41: reduce by rule 3
+State 4: read token NAME(main_loop)
+State 4: shift to state 9
+State 9: read token JUMP
+State 9: shift to state 49
+State 49: reduce by rule 38
+State 41: reduce by rule 3
+State 4: read token EOF
+State 4: reduce by rule 1
+State 3: reduce by rule 52
+State 0: shift to state 1
+State 1: reduce by rule 2
+State 4: read token INTEGER(0)
+State 4: shift to state 10
+State 10: reduce by rule 15
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token STORE
+State 9: shift to state 48
+State 48: reduce by rule 30
+State 41: reduce by rule 3
+State 4: read token LABEL(main_loop)
+State 4: shift to state 8
+State 8: reduce by rule 37
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token READ
+State 9: shift to state 47
+State 47: reduce by rule 29
+State 41: reduce by rule 3
+State 4: read token LOOK
+State 4: shift to state 33
+State 33: reduce by rule 44
+State 41: reduce by rule 3
+State 4: read token LABEL(check_what_I_saw)
+State 4: shift to state 8
+State 8: reduce by rule 37
+State 41: reduce by rule 3
+State 4: read token NAME(isDrone)
+State 4: shift to state 9
+State 9: read token NAME(sees_a_drone)
+State 9: reduce by rule 40
+State 41: reduce by rule 3
+State 4: shift to state 9
+State 9: read token JUMPIF
+State 9: shift to state 50
+State 50: reduce by rule 39
+State 41: reduce by rule 3
+State 4: read token ISEND
+State 4: shift to state 37
+State 37: reduce by rule 48
+State 41: reduce by rule 3
+State 4: read token NAME(main_loop)
+State 4: shift to state 9
+State 9: read token JUMPIF
+State 9: shift to state 50
+State 50: reduce by rule 39
+State 41: reduce by rule 3
+State 4: read token NAME(drop2)
+State 4: shift to state 9
+State 9: read token NAME(check_what_I_saw)
+State 9: reduce by rule 40
+State 41: reduce by rule 3
+State 4: shift to state 9
+State 9: read token JUMP
+State 9: shift to state 49
+State 49: reduce by rule 38
+State 41: reduce by rule 3
+State 4: read token LABEL(sees_a_drone)
+State 4: shift to state 8
+State 8: reduce by rule 37
+State 41: reduce by rule 3
+State 4: read token DROP
+State 4: shift to state 24
+State 24: reduce by rule 31
+State 41: reduce by rule 3
+State 4: read token DUP
+State 4: shift to state 26
+State 26: reduce by rule 33
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token STORE
+State 9: shift to state 48
+State 48: reduce by rule 30
+State 41: reduce by rule 3
+State 4: read token MOVE
+State 4: shift to state 30
+State 30: reduce by rule 41
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token READ
+State 9: shift to state 47
+State 47: reduce by rule 29
+State 41: reduce by rule 3
+State 4: read token SHOOT
+State 4: shift to state 32
+State 32: reduce by rule 43
+State 41: reduce by rule 3
+State 4: read token DROP
+State 4: shift to state 24
+State 24: reduce by rule 31
+State 41: reduce by rule 3
+State 4: read token LABEL(look_cleanup)
+State 4: shift to state 8
+State 8: reduce by rule 37
+State 41: reduce by rule 3
+State 4: read token ISEND
+State 4: shift to state 37
+State 37: reduce by rule 48
+State 41: reduce by rule 3
+State 4: read token NAME(main_loop)
+State 4: shift to state 9
+State 9: read token JUMPIF
+State 9: shift to state 50
+State 50: reduce by rule 39
+State 41: reduce by rule 3
+State 4: read token NAME(drop2)
+State 4: shift to state 9
+State 9: read token NAME(look_cleanup)
+State 9: reduce by rule 40
+State 41: reduce by rule 3
+State 4: shift to state 9
+State 9: read token JUMP
+State 9: shift to state 49
+State 49: reduce by rule 38
+State 41: reduce by rule 3
+State 4: read token SUB
+State 4: shift to state 5
+State 5: read token NAME(drop2)
+State 5: shift to state 44
+State 44: reduce by rule 7
+State 51: read token DROP
+State 51: shift to state 24
+State 24: reduce by rule 31
+State 55: reduce by rule 8
+State 51: read token DROP
+State 51: shift to state 24
+State 24: reduce by rule 31
+State 55: reduce by rule 8
+State 51: read token END_SUB
+State 51: shift to state 59
+State 59: reduce by rule 6
+State 42: reduce by rule 4
+State 4: read token SUB
+State 4: shift to state 5
+State 5: read token NAME(isDrone)
+State 5: shift to state 44
+State 44: reduce by rule 7
+State 51: read token DUP
+State 51: shift to state 26
+State 26: reduce by rule 33
+State 55: reduce by rule 8
+State 51: read token ISALLY
+State 51: shift to state 35
+State 35: reduce by rule 46
+State 55: reduce by rule 8
+State 51: read token NAME(l1)
+State 51: shift to state 9
+State 9: read token JUMPIF
+State 9: shift to state 50
+State 50: reduce by rule 39
+State 55: reduce by rule 8
+State 51: read token DUP
+State 51: shift to state 26
+State 26: reduce by rule 33
+State 55: reduce by rule 8
+State 51: read token ISFOE
+State 51: shift to state 34
+State 34: reduce by rule 45
+State 55: reduce by rule 8
+State 51: read token NAME(l2)
+State 51: shift to state 9
+State 9: read token JUMP
+State 9: shift to state 49
+State 49: reduce by rule 38
+State 55: reduce by rule 8
+State 51: read token LABEL(l1)
+State 51: shift to state 8
+State 8: reduce by rule 37
+State 55: reduce by rule 8
+State 51: read token BOOL(1)
+State 51: shift to state 20
+State 20: reduce by rule 25
+State 55: reduce by rule 8
+State 51: read token LABEL(l2)
+State 51: shift to state 8
+State 8: reduce by rule 37
+State 55: reduce by rule 8
+State 51: read token END_SUB
+State 51: shift to state 59
+State 59: reduce by rule 6
+State 42: reduce by rule 4
+State 4: read token EOF
+State 4: reduce by rule 1
+State 3: reduce by rule 52
+State 0: shift to state 1
+State 1: reduce by rule 2
+State 4: read token INTEGER(0)
+State 4: shift to state 10
+State 10: reduce by rule 15
+State 41: reduce by rule 3
+State 4: read token NAME(direction)
+State 4: shift to state 9
+State 9: read token STORE
+State 9: shift to state 48
+State 48: reduce by rule 30
+State 41: reduce by rule 3
+State 4: read token BEGIN
+State 4: shift to state 7
+State 7: reduce by rule 7
+State 46: read token DROPALL
+State 46: shift to state 25
+State 25: reduce by rule 32
+State 55: reduce by rule 8
+Fatal error: exception Scanner.Unknown_token("//new", 4, 11)
