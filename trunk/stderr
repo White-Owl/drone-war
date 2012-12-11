@@ -9,21 +9,20 @@ State 6: reduce by rule 3
 State 4: read token CR
 State 4: shift to state 6
 State 6: reduce by rule 3
-State 4: read token ID(myhealth)
+State 4: read token ID(direction)
 State 4: shift to state 15
 State 15: read token EQUAL
 State 15: shift to state 48
-State 48: read token HEALTH
-State 48: shift to state 28
-State 28: read token LPAREN
-State 28: shift to state 62
-State 62: read token RPAREN
-State 62: shift to state 106
-State 106: reduce by rule 70
+State 48: read token INT(0)
+State 48: shift to state 23
+State 23: reduce by rule 61
 State 99: read token CR
 State 99: shift to state 133
 State 133: reduce by rule 11
 State 16: reduce by rule 4
+State 4: read token CR
+State 4: shift to state 6
+State 6: reduce by rule 3
 State 4: read token ID(start)
 State 4: shift to state 15
 State 15: read token COLON
@@ -33,14 +32,75 @@ State 16: reduce by rule 4
 State 4: read token CR
 State 4: shift to state 6
 State 6: reduce by rule 3
-State 4: read token DO
-State 4: shift to state 8
-State 8: read token CR
-State 8: reduce by rule 7
-State 34: shift to state 79
-State 79: reduce by rule 8
-State 34: read token CALL
-State 34: shift to state 12
+State 4: read token ID(drone)
+State 4: shift to state 15
+State 15: read token EQUAL
+State 15: shift to state 48
+State 48: read token STARTSCAN
+State 48: shift to state 97
+State 97: read token LPAREN
+State 97: shift to state 131
+State 131: read token ID(direction)
+State 131: shift to state 95
+State 95: read token RPAREN
+State 95: reduce by rule 63
+State 153: shift to state 170
+State 170: read token CR
+State 170: shift to state 181
+State 181: reduce by rule 21
+State 16: reduce by rule 4
+State 4: read token IF
+State 4: shift to state 7
+State 7: read token ID(drone)
+State 7: shift to state 22
+State 22: read token ISFOE
+State 22: shift to state 52
+State 52: reduce by rule 51
+State 31: read token THEN
+State 31: reduce by rule 42
+State 30: shift to state 74
+State 74: read token CR
+State 74: shift to state 112
+State 112: reduce by rule 7
+State 138: read token ID(direction)
+State 138: shift to state 15
+State 15: read token EQUAL
+State 15: shift to state 48
+State 48: read token ID(drone)
+State 48: shift to state 95
+State 95: read token DIRECTION
+State 95: shift to state 55
+State 55: reduce by rule 72
+State 99: read token CR
+State 99: shift to state 133
+State 133: reduce by rule 11
+State 81: reduce by rule 9
+State 138: read token CALL
+State 138: shift to state 12
+State 12: read token SHOOT
+State 12: shift to state 43
+State 43: read token LPAREN
+State 43: shift to state 91
+State 91: read token ID(drone)
+State 91: shift to state 95
+State 95: read token DIRECTION
+State 95: shift to state 55
+State 55: reduce by rule 72
+State 127: read token COMMA
+State 127: shift to state 150
+State 150: read token ID(drone)
+State 150: shift to state 95
+State 95: read token DISTANCE
+State 95: shift to state 54
+State 54: reduce by rule 71
+State 168: read token RPAREN
+State 168: shift to state 178
+State 178: read token CR
+State 178: shift to state 185
+State 185: reduce by rule 20
+State 81: reduce by rule 9
+State 138: read token CALL
+State 138: shift to state 12
 State 12: read token SLEEP
 State 12: shift to state 40
 State 40: read token LPAREN
@@ -54,71 +114,48 @@ State 147: read token CR
 State 147: shift to state 166
 State 166: reduce by rule 17
 State 81: reduce by rule 9
-State 34: read token LOOP
-State 34: shift to state 80
-State 80: read token WHILE
-State 80: shift to state 118
-State 118: read token ID(myhealth)
-State 118: shift to state 22
-State 22: read token EQUAL
-State 22: reduce by rule 63
-State 29: shift to state 67
-State 67: reduce by rule 55
-State 73: read token HEALTH
-State 73: shift to state 28
-State 28: read token LPAREN
-State 28: shift to state 62
-State 62: read token RPAREN
-State 62: shift to state 106
-State 106: reduce by rule 70
-State 111: read token CR
-State 111: reduce by rule 49
-State 31: reduce by rule 42
-State 141: reduce by rule 29
+State 138: read token ELSE
+State 138: shift to state 158
+State 158: read token CR
+State 158: shift to state 174
+State 174: reduce by rule 7
+State 182: read token ID(direction)
+State 182: shift to state 15
+State 15: read token EQUAL
+State 15: shift to state 48
+State 48: read token ID(direction)
+State 48: shift to state 95
+State 95: read token PLUS
+State 95: reduce by rule 63
+State 99: shift to state 63
+State 63: read token INT(10)
+State 63: shift to state 23
+State 23: reduce by rule 61
+State 107: read token CR
+State 107: reduce by rule 64
+State 99: shift to state 133
+State 133: reduce by rule 11
+State 81: reduce by rule 9
+State 182: read token END
+State 182: shift to state 188
+State 188: read token IF
+State 188: shift to state 193
+State 193: reduce by rule 27
 State 17: reduce by rule 5
+State 4: read token CR
 State 4: shift to state 6
 State 6: reduce by rule 3
 State 4: read token CALL
 State 4: shift to state 12
-State 12: read token MOVE
-State 12: shift to state 41
-State 41: read token LPAREN
-State 41: shift to state 89
-State 89: read token RANDOM
-State 89: shift to state 27
-State 27: read token LPAREN
-State 27: shift to state 61
-State 61: read token INT(0)
-State 61: shift to state 23
-State 23: reduce by rule 61
-State 105: read token COMMA
-State 105: shift to state 137
-State 137: read token INT(360)
-State 137: shift to state 23
-State 23: reduce by rule 61
-State 157: read token RPAREN
-State 157: shift to state 173
-State 173: reduce by rule 69
-State 125: read token RPAREN
-State 125: shift to state 148
-State 148: read token CR
-State 148: shift to state 167
-State 167: reduce by rule 18
-State 16: reduce by rule 4
-State 4: read token CALL
-State 4: shift to state 12
-State 12: read token SLEEP
-State 12: shift to state 40
-State 40: read token LPAREN
-State 40: shift to state 88
-State 88: read token INT(10)
-State 88: shift to state 23
-State 23: reduce by rule 61
-State 124: read token RPAREN
-State 124: shift to state 147
-State 147: read token CR
-State 147: shift to state 166
-State 166: reduce by rule 17
+State 12: read token CANCELSCAN
+State 12: shift to state 44
+State 44: read token LPAREN
+State 44: shift to state 92
+State 92: read token RPAREN
+State 92: shift to state 128
+State 128: read token CR
+State 128: shift to state 151
+State 151: reduce by rule 23
 State 16: reduce by rule 4
 State 4: read token GOTO
 State 4: shift to state 14

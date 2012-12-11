@@ -55,6 +55,7 @@ type token =
   | EOF
 
 open Parsing;;
+let _ = parse_error;;
 # 1 "parser_dbt.mly"
 
 
@@ -75,7 +76,7 @@ let report_error error_starts_at message =
     raise (Parse_failure (message, error_starts_at.pos_lnum, (error_starts_at.pos_cnum-error_starts_at.pos_bol+1)))
 	;;
 
-# 79 "parser_dbt.ml"
+# 80 "parser_dbt.ml"
 let yytransl_const = [|
   257 (* CR *);
   258 (* IF *);
@@ -492,20 +493,20 @@ let yyact = [|
 # 55 "parser_dbt.mly"
           ( let main_sub = { name="--"; body = List.rev (fst _1); } in
 			main_sub :: snd _1 )
-# 496 "parser_dbt.ml"
+# 497 "parser_dbt.ml"
                : Ast.sub list))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 59 "parser_dbt.mly"
          ([],[])
-# 502 "parser_dbt.ml"
+# 503 "parser_dbt.ml"
                : 'program))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'program) in
     Obj.repr(
 # 60 "parser_dbt.mly"
                                  ( _1 )
-# 509 "parser_dbt.ml"
+# 510 "parser_dbt.ml"
                : 'program))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'program) in
@@ -513,7 +514,7 @@ let yyact = [|
     Obj.repr(
 # 61 "parser_dbt.mly"
                                  ( (_2 @ fst _1), snd _1 )
-# 517 "parser_dbt.ml"
+# 518 "parser_dbt.ml"
                : 'program))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'program) in
@@ -521,7 +522,7 @@ let yyact = [|
     Obj.repr(
 # 62 "parser_dbt.mly"
                                  ( (_2 @ fst _1), snd _1 )
-# 525 "parser_dbt.ml"
+# 526 "parser_dbt.ml"
                : 'program))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'program) in
@@ -529,20 +530,20 @@ let yyact = [|
     Obj.repr(
 # 63 "parser_dbt.mly"
                                  ( fst _1, (_2 :: snd _1) )
-# 533 "parser_dbt.ml"
+# 534 "parser_dbt.ml"
                : 'program))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 67 "parser_dbt.mly"
                                   ( [] )
-# 539 "parser_dbt.ml"
+# 540 "parser_dbt.ml"
                : 'statements))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'statements) in
     Obj.repr(
 # 68 "parser_dbt.mly"
                                   ( _1 )
-# 546 "parser_dbt.ml"
+# 547 "parser_dbt.ml"
                : 'statements))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'statements) in
@@ -550,7 +551,7 @@ let yyact = [|
     Obj.repr(
 # 69 "parser_dbt.mly"
                                   ( _2 @ _1 )
-# 554 "parser_dbt.ml"
+# 555 "parser_dbt.ml"
                : 'statements))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : 'statements) in
@@ -558,7 +559,7 @@ let yyact = [|
     Obj.repr(
 # 70 "parser_dbt.mly"
                                   ( _2 @ _1 )
-# 562 "parser_dbt.ml"
+# 563 "parser_dbt.ml"
                : 'statements))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 3 : string) in
@@ -566,33 +567,33 @@ let yyact = [|
     Obj.repr(
 # 74 "parser_dbt.mly"
                                                           ( Store(_1) :: _3 )
-# 570 "parser_dbt.ml"
+# 571 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 75 "parser_dbt.mly"
                                                           ( [ Jump("--ExitDo") ] )
-# 576 "parser_dbt.ml"
+# 577 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 76 "parser_dbt.mly"
                                                           ( [ Jump("--ExitFor") ] )
-# 582 "parser_dbt.ml"
+# 583 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 77 "parser_dbt.mly"
                                                           ( [ Jump(_2) ] )
-# 589 "parser_dbt.ml"
+# 590 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 78 "parser_dbt.mly"
                                                           ( [ Label(_1) ] )
-# 596 "parser_dbt.ml"
+# 597 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 4 : string) in
@@ -600,27 +601,27 @@ let yyact = [|
     Obj.repr(
 # 79 "parser_dbt.mly"
                                                           ( Call(_2) :: _4 )
-# 604 "parser_dbt.ml"
+# 605 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _4 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
     Obj.repr(
 # 80 "parser_dbt.mly"
                                                           ( Wait :: _4 )
-# 611 "parser_dbt.ml"
+# 612 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _4 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
     Obj.repr(
 # 81 "parser_dbt.mly"
                                                           ( Move :: _4 )
-# 618 "parser_dbt.ml"
+# 619 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 82 "parser_dbt.mly"
                                                          ( [ Stop ] )
-# 624 "parser_dbt.ml"
+# 625 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _4 = (Parsing.peek_val __caml_parser_env 4 : 'math_expr) in
@@ -628,7 +629,7 @@ let yyact = [|
     Obj.repr(
 # 83 "parser_dbt.mly"
                                                           ( Drop :: Shoot :: (_4 @ _6) )
-# 632 "parser_dbt.ml"
+# 633 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 6 : string) in
@@ -636,27 +637,27 @@ let yyact = [|
     Obj.repr(
 # 84 "parser_dbt.mly"
                                                           ( [ Store(_1^".distance"); Store(_1^".direction"); Store(_1^".flag"); Look ] @ _5 )
-# 640 "parser_dbt.ml"
+# 641 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 5 : string) in
     Obj.repr(
 # 85 "parser_dbt.mly"
                                                           ( [ Store(_1^".distance"); Store(_1^".direction"); Store(_1^".flag"); ] )
-# 647 "parser_dbt.ml"
+# 648 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 86 "parser_dbt.mly"
                                                           ( let lblAgain=make_label() and lblDone=make_label() in
                                                             [ Label(lblDone); Jump(lblAgain); Drop; Drop; JumpIf(lblDone); IsEnd;  Label(lblAgain)] )
-# 654 "parser_dbt.ml"
+# 655 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 88 "parser_dbt.mly"
                                                           ( report_error (Parsing.rhs_start_pos 1) "Syntax error" )
-# 660 "parser_dbt.ml"
+# 661 "parser_dbt.ml"
                : 'statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 2 : 'condition) in
@@ -666,7 +667,7 @@ let yyact = [|
   ( let lbl = make_label() in
 		  Label(lbl) :: ( _4 @ ( [ JumpIf(lbl) ; Not ]  @ _2 ) )
 		)
-# 670 "parser_dbt.ml"
+# 671 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 5 : 'condition) in
@@ -676,7 +677,7 @@ let yyact = [|
   ( let lbl = make_label() in
 		  Label(lbl) :: ( _5 @ ( [ JumpIf(lbl) ; Not ]  @ _2 ) )
 		)
-# 680 "parser_dbt.ml"
+# 681 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 8 : 'condition) in
@@ -688,7 +689,7 @@ let yyact = [|
 		  let lblEndIf = make_label() in
 		  Label(lblEndIf) :: ( _5 @ (Label(lblTrue) :: Jump(lblEndIf) :: ( _8 @ ( JumpIf(lblTrue) :: _2) ) ) )
 		)
-# 692 "parser_dbt.ml"
+# 693 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _3 = (Parsing.peek_val __caml_parser_env 3 : 'condition) in
@@ -699,7 +700,7 @@ let yyact = [|
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) _5 in
 		  Label(lblDone) :: JumpIf(lblStart) :: (_3 @ (Label(lblCheckCondition) :: (block @ [Label(lblStart); Jump(lblCheckCondition) ])))
 		)
-# 703 "parser_dbt.ml"
+# 704 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 3 : 'statements) in
@@ -710,7 +711,7 @@ let yyact = [|
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) _2 in
 		  Label(lblDone) :: JumpIf(lblStart) :: (_5 @ (block @ [Label(lblStart)]))
 		)
-# 714 "parser_dbt.ml"
+# 715 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _3 = (Parsing.peek_val __caml_parser_env 3 : 'condition) in
@@ -721,7 +722,7 @@ let yyact = [|
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) _5 in
 		  Label(lblDone) :: Jump(lblCheckCondition) :: (block @ ( JumpIf(lblDone) :: (_3 @ [Label(lblCheckCondition)])))
 		)
-# 725 "parser_dbt.ml"
+# 726 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 3 : 'statements) in
@@ -732,7 +733,7 @@ let yyact = [|
 		  let block = List.map (fun x -> match x with Jump("--ExitDo") -> Jump(lblDone) | _ -> x) _2 in
 		  Label(lblDone) :: JumpIf(lblStart) :: Not :: (_5 @ (block @ [Label(lblStart)]))
 		)
-# 736 "parser_dbt.ml"
+# 737 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 7 : string) in
@@ -745,7 +746,7 @@ let yyact = [|
 		  let block = List.map (fun x -> match x with Jump("--ExitFor") -> Jump(lblDone) | _ -> x) _8 in
 		  [Label(lblDone); JumpIf(lblAgain); Less] @ _6 @ [ Store(_2); Dup; Plus; Int(1); Read(_2)] @ block @ [Label(lblAgain); Store(_2)] @ _4
 		)
-# 749 "parser_dbt.ml"
+# 750 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 9 : string) in
@@ -759,7 +760,7 @@ let yyact = [|
 		  let block = List.map (fun x -> match x with Jump("--ExitFor") -> Jump(lblDone) | _ -> x) _10 in
 		  [Label(lblDone); JumpIf(lblAgain); Less] @ _6 @ [ Store(_2); Dup; Plus] @ _8 @ [Read(_2)] @ block @ [Label(lblAgain); Store(_2)] @ _4
 		)
-# 763 "parser_dbt.ml"
+# 764 "parser_dbt.ml"
                : 'compaund_statement))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 8 : string) in
@@ -774,7 +775,7 @@ let yyact = [|
 		                          | _ -> x) (_7 @ read_arguments) in
 		  { name = _2; body = List.rev sub_body; }
 		)
-# 778 "parser_dbt.ml"
+# 779 "parser_dbt.ml"
                : 'sub))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 8 : string) in
@@ -789,20 +790,20 @@ let yyact = [|
 		                          | _ -> x) (_7 @ read_arguments) in
 		  { name = _2; body = List.rev (Read(_2^"-") :: sub_body); }
 		)
-# 793 "parser_dbt.ml"
+# 794 "parser_dbt.ml"
                : 'sub))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 154 "parser_dbt.mly"
       ( [] )
-# 799 "parser_dbt.ml"
+# 800 "parser_dbt.ml"
                : 'args))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : string) in
     Obj.repr(
 # 155 "parser_dbt.mly"
                   ( [ _1 ] )
-# 806 "parser_dbt.ml"
+# 807 "parser_dbt.ml"
                : 'args))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'args) in
@@ -810,20 +811,20 @@ let yyact = [|
     Obj.repr(
 # 156 "parser_dbt.mly"
                   ( _3 :: _1 )
-# 814 "parser_dbt.ml"
+# 815 "parser_dbt.ml"
                : 'args))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 159 "parser_dbt.mly"
             ( [] )
-# 820 "parser_dbt.ml"
+# 821 "parser_dbt.ml"
                : 'parameters))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : 'math_expr) in
     Obj.repr(
 # 160 "parser_dbt.mly"
               ( _1 )
-# 827 "parser_dbt.ml"
+# 828 "parser_dbt.ml"
                : 'parameters))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'parameters) in
@@ -831,14 +832,14 @@ let yyact = [|
     Obj.repr(
 # 161 "parser_dbt.mly"
                                ( _3 @ _1 )
-# 835 "parser_dbt.ml"
+# 836 "parser_dbt.ml"
                : 'parameters))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : 'logic_expr) in
     Obj.repr(
 # 164 "parser_dbt.mly"
                                    ( _1 )
-# 842 "parser_dbt.ml"
+# 843 "parser_dbt.ml"
                : 'condition))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'logic_expr) in
@@ -846,7 +847,7 @@ let yyact = [|
     Obj.repr(
 # 165 "parser_dbt.mly"
                                    ( And :: (_3 @ _1) )
-# 850 "parser_dbt.ml"
+# 851 "parser_dbt.ml"
                : 'condition))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'logic_expr) in
@@ -854,34 +855,34 @@ let yyact = [|
     Obj.repr(
 # 166 "parser_dbt.mly"
                                    ( Or :: (_3 @ _1) )
-# 858 "parser_dbt.ml"
+# 859 "parser_dbt.ml"
                : 'condition))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 0 : 'logic_expr) in
     Obj.repr(
 # 167 "parser_dbt.mly"
                                    ( Not :: _2 )
-# 865 "parser_dbt.ml"
+# 866 "parser_dbt.ml"
                : 'condition))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 168 "parser_dbt.mly"
                                    ( report_error (Parsing.rhs_start_pos 1) "Malformed logical expression" )
-# 871 "parser_dbt.ml"
+# 872 "parser_dbt.ml"
                : 'condition))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : bool) in
     Obj.repr(
 # 172 "parser_dbt.mly"
                                                    ( [ Bool(_1) ] )
-# 878 "parser_dbt.ml"
+# 879 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 1 : 'logic_expr) in
     Obj.repr(
 # 173 "parser_dbt.mly"
                                                    ( _2 )
-# 885 "parser_dbt.ml"
+# 886 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
@@ -890,7 +891,7 @@ let yyact = [|
     Obj.repr(
 # 174 "parser_dbt.mly"
                                                    ( _2 @ ( _3 @ _1) )
-# 894 "parser_dbt.ml"
+# 895 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _3 = (Parsing.peek_val __caml_parser_env 3 : 'math_expr) in
@@ -898,78 +899,78 @@ let yyact = [|
     Obj.repr(
 # 175 "parser_dbt.mly"
                                                    ( Shoot :: (_3 @ _5) )
-# 902 "parser_dbt.ml"
+# 903 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 176 "parser_dbt.mly"
                                                    ( [ IsFoe; Read(_1^".flag") ] )
-# 909 "parser_dbt.ml"
+# 910 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 177 "parser_dbt.mly"
                                                    ( [ IsAlly; Read(_1^".flag") ] )
-# 916 "parser_dbt.ml"
+# 917 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 178 "parser_dbt.mly"
                                                    ( [ IsWall; Read(_1^".flag") ] )
-# 923 "parser_dbt.ml"
+# 924 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 179 "parser_dbt.mly"
                                                    ( [ IsEnd; Read(_1^".flag") ] )
-# 930 "parser_dbt.ml"
+# 931 "parser_dbt.ml"
                : 'logic_expr))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 183 "parser_dbt.mly"
                   ( [ Equal ] )
-# 936 "parser_dbt.ml"
+# 937 "parser_dbt.ml"
                : 'math_relation))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 184 "parser_dbt.mly"
                   ( [ Equal ; Not ] )
-# 942 "parser_dbt.ml"
+# 943 "parser_dbt.ml"
                : 'math_relation))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 185 "parser_dbt.mly"
                   ( [ Less ] )
-# 948 "parser_dbt.ml"
+# 949 "parser_dbt.ml"
                : 'math_relation))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 186 "parser_dbt.mly"
                   ( [ Greater ] )
-# 954 "parser_dbt.ml"
+# 955 "parser_dbt.ml"
                : 'math_relation))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 187 "parser_dbt.mly"
                   ( [ Greater ; Not ] )
-# 960 "parser_dbt.ml"
+# 961 "parser_dbt.ml"
                : 'math_relation))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 188 "parser_dbt.mly"
                   ( [ Less ; Not ] )
-# 966 "parser_dbt.ml"
+# 967 "parser_dbt.ml"
                : 'math_relation))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : int) in
     Obj.repr(
 # 192 "parser_dbt.mly"
                                  ( [ Int(_1) ] )
-# 973 "parser_dbt.ml"
+# 974 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 3 : string) in
@@ -977,14 +978,14 @@ let yyact = [|
     Obj.repr(
 # 193 "parser_dbt.mly"
                                  ( Call(_1) :: _3 )
-# 981 "parser_dbt.ml"
+# 982 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : string) in
     Obj.repr(
 # 194 "parser_dbt.mly"
                                  ( [ Read(_1) ] )
-# 988 "parser_dbt.ml"
+# 989 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
@@ -992,7 +993,7 @@ let yyact = [|
     Obj.repr(
 # 195 "parser_dbt.mly"
                                  ( Plus :: ( _3 @ _1) )
-# 996 "parser_dbt.ml"
+# 997 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
@@ -1000,7 +1001,7 @@ let yyact = [|
     Obj.repr(
 # 196 "parser_dbt.mly"
                                  ( Minus :: ( _3 @ _1) )
-# 1004 "parser_dbt.ml"
+# 1005 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
@@ -1008,7 +1009,7 @@ let yyact = [|
     Obj.repr(
 # 197 "parser_dbt.mly"
                                  ( Times :: ( _3 @ _1) )
-# 1012 "parser_dbt.ml"
+# 1013 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 2 : 'math_expr) in
@@ -1016,14 +1017,14 @@ let yyact = [|
     Obj.repr(
 # 198 "parser_dbt.mly"
                                  ( Divide :: ( _3 @ _1) )
-# 1020 "parser_dbt.ml"
+# 1021 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _2 = (Parsing.peek_val __caml_parser_env 1 : 'math_expr) in
     Obj.repr(
 # 199 "parser_dbt.mly"
                                  ( _2 )
-# 1027 "parser_dbt.ml"
+# 1028 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _3 = (Parsing.peek_val __caml_parser_env 3 : 'math_expr) in
@@ -1031,33 +1032,33 @@ let yyact = [|
     Obj.repr(
 # 200 "parser_dbt.mly"
                                                    ( Random :: (_5 @ _3) )
-# 1035 "parser_dbt.ml"
+# 1036 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 201 "parser_dbt.mly"
                                  ( [ GetHealth ] )
-# 1041 "parser_dbt.ml"
+# 1042 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 202 "parser_dbt.mly"
                                  ( [ Read(_1^".distance") ] )
-# 1048 "parser_dbt.ml"
+# 1049 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 1 : string) in
     Obj.repr(
 # 203 "parser_dbt.mly"
                                  ( [ Read(_1^".direction") ] )
-# 1055 "parser_dbt.ml"
+# 1056 "parser_dbt.ml"
                : 'math_expr))
 ; (fun __caml_parser_env ->
     Obj.repr(
 # 204 "parser_dbt.mly"
                                  ( report_error (Parsing.rhs_start_pos 1) "Malformed math expression" )
-# 1061 "parser_dbt.ml"
+# 1062 "parser_dbt.ml"
                : 'math_expr))
 (* Entry drone *)
 ; (fun __caml_parser_env -> raise (Parsing.YYexit (Parsing.peek_val __caml_parser_env 0)))
