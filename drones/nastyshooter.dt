@@ -1,0 +1,54 @@
+0 direction store
+
+	begin
+		dropall //new starting
+		0 shoottime store
+		0 360 random
+		direction store
+
+		//move near a wall
+		direction read move
+		begin
+
+			//find the wall
+			direction read look
+			begin
+
+				iswall not
+			while
+				drop drop drop
+			again
+			drop drop
+			20 >
+
+		while
+			//keep moving	
+		again
+
+		//stop there nearby the wall
+		stop
+
+		//lay on the wall then shoot
+		begin
+
+			//find the nearest feo shoot it
+			direction read 180 + look
+			begin
+				dup
+				isfoe not
+				swap
+				iswall not
+				and
+			while
+				drop drop drop
+			again
+			drop
+			shoot
+			shoottime read 1 + shoottime store
+			shoottime read 10 <
+		while
+			//keep finding foe and shooting
+		again
+
+	again
+

@@ -1,0 +1,784 @@
+   0  $accept : %entry% $end
+
+   1  drone : program
+
+   2  program :
+   3          | program operation
+   4          | program sub
+   5          | program compaund_statment
+
+   6  sub : SUB NAME operations END_SUB
+
+   7  operations :
+   8             | operations operation
+   9             | operations compaund_statment
+  10             | operations error
+
+  11  compaund_statment : IF operations END_IF
+  12                    | IF operations ELSE operations END_IF
+  13                    | BEGIN operations AGAIN
+  14                    | BEGIN operations WHILE operations AGAIN
+
+  15  operation : INTEGER
+  16            | PLUS
+  17            | MINUS
+  18            | TIMES
+  19            | DIVIDE
+  20            | MOD
+  21            | POWER
+  22            | AND
+  23            | OR
+  24            | NOT
+  25            | BOOL
+  26            | EQUAL
+  27            | LESS
+  28            | GREATER
+  29            | NAME READ
+  30            | NAME STORE
+  31            | DROP
+  32            | DROPALL
+  33            | DUP
+  34            | SWAP
+  35            | OVER
+  36            | ROT
+  37            | LABEL
+  38            | NAME JUMP
+  39            | NAME JUMPIF
+  40            | NAME
+  41            | MOVE
+  42            | STOP
+  43            | SHOOT
+  44            | LOOK
+  45            | ISFOE
+  46            | ISALLY
+  47            | ISWALL
+  48            | ISEND
+  49            | WAIT
+  50            | GETHEALTH
+  51            | RANDOM
+
+  52  %entry% : '\001' drone
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . drone  (52)
+	program : .  (2)
+
+	.  reduce 2
+
+	drone  goto 3
+	program  goto 4
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	%entry% : '\001' drone .  (52)
+
+	.  reduce 52
+
+
+state 4
+	drone : program .  (1)
+	program : program . operation  (3)
+	program : program . sub  (4)
+	program : program . compaund_statment  (5)
+
+	SUB  shift 5
+	IF  shift 6
+	BEGIN  shift 7
+	LABEL  shift 8
+	NAME  shift 9
+	INTEGER  shift 10
+	PLUS  shift 11
+	MINUS  shift 12
+	TIMES  shift 13
+	DIVIDE  shift 14
+	MOD  shift 15
+	POWER  shift 16
+	AND  shift 17
+	OR  shift 18
+	NOT  shift 19
+	BOOL  shift 20
+	EQUAL  shift 21
+	LESS  shift 22
+	GREATER  shift 23
+	DROP  shift 24
+	DROPALL  shift 25
+	DUP  shift 26
+	SWAP  shift 27
+	OVER  shift 28
+	ROT  shift 29
+	MOVE  shift 30
+	STOP  shift 31
+	SHOOT  shift 32
+	LOOK  shift 33
+	ISFOE  shift 34
+	ISALLY  shift 35
+	ISWALL  shift 36
+	ISEND  shift 37
+	WAIT  shift 38
+	GETHEALTH  shift 39
+	RANDOM  shift 40
+	$end  reduce 1
+
+	operation  goto 41
+	sub  goto 42
+	compaund_statment  goto 43
+
+
+state 5
+	sub : SUB . NAME operations END_SUB  (6)
+
+	NAME  shift 44
+	.  error
+
+
+state 6
+	compaund_statment : IF . operations END_IF  (11)
+	compaund_statment : IF . operations ELSE operations END_IF  (12)
+	operations : .  (7)
+
+	.  reduce 7
+
+	operations  goto 45
+
+
+state 7
+	compaund_statment : BEGIN . operations AGAIN  (13)
+	compaund_statment : BEGIN . operations WHILE operations AGAIN  (14)
+	operations : .  (7)
+
+	.  reduce 7
+
+	operations  goto 46
+
+
+state 8
+	operation : LABEL .  (37)
+
+	.  reduce 37
+
+
+state 9
+	operation : NAME . READ  (29)
+	operation : NAME . STORE  (30)
+	operation : NAME . JUMP  (38)
+	operation : NAME . JUMPIF  (39)
+	operation : NAME .  (40)
+
+	READ  shift 47
+	STORE  shift 48
+	JUMP  shift 49
+	JUMPIF  shift 50
+	$end  reduce 40
+	error  reduce 40
+	SUB  reduce 40
+	END_SUB  reduce 40
+	IF  reduce 40
+	ELSE  reduce 40
+	END_IF  reduce 40
+	BEGIN  reduce 40
+	WHILE  reduce 40
+	AGAIN  reduce 40
+	LABEL  reduce 40
+	NAME  reduce 40
+	INTEGER  reduce 40
+	PLUS  reduce 40
+	MINUS  reduce 40
+	TIMES  reduce 40
+	DIVIDE  reduce 40
+	MOD  reduce 40
+	POWER  reduce 40
+	AND  reduce 40
+	OR  reduce 40
+	NOT  reduce 40
+	BOOL  reduce 40
+	EQUAL  reduce 40
+	LESS  reduce 40
+	GREATER  reduce 40
+	DROP  reduce 40
+	DROPALL  reduce 40
+	DUP  reduce 40
+	SWAP  reduce 40
+	OVER  reduce 40
+	ROT  reduce 40
+	MOVE  reduce 40
+	STOP  reduce 40
+	SHOOT  reduce 40
+	LOOK  reduce 40
+	ISFOE  reduce 40
+	ISALLY  reduce 40
+	ISWALL  reduce 40
+	ISEND  reduce 40
+	WAIT  reduce 40
+	GETHEALTH  reduce 40
+	RANDOM  reduce 40
+
+
+state 10
+	operation : INTEGER .  (15)
+
+	.  reduce 15
+
+
+state 11
+	operation : PLUS .  (16)
+
+	.  reduce 16
+
+
+state 12
+	operation : MINUS .  (17)
+
+	.  reduce 17
+
+
+state 13
+	operation : TIMES .  (18)
+
+	.  reduce 18
+
+
+state 14
+	operation : DIVIDE .  (19)
+
+	.  reduce 19
+
+
+state 15
+	operation : MOD .  (20)
+
+	.  reduce 20
+
+
+state 16
+	operation : POWER .  (21)
+
+	.  reduce 21
+
+
+state 17
+	operation : AND .  (22)
+
+	.  reduce 22
+
+
+state 18
+	operation : OR .  (23)
+
+	.  reduce 23
+
+
+state 19
+	operation : NOT .  (24)
+
+	.  reduce 24
+
+
+state 20
+	operation : BOOL .  (25)
+
+	.  reduce 25
+
+
+state 21
+	operation : EQUAL .  (26)
+
+	.  reduce 26
+
+
+state 22
+	operation : LESS .  (27)
+
+	.  reduce 27
+
+
+state 23
+	operation : GREATER .  (28)
+
+	.  reduce 28
+
+
+state 24
+	operation : DROP .  (31)
+
+	.  reduce 31
+
+
+state 25
+	operation : DROPALL .  (32)
+
+	.  reduce 32
+
+
+state 26
+	operation : DUP .  (33)
+
+	.  reduce 33
+
+
+state 27
+	operation : SWAP .  (34)
+
+	.  reduce 34
+
+
+state 28
+	operation : OVER .  (35)
+
+	.  reduce 35
+
+
+state 29
+	operation : ROT .  (36)
+
+	.  reduce 36
+
+
+state 30
+	operation : MOVE .  (41)
+
+	.  reduce 41
+
+
+state 31
+	operation : STOP .  (42)
+
+	.  reduce 42
+
+
+state 32
+	operation : SHOOT .  (43)
+
+	.  reduce 43
+
+
+state 33
+	operation : LOOK .  (44)
+
+	.  reduce 44
+
+
+state 34
+	operation : ISFOE .  (45)
+
+	.  reduce 45
+
+
+state 35
+	operation : ISALLY .  (46)
+
+	.  reduce 46
+
+
+state 36
+	operation : ISWALL .  (47)
+
+	.  reduce 47
+
+
+state 37
+	operation : ISEND .  (48)
+
+	.  reduce 48
+
+
+state 38
+	operation : WAIT .  (49)
+
+	.  reduce 49
+
+
+state 39
+	operation : GETHEALTH .  (50)
+
+	.  reduce 50
+
+
+state 40
+	operation : RANDOM .  (51)
+
+	.  reduce 51
+
+
+state 41
+	program : program operation .  (3)
+
+	.  reduce 3
+
+
+state 42
+	program : program sub .  (4)
+
+	.  reduce 4
+
+
+state 43
+	program : program compaund_statment .  (5)
+
+	.  reduce 5
+
+
+state 44
+	sub : SUB NAME . operations END_SUB  (6)
+	operations : .  (7)
+
+	.  reduce 7
+
+	operations  goto 51
+
+
+state 45
+	operations : operations . operation  (8)
+	operations : operations . compaund_statment  (9)
+	operations : operations . error  (10)
+	compaund_statment : IF operations . END_IF  (11)
+	compaund_statment : IF operations . ELSE operations END_IF  (12)
+
+	error  shift 52
+	IF  shift 6
+	ELSE  shift 53
+	END_IF  shift 54
+	BEGIN  shift 7
+	LABEL  shift 8
+	NAME  shift 9
+	INTEGER  shift 10
+	PLUS  shift 11
+	MINUS  shift 12
+	TIMES  shift 13
+	DIVIDE  shift 14
+	MOD  shift 15
+	POWER  shift 16
+	AND  shift 17
+	OR  shift 18
+	NOT  shift 19
+	BOOL  shift 20
+	EQUAL  shift 21
+	LESS  shift 22
+	GREATER  shift 23
+	DROP  shift 24
+	DROPALL  shift 25
+	DUP  shift 26
+	SWAP  shift 27
+	OVER  shift 28
+	ROT  shift 29
+	MOVE  shift 30
+	STOP  shift 31
+	SHOOT  shift 32
+	LOOK  shift 33
+	ISFOE  shift 34
+	ISALLY  shift 35
+	ISWALL  shift 36
+	ISEND  shift 37
+	WAIT  shift 38
+	GETHEALTH  shift 39
+	RANDOM  shift 40
+	.  error
+
+	operation  goto 55
+	compaund_statment  goto 56
+
+
+state 46
+	operations : operations . operation  (8)
+	operations : operations . compaund_statment  (9)
+	operations : operations . error  (10)
+	compaund_statment : BEGIN operations . AGAIN  (13)
+	compaund_statment : BEGIN operations . WHILE operations AGAIN  (14)
+
+	error  shift 52
+	IF  shift 6
+	BEGIN  shift 7
+	WHILE  shift 57
+	AGAIN  shift 58
+	LABEL  shift 8
+	NAME  shift 9
+	INTEGER  shift 10
+	PLUS  shift 11
+	MINUS  shift 12
+	TIMES  shift 13
+	DIVIDE  shift 14
+	MOD  shift 15
+	POWER  shift 16
+	AND  shift 17
+	OR  shift 18
+	NOT  shift 19
+	BOOL  shift 20
+	EQUAL  shift 21
+	LESS  shift 22
+	GREATER  shift 23
+	DROP  shift 24
+	DROPALL  shift 25
+	DUP  shift 26
+	SWAP  shift 27
+	OVER  shift 28
+	ROT  shift 29
+	MOVE  shift 30
+	STOP  shift 31
+	SHOOT  shift 32
+	LOOK  shift 33
+	ISFOE  shift 34
+	ISALLY  shift 35
+	ISWALL  shift 36
+	ISEND  shift 37
+	WAIT  shift 38
+	GETHEALTH  shift 39
+	RANDOM  shift 40
+	.  error
+
+	operation  goto 55
+	compaund_statment  goto 56
+
+
+state 47
+	operation : NAME READ .  (29)
+
+	.  reduce 29
+
+
+state 48
+	operation : NAME STORE .  (30)
+
+	.  reduce 30
+
+
+state 49
+	operation : NAME JUMP .  (38)
+
+	.  reduce 38
+
+
+state 50
+	operation : NAME JUMPIF .  (39)
+
+	.  reduce 39
+
+
+state 51
+	sub : SUB NAME operations . END_SUB  (6)
+	operations : operations . operation  (8)
+	operations : operations . compaund_statment  (9)
+	operations : operations . error  (10)
+
+	error  shift 52
+	END_SUB  shift 59
+	IF  shift 6
+	BEGIN  shift 7
+	LABEL  shift 8
+	NAME  shift 9
+	INTEGER  shift 10
+	PLUS  shift 11
+	MINUS  shift 12
+	TIMES  shift 13
+	DIVIDE  shift 14
+	MOD  shift 15
+	POWER  shift 16
+	AND  shift 17
+	OR  shift 18
+	NOT  shift 19
+	BOOL  shift 20
+	EQUAL  shift 21
+	LESS  shift 22
+	GREATER  shift 23
+	DROP  shift 24
+	DROPALL  shift 25
+	DUP  shift 26
+	SWAP  shift 27
+	OVER  shift 28
+	ROT  shift 29
+	MOVE  shift 30
+	STOP  shift 31
+	SHOOT  shift 32
+	LOOK  shift 33
+	ISFOE  shift 34
+	ISALLY  shift 35
+	ISWALL  shift 36
+	ISEND  shift 37
+	WAIT  shift 38
+	GETHEALTH  shift 39
+	RANDOM  shift 40
+	.  error
+
+	operation  goto 55
+	compaund_statment  goto 56
+
+
+state 52
+	operations : operations error .  (10)
+
+	.  reduce 10
+
+
+state 53
+	compaund_statment : IF operations ELSE . operations END_IF  (12)
+	operations : .  (7)
+
+	.  reduce 7
+
+	operations  goto 60
+
+
+state 54
+	compaund_statment : IF operations END_IF .  (11)
+
+	.  reduce 11
+
+
+state 55
+	operations : operations operation .  (8)
+
+	.  reduce 8
+
+
+state 56
+	operations : operations compaund_statment .  (9)
+
+	.  reduce 9
+
+
+state 57
+	compaund_statment : BEGIN operations WHILE . operations AGAIN  (14)
+	operations : .  (7)
+
+	.  reduce 7
+
+	operations  goto 61
+
+
+state 58
+	compaund_statment : BEGIN operations AGAIN .  (13)
+
+	.  reduce 13
+
+
+state 59
+	sub : SUB NAME operations END_SUB .  (6)
+
+	.  reduce 6
+
+
+state 60
+	operations : operations . operation  (8)
+	operations : operations . compaund_statment  (9)
+	operations : operations . error  (10)
+	compaund_statment : IF operations ELSE operations . END_IF  (12)
+
+	error  shift 52
+	IF  shift 6
+	END_IF  shift 62
+	BEGIN  shift 7
+	LABEL  shift 8
+	NAME  shift 9
+	INTEGER  shift 10
+	PLUS  shift 11
+	MINUS  shift 12
+	TIMES  shift 13
+	DIVIDE  shift 14
+	MOD  shift 15
+	POWER  shift 16
+	AND  shift 17
+	OR  shift 18
+	NOT  shift 19
+	BOOL  shift 20
+	EQUAL  shift 21
+	LESS  shift 22
+	GREATER  shift 23
+	DROP  shift 24
+	DROPALL  shift 25
+	DUP  shift 26
+	SWAP  shift 27
+	OVER  shift 28
+	ROT  shift 29
+	MOVE  shift 30
+	STOP  shift 31
+	SHOOT  shift 32
+	LOOK  shift 33
+	ISFOE  shift 34
+	ISALLY  shift 35
+	ISWALL  shift 36
+	ISEND  shift 37
+	WAIT  shift 38
+	GETHEALTH  shift 39
+	RANDOM  shift 40
+	.  error
+
+	operation  goto 55
+	compaund_statment  goto 56
+
+
+state 61
+	operations : operations . operation  (8)
+	operations : operations . compaund_statment  (9)
+	operations : operations . error  (10)
+	compaund_statment : BEGIN operations WHILE operations . AGAIN  (14)
+
+	error  shift 52
+	IF  shift 6
+	BEGIN  shift 7
+	AGAIN  shift 63
+	LABEL  shift 8
+	NAME  shift 9
+	INTEGER  shift 10
+	PLUS  shift 11
+	MINUS  shift 12
+	TIMES  shift 13
+	DIVIDE  shift 14
+	MOD  shift 15
+	POWER  shift 16
+	AND  shift 17
+	OR  shift 18
+	NOT  shift 19
+	BOOL  shift 20
+	EQUAL  shift 21
+	LESS  shift 22
+	GREATER  shift 23
+	DROP  shift 24
+	DROPALL  shift 25
+	DUP  shift 26
+	SWAP  shift 27
+	OVER  shift 28
+	ROT  shift 29
+	MOVE  shift 30
+	STOP  shift 31
+	SHOOT  shift 32
+	LOOK  shift 33
+	ISFOE  shift 34
+	ISALLY  shift 35
+	ISWALL  shift 36
+	ISEND  shift 37
+	WAIT  shift 38
+	GETHEALTH  shift 39
+	RANDOM  shift 40
+	.  error
+
+	operation  goto 55
+	compaund_statment  goto 56
+
+
+state 62
+	compaund_statment : IF operations ELSE operations END_IF .  (12)
+
+	.  reduce 12
+
+
+state 63
+	compaund_statment : BEGIN operations WHILE operations AGAIN .  (14)
+
+	.  reduce 14
+
+
+50 terminals, 8 nonterminals
+53 grammar rules, 64 states
