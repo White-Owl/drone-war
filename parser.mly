@@ -47,7 +47,7 @@ program:
 	| program compaund_statment { ($2 @ fst $1), snd $1 }
 
 sub:
-	SUB NAME operations END_SUB  { { name = $2; body = List.rev $3; } } /* store the function name and function operations between "sub" and "esub" */
+	SUB NAME operations END_SUB  	{ { name = $2; body = List.rev $3; } } /* store the function name and function operations between "sub" and "esub" */
 
 
 operations:
