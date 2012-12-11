@@ -1,16 +1,16 @@
 0 direction store
-
+// keep moving to different walls, seek foe to shoot 
 	begin
-		dropall //new starting
+	
+		dropall 
 		0 shoottime store
 		0 360 random
 		direction store
-
-		//move near a wall
+// moving
 		direction read move
+// move to the wall stop before hitting
 		begin
 
-			//find the wall
 			direction read look
 			begin
 
@@ -18,20 +18,17 @@
 			while
 				drop drop drop
 			again
-			drop drop
+			drop
 			20 >
 
 		while
-			//keep moving	
-		again
 
-		//stop there nearby the wall
+		again
+// stop moving
 		stop
 
-		//lay on the wall then shoot
 		begin
-
-			//find the nearest feo shoot it
+// lay on the wall and look backward
 			direction read 180 + look
 			begin
 				dup
@@ -40,15 +37,14 @@
 				iswall not
 				and
 			while
-				drop drop drop
+				drop drop
 			again
-			drop
+// shoot foe
 			shoot
 			shoottime read 1 + shoottime store
 			shoottime read 10 <
 		while
-			//keep finding foe and shooting
 		again
-
+// repeat it until die
 	again
 
