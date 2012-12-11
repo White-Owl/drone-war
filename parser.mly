@@ -7,10 +7,16 @@ open Utils;;
 
 let auto_label_counter = ref 0;;
 
+let make_label() =
+	incr auto_label_counter;
+	("-" ^ string_of_int(!auto_label_counter))
+	;;
+
 %}
 
 %token SUB END_SUB
 %token IF ELSE END_IF
+%token BEGIN WHILE AGAIN
 %token READ STORE
 %token COLON
 %token JUMP JUMPIF
@@ -38,7 +44,7 @@ program:
 	{ [], [] }                                      /* two lists for main body  of the program and for functions defined by users */
 	| program operation { ($2 :: fst $1), snd $1 }  /* add operations to the body of the main program */
 	| program sub { fst $1, ($2 :: snd $1) }        /* add user function to the list of subs */
-	| program if_block { ($2 @ fst $1), snd $1 }
+	| program compaund_statment { ($2 @ fst $1), snd $1 }
 
 sub:
 	SUB NAME operations END_SUB  { { name = $2; body = List.rev $3; } } /* store the function name and function operations between "sub" and "esub" */
@@ -47,17 +53,26 @@ sub:
 operations:
 	{ [] }
 	| operations operation   { if $2=Nop then $1 else $2 :: $1 }
-	| operations if_block    { $2 @ $1 }
+	| operations compaund_statment    { $2 @ $1 }
 	| operations error       { let pos = Parsing.rhs_start_pos 2 in
 	                           raise (Parse_failure ("Unrecognized tokens starting from line %d position %d\n", pos.pos_lnum, (pos.pos_cnum - pos.pos_bol +1)));
 	                           (* TO DO! I have no idea how to reach lex_buffer from the parser. So the exact token or text of the line are unknown *)
 	                         }
 
 
-if_block:
-	IF operations END_IF     { incr auto_label_counter; let lbl = ("-" ^ string_of_int(!auto_label_counter)) in
+compaund_statment:
+	IF operations END_IF     {  let lbl = make_label() in
 								( Label(lbl):: $2 ) @ [ JumpIf(lbl) ; Not ]
 							 }
+	| IF operations ELSE operations END_IF	{ let lbl1 = make_label() and lbl2= make_label() in
+								 ( Label(lbl2):: $4) @ ( Label(lbl1)::(Jump(lbl2):: $2 )) @ [ JumpIf(lbl1) ; Not ]  
+							 }
+	| BEGIN operations AGAIN { let lbl=make_label() in
+								(Jump(lbl)::$2) @ [Label(lbl)]
+							}
+	| BEGIN operations WHILE operations AGAIN	{let lbl1 =make_label() and lbl2 = make_label() in
+								[Label(lbl1); Jump(lbl2)] @ $4 @ [ JumpIf(lbl1) ; Not ] @ $2 @ [Label(lbl2)]
+							}
 
 operation:
 	  INTEGER       { Int($1) }

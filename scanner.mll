@@ -35,6 +35,9 @@ let keyword_table =
 		( "if", IF );
 		( "else", ELSE );
 		( "endif", END_IF );
+		( "begin", BEGIN );
+		( "while", WHILE );
+		( "again", AGAIN );
 		( "move", MOVE );
 		( "stop", STOP );
 		( "shoot", SHOOT );
