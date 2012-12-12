@@ -47,7 +47,7 @@ object (self)
 
 	method run =
 		let steps = ref 1 in
-		while (self#step > 1) && (!steps < 300) do
+		while (self#step > 1) && (!steps < 1000) do
 			incr steps
 		done;
 		printf "Results:\n";
@@ -152,7 +152,9 @@ object (self)
 		(* update position for all drones and bullets *)
 		List.iter (fun d -> d#move drone_speed ) drones;
 		List.iter (fun b -> b#move bullet_speed; if b#is_exploded then List.iter(fun d -> self#explosion b d) drones) bullets;
-		(* TO DO! call GUI if needed *)
+
+(* 		List.iter (fun d -> d#print_current_pos ) drones;
+ *)		(* TO DO! call GUI if needed *)
 		(* remove all exploded bullets from the arena *)
 		bullets <- List.filter (fun b -> not b#is_exploded) bullets;
 		!live_drones

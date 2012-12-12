@@ -8,9 +8,9 @@
 		direction store
 // moving
 		direction read move
+
 // move to the wall stop before hitting
 		begin
-
 			direction read look
 			begin
 				iswall not
@@ -23,7 +23,10 @@
 
 		again
 // stop moving
-		stop
+		direction read 
+		180 +
+		direction store
+		direction read move
 
 		begin
 // lay on the wall and look backward
