@@ -2,6 +2,7 @@ open Arena;;
 open Printf;;
 open Utils;;
 
+
 let main =
 	print_string "The Drone War\nThe class project for COMS W4115 Programming Languages and Translators\nColumbia University, Fall 2012\n\
 				  Professor:\tStephen A. Edwards\n\
@@ -10,7 +11,7 @@ let main =
 				  \t\tXiaotong Chen (xc2230)\n\
 				  \t\tShuo Qiu (sq2144)\n\n\
 				  ";
-
+	
 	let cage = new arena in
 	Array.iter (fun parameter ->
 		if parameter.[0]='-' then
@@ -25,6 +26,7 @@ let main =
 		begin
 			print_string "Loading ";
 			print_string parameter;
+			Random.self_init();
 			try
 				cage#load parameter;
 				printf " - ok\n"
