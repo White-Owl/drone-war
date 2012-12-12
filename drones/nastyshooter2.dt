@@ -13,6 +13,7 @@
 
 			direction read look
 			begin
+
 				iswall not
 			while
 				drop drop
