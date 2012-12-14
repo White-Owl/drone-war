@@ -1,0 +1,25 @@
+0 direction store
+
+	begin
+		dropall
+		0 shoottime store
+		0 360 random
+		direction store
+
+		begin
+			direction read 180 + look
+			begin
+				dup
+				isfoe not
+				swap
+				iswall not
+				and
+			while
+				drop drop drop
+			again
+			shoot
+		while
+
+		again
+
+	again
