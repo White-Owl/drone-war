@@ -64,6 +64,8 @@ class drone =
 
 		method get_current_sub = current_sub;
 
+                method get_direction_of_the_gun = direction_of_the_gun;
+
 		method get_drone_name = drone_name
 
 		method is_brain_dead = brain_dead
@@ -324,9 +326,9 @@ class drone =
 				print_endline "";
 				print_endline "Health: ";
 				print_int health;
-				print_endline "";
-				print_endline "Bullet load: ";
-				print_int bullet_capacity;
+                                print_endline "";
+				print_endline "team_id: ";
+				print_int team_id;
 				print_endline "";
 				print_endline "";
 			end

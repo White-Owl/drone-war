@@ -1,9 +1,9 @@
 TARGET=DroneWar
-ML1=ast.ml utils.ml
+ML1=ast.ml utils.ml gui.ml
 ML2=bullet.ml drone.ml arena.ml main.ml
 MLY=parser_dbt.mly parser.mly
 MLL=scanner_dbt.mll scanner.mll
-LIBS=
+LIBS=$(WITHGRAPHICS)
 OBJS=$(ML1:.ml=.cmo) $(MLL:.mll=.cmo) $(MLY:.mly=.cmo) $(ML2:.ml=.cmo)
 
 # uncomment and recompile to see the full parser log
@@ -20,13 +20,13 @@ endif
 
 all: $(TARGET)
 ifeq ($(DEBUG), yes)
-	export OCAMLRUNPARAM='p' && ./$(TARGET) -D test.dbt drones/turret.dt drones/berserk.dt drones/nastyshooter.dt drones/rabbit.dt drones/movingshooter.dt drones/nastyshooter2.dt drones/standshooter.dt 2> stderr
+	export OCAMLRUNPARAM='p' && ./$(TARGET) -D test.dbt drones/turret.dt drones/berserk.dt drones/nastyshooter.dt drones/rabbit.dt drones/movingshooter.dt drones/nastyshooter2.dt 2> stderr
 else
 	./$(TARGET) -D drones/berserk.dt drones/rabbit.dt drones/turret.dt test.dbt
 endif
 
 $(TARGET): $(OBJS)
-	ocamlc  -o $@ $(LIBS) $^
+	ocamlc  -o $@ $(LIBS) graphics.cma $^
 
 %.ml: %.mll
 	ocamllex $<

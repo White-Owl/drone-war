@@ -3,11 +3,13 @@ open Printf;;
 open Bullet;;
 open Ast;;
 open Utils;;
+open Gui;;
 
 class arena =
 object (self)
 	val mutable drones : drone list = []
 	val mutable bullets : bullet list = []
+    val mutable arena_gui = new gui
 	val mutable debug_mode = false
 
 	val mutable look_range = 180 		(* +30 and -30 on the given degree *)
@@ -46,6 +48,7 @@ object (self)
 
 
 	method run =
+                arena_gui#drawArena;
 		let steps = ref 1 in
 		while (self#step > 1) && (!steps < 1000) do
 			incr steps
@@ -69,7 +72,7 @@ object (self)
 		let target_dire = int_of_float(atan( (d_target_y -. d_shoot_y) /. (d_target_x  -. d_shoot_x)) *. 180. /. pi) and
 				dist = distance (d_target_x, d_target_y, d_shoot_x, d_shoot_y)	in
 		let flag=(if (d_shoot#get_team_id=d_target#get_team_id) then Ally else Foe) in
-		if (target_dire < (dire + look_range)) && (target_dire > (dire - look_range)) && (not (d_shoot == d_target))
+		if (target_dire < (dire + look_range)) && (target_dire > (dire - look_range)) && (not (d_shoot == d_target) && (d_target#is_alive = true) )
 			then d_shoot#found_target dist target_dire flag
 
 
@@ -153,11 +156,15 @@ object (self)
 		List.iter (fun d -> d#move drone_speed ) drones;
 		List.iter (fun b -> b#move bullet_speed; if b#is_exploded then List.iter(fun d -> self#explosion b d) drones) bullets;
 
-(* 		List.iter (fun d -> d#print_current_pos ) drones;
- *)		(* TO DO! call GUI if needed *)
+ 		List.iter (fun d -> d#print_current_pos ) drones;
+		(* TO DO! call GUI if needed *)
+                arena_gui#clear;
+                List.iter (fun d -> arena_gui#drawDroneDetail (int_of_float d#get_x_position) (int_of_float (d#get_y_position *. 0.58)) (radian_of_degree d#get_direction_of_the_gun) d#get_drone_name d#get_health) drones;
+                List.iter (fun b -> if(b#is_exploded) then arena_gui#drawExplode (int_of_float b#get_pos_x) (int_of_float (b#get_pos_y *. 0.58))else arena_gui#drawBullet (int_of_float b#get_pos_x) (int_of_float (b#get_pos_y *. 0.58))) bullets;
+                arena_gui#wait;
 		(* remove all exploded bullets from the arena *)
 		bullets <- List.filter (fun b -> not b#is_exploded) bullets;
-		!live_drones
+		!live_drones 
 
 
 	method ins d drone d_list =
