@@ -72,7 +72,7 @@ object (self)
 		let target_dire = int_of_float(atan( (d_target_y -. d_shoot_y) /. (d_target_x  -. d_shoot_x)) *. 180. /. pi) and
 				dist = distance (d_target_x, d_target_y, d_shoot_x, d_shoot_y)	in
 		let flag=(if (d_shoot#get_team_id=d_target#get_team_id) then Ally else Foe) in
-		if (target_dire < (dire + look_range)) && (target_dire > (dire - look_range)) && (not (d_shoot == d_target))
+		if (target_dire < (dire + look_range)) && (target_dire > (dire - look_range)) && (not (d_shoot == d_target) && (d_target#is_alive = true))
 			then d_shoot#found_target dist target_dire flag
 
 
