@@ -84,7 +84,9 @@ class drone =
 
 		method set_health h = health <- max h 0
 
+                method get_reason_for_coma = reason_for_coma
 
+                method get_gun_cooldown = gun_cooldown
 		(* this method is called, by the engine's LOOK procedure *)
 		method found_target dist dire flag=
 			if flag<>End then
@@ -324,6 +326,9 @@ class drone =
 				print_endline "Direction: ";
 				print_int direction_of_the_body;
 				print_endline "";
+				print_endline "Gun Direction: ";
+				print_int direction_of_the_gun;
+				print_endline "";
 				print_endline "Health: ";
 				print_int health;
                                 print_endline "";
@@ -339,7 +344,7 @@ class drone =
 			reason_for_coma <- explanation;
 			raise (Error_in_AI (explanation, current_sub, instruction_pointer));
 
-		method get_reason_for_coma = reason_for_coma
+		
 
 		method print_current_state =
 			let sub_name = (if current_sub="--" then "" else current_sub) in
