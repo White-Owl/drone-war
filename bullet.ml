@@ -27,7 +27,7 @@ class bullet =
 		start_y_position <- y;
 		y_position <- y;
 		direction <- dir;
-		distance_to_fly <- min dist 500
+		distance_to_fly <- min dist 1000
 
 
 	method move speed =
