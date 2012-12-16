@@ -199,6 +199,7 @@ class drone =
 			if Stack.is_empty stack then self#freeze "Empty stack";
 			match (Stack.pop stack) with
 			Integer op-> op
+
 			| _ -> self#freeze "Type mismatch"; 0
 
 		(* helping pop function which converts operand to bool *)
