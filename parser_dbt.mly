@@ -83,8 +83,6 @@ statement:
   | CALL SHOOT LPAREN math_expr COMMA math_expr RPAREN CR { Drop :: Shoot :: ($4 @ $6) }
   | ID EQUAL STARTSCAN LPAREN math_expr RPAREN CR         { [ Store($1^".distance"); Store($1^".direction"); Store($1^".flag"); Look ] @ $5 }
   | ID EQUAL NEXTSCAN LPAREN RPAREN CR                    { [ Store($1^".distance"); Store($1^".direction"); Store($1^".flag"); ] }
-  | CALL CANCELSCAN LPAREN RPAREN CR                      { let lblAgain=make_label() and lblDone=make_label() in
-                                                            [ Label(lblDone); Jump(lblAgain); Drop; Drop; JumpIf(lblDone); IsEnd;  Label(lblAgain)] }
   | error CR                                              { report_error (Parsing.rhs_start_pos 1) "Syntax error" }
 
 
