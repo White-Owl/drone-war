@@ -9,7 +9,7 @@ class arena =
 object (self)
 	val mutable drones : drone list = []
 	val mutable bullets : bullet list = []
-        val mutable arena_gui = new gui
+    val mutable arena_gui = new gui
 	val mutable debug_mode = false
 
 	val mutable look_range = 180 		(* +30 and -30 on the given degree *)
@@ -77,7 +77,7 @@ object (self)
 
 
 	(* get a distance to the wall in the exact direction of the drone's look *)
-	method look_wall dire d_look=
+	 method look_wall dire d_look=
 		let x=d_look#get_x_position and y=d_look#get_y_position in
 		let md = dire mod 360 in
 		let rd = radian_of_degree md in
@@ -88,8 +88,9 @@ object (self)
 					else min dh dv in
         d_look#found_target dist dire Wall
 
-(*  That method is extremly complicated and therefore prone to mistakes...
-	method look_wall dire d_look=
+
+ (*  That method is extremly complicated and therefore prone to mistakes... *)
+	(* method look_wall2 dire d_look=
 		let d_look_x=d_look#get_x_position and d_look_y=d_look#get_y_position in
 		let	k=tan(float_of_int(dire)) in
 		let	intercept=d_look_x -. k *. d_look_y in
@@ -120,8 +121,8 @@ object (self)
 				else
 				 	(intercept,0.)
 		in
-		let dist = self#get_distance d_look_x d_look_y wall_x wall_y in
-		d_look#found_target dist dire Wall *)
+		let dist = distance (d_look_x, d_look_y, wall_x, wall_y) in
+		d_look#found_target dist dire Wall  *)
 
 
 

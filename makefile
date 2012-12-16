@@ -20,7 +20,7 @@ endif
 
 all: $(TARGET)
 ifeq ($(DEBUG), yes)
-	export OCAMLRUNPARAM='p' && ./$(TARGET) -D test.dbt drones/turret.dt drones/berserk.dt drones/nastyshooter.dt drones/rabbit.dt drones/movingshooter.dt drones/nastyshooter2.dt 2> stderr
+	export OCAMLRUNPARAM='p' && ./$(TARGET) -D test.dbt drones/turret.dt drones/berserk.dt drones/nastyshooter.dt drones/rabbit.dt drones/movingshooter.dt drones/nastyshooter2.dt drones/movingshooter2.dt drones/standshooter.dt 2> stderr
 else
 	./$(TARGET) -D drones/berserk.dt drones/rabbit.dt drones/turret.dt test.dbt
 endif

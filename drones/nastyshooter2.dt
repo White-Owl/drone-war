@@ -41,7 +41,7 @@
 // shoot foe
 			shoot
 			shoottime read 1 + shoottime store
-			shoottime read 10 <
+			shoottime read 5 <
 		while
 		again
 // repeat it until die
