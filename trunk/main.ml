@@ -11,7 +11,7 @@ let main =
 				  \t\tXiaotong Chen (xc2230)\n\
 				  \t\tShuo Qiu (sq2144)\n\n\
 				  ";
-	(*Random.self_init(); *)
+	Random.self_init();
 	let cage = new arena in
 	Array.iter (fun parameter ->
 		if parameter.[0]='-' then
