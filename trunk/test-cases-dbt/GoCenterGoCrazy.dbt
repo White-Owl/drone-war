@@ -40,5 +40,4 @@ function wall(direction)
 		d = nextScan()
 	loop
 	wall = d.distance
-	call cancelscan()
 end function

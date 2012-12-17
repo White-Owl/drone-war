@@ -7,3 +7,6 @@ let distance(x1, y1, x2, y2) =
 
 let radian_of_degree angle =
 	float_of_int(angle) *. pi /. 180.;;
+
+let degree_of_radian angle =
+	int_of_float( angle *. 180. /. pi );;

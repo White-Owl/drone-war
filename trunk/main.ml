@@ -11,7 +11,7 @@ let main =
 				  \t\tXiaotong Chen (xc2230)\n\
 				  \t\tShuo Qiu (sq2144)\n\n\
 				  ";
-	
+	(*Random.self_init(); *)
 	let cage = new arena in
 	Array.iter (fun parameter ->
 		if parameter.[0]='-' then
@@ -19,6 +19,7 @@ let main =
 			match parameter.[1] with
 			  'D' -> cage#set_debug_mode true
 			| 't' -> cage#start_a_team
+			| 'q' -> cage#disable_gui
 			|  _  -> print_endline ("Unknown option " ^parameter);
 		end
 		else
@@ -26,7 +27,6 @@ let main =
 		begin
 			print_string "Loading ";
 			print_string parameter;
-			Random.self_init();
 			try
 				cage#load parameter;
 				printf " - ok\n"
