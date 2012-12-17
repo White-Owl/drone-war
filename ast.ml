@@ -38,7 +38,6 @@ type bytecode =
 	| IsFoe
 	| IsAlly
 	| IsWall
-	| IsEnd
 	| Wait
 	| GetHealth
 	| Random
@@ -83,7 +82,6 @@ let string_of_bytecode code =
 	| IsFoe           -> "IsFoe"
 	| IsAlly          -> "IsAlly"
 	| IsWall          -> "IsWall"
-	| IsEnd           -> "IsEnd"
 	| Wait            -> "Wait"
 	| GetHealth       -> "GetHealth"
 	| Random          -> "Random"
@@ -93,7 +91,6 @@ type look_flags =
 	  Foe															(* enemy type *)
 	| Ally                                                          (* friend type*)
 	| Wall                                                          (* boundary of arena *)
-	| End															(* end of the action *)
 
 type operands =
 	  Undefined
@@ -110,7 +107,6 @@ let string_of_operand op =
 					  Foe  -> "Foe"
 					| Ally -> "Ally"
 					| Wall -> "Wall"
-					| End  -> "End"
 
 
 type sub = {                                                        (* function defined by user *)

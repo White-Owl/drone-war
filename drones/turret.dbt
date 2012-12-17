@@ -12,5 +12,7 @@ start:
     else
         direction = direction + 10
     end if
-    call cancelScan()
+    do until drone.isWall
+		drone = nextScan()
+	loop
 goto start

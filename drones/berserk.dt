@@ -6,42 +6,27 @@
 main_loop:
 	direction read look
 
-check_what_I_saw:
-	isDrone sees_a_drone jumpif
-	isEnd main_loop jumpif
-    // if that was not a drone or END, then it had to be a WALL
-	// drop direction and distance to the wall and repeat the deciphering loop
-	drop2
-	check_what_I_saw jump
+	// if drones sees a wall, that means it does not see any drones
+	isWall not sees_a_drone jumpif
+	stop             // do not move if drone does not have a target
+	drop2            // if we sees a wall, then drop the distance to it (stack should be empty now)
+	0 360 random     // get a random direction value in [0-360] range
+	direction store  // and the drone will look for the next target in this random direction
+	main_loop jump
 
 sees_a_drone:
-	drop                  // it should have an ALLY/FOE flag after isDrone
 	dup direction store   // store the direction to the drone
-	move                  // start moving toward the target
-	direction read shoot  // and shoot in the same direction
+	dup move              // start moving toward the target
+	shoot                 // and shoot in the same direction
 	drop                  // ignore the result of shooting
 
 	// after charged to the nearest drone, we still have to cleanup data for
 	// other objects seen by look.
 look_cleanup:
-	isEnd main_loop jumpif
-	drop2
-	look_cleanup jump
-
+	swap drop swap drop     // drop direction and distance to the next target
+	isWall main_loop jumpif // the last target was a wall
+	look_cleanup jump       // repeat clean up process
 
 // user function
 // drop two values from the stack
 sub drop2 drop drop endsub
-
-
-// User function
-// Push TRUE to the stack if top value is a flag which represents a drone
-// Keep the flag itself.
-sub isDrone
-	dup isAlly l1 jumpif
-	dup isFoe
-	l2 jump
-l1:
-	true
-l2:
-endsub

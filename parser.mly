@@ -28,7 +28,7 @@ let make_label() =
 %token <bool> BOOL
 %token EQUAL LESS GREATER
 %token DROP DROPALL DUP SWAP OVER ROT
-%token MOVE STOP SHOOT LOOK ISFOE ISALLY ISWALL ISEND WAIT GETHEALTH RANDOM
+%token MOVE STOP SHOOT LOOK ISFOE ISALLY ISWALL WAIT GETHEALTH RANDOM
 %token EOF
 
 %start drone
@@ -65,7 +65,7 @@ compaund_statment:
 								( Label(lbl):: $2 ) @ [ JumpIf(lbl) ; Not ]
 							 }
 	| IF operations ELSE operations END_IF	{ let lbl1 = make_label() and lbl2= make_label() in
-								 ( Label(lbl2):: $4) @ ( Label(lbl1)::(Jump(lbl2):: $2 )) @ [ JumpIf(lbl1) ; Not ]  
+								 ( Label(lbl2):: $4) @ ( Label(lbl1)::(Jump(lbl2):: $2 )) @ [ JumpIf(lbl1) ; Not ]
 							 }
 	| BEGIN operations AGAIN { let lbl=make_label() in
 								(Jump(lbl)::$2) @ [Label(lbl)]
@@ -108,7 +108,6 @@ operation:
 	| ISFOE         { IsFoe }
 	| ISALLY        { IsAlly }
 	| ISWALL        { IsWall }
-	| ISEND         { IsEnd }
 	| WAIT          { Wait }
 	| GETHEALTH     { GetHealth }
 	| RANDOM        { Random }

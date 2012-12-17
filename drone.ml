@@ -64,7 +64,7 @@ class drone =
 
 		method get_current_sub = current_sub;
 
-                method get_direction_of_the_gun = direction_of_the_gun;
+		method get_direction_of_the_gun = direction_of_the_gun;
 
 		method get_drone_name = drone_name
 
@@ -82,18 +82,19 @@ class drone =
 
 		method get_moving_status = moving
 
-		method set_health h = health <- max h 0
+		method set_health h =
+			health <- max h 0;
+			moving <- moving && health>0
 
-                method get_reason_for_coma = reason_for_coma
+		method get_reason_for_coma = reason_for_coma
 
-                method get_gun_cooldown = gun_cooldown
+		method get_gun_cooldown = gun_cooldown
+
+
 		(* this method is called, by the engine's LOOK procedure *)
 		method found_target dist dire flag=
-			if flag<>End then
-			begin
-				Stack.push (Integer (dist)) stack;
-				Stack.push (Integer (dire)) stack;
-			end;
+			Stack.push (Integer (dist)) stack;
+			Stack.push (Integer (dire)) stack;
 			Stack.push (Flag (flag)) stack
 
 
@@ -214,7 +215,7 @@ class drone =
 			if Stack.is_empty stack then self#freeze "Empty stack";
 			match (Stack.pop stack) with
 			Flag op -> op
-			| _ -> self#freeze "Type mismatch"; End
+			| _ -> self#freeze "Type mismatch"; Wall
 
 
 
@@ -296,11 +297,13 @@ class drone =
 											then No_Action
 											else (gun_cooldown<-10; Do_Shoot(direction, distance))
 
-						| Look      -> let direction=self#pop_int in Do_Look(direction)
+						| Look      -> let direction=self#pop_int in
+										direction_of_the_gun <- direction mod 360;
+										if direction_of_the_gun > 180 then direction_of_the_gun <- direction_of_the_gun-360;
+										Do_Look(direction_of_the_gun)
 						| IsFoe     -> let flag=self#pop_flag in Stack.push (Boolean (flag=Foe)) stack; No_Action
 						| IsAlly    -> let flag=self#pop_flag in Stack.push (Boolean (flag=Ally)) stack; No_Action
 						| IsWall    -> let flag=self#pop_flag in Stack.push (Boolean (flag=Wall)) stack; No_Action
-						| IsEnd     -> let flag=self#pop_flag in Stack.push (Boolean (flag=End)) stack; No_Action
 						| GetHealth -> Stack.push (Integer(health)) stack; No_Action
 						| Wait      -> ticks_to_wait <- self#pop_int; No_Action
 
@@ -345,7 +348,7 @@ class drone =
 			reason_for_coma <- explanation;
 			raise (Error_in_AI (explanation, current_sub, instruction_pointer));
 
-		
+
 
 		method print_current_state =
 			let sub_name = (if current_sub="--" then "" else current_sub) in
@@ -362,7 +365,8 @@ class drone =
 			if (Stack.is_empty stack_copy) then
 				fprintf debug_out_file " EOS\n"
 			else
-				fprintf debug_out_file " ...\n"
+				fprintf debug_out_file " ...\n";
+			flush debug_out_file
 
 
 		(* for each shoot update bullet capacity and push boolean on the stack *)

@@ -48,7 +48,6 @@ let keyword_table =
 		( "isfoe", ISFOE );
 		( "isally", ISALLY );
 		( "iswall", ISWALL );
-		( "isend", ISEND );
 		( "mod", MOD );
 		( "and", AND );
 		( "or",  OR );

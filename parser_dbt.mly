@@ -35,8 +35,8 @@ let report_error error_starts_at message =
 %token LESS GREATER LESS_EQUAL GREATER_EQUAL
 %token AND OR NOT
 %token SLEEP MOVE STOP SHOOT RANDOM HEALTH
-%token STARTSCAN NEXTSCAN CANCELSCAN
-%token ISEND ISWALL ISFOE ISALLY DISTANCE DIRECTION
+%token STARTSCAN NEXTSCAN
+%token ISWALL ISFOE ISALLY DISTANCE DIRECTION
 %token EOF
 
 %left AND OR NOT
@@ -174,7 +174,6 @@ logic_expr:
   | ID ISFOE                                       { [ IsFoe; Read($1^".flag") ] }
   | ID ISALLY                                      { [ IsAlly; Read($1^".flag") ] }
   | ID ISWALL                                      { [ IsWall; Read($1^".flag") ] }
-  | ID ISEND                                       { [ IsEnd; Read($1^".flag") ] }
 
 
 math_relation:

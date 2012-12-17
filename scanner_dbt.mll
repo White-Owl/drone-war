@@ -42,7 +42,6 @@ let keyword_table =
 
 		("startscan",   STARTSCAN);
 		("nextscan",    NEXTSCAN);
-		(".isend",      ISEND);
 		(".iswall",     ISWALL);
 		(".isfoe",      ISFOE);
 		(".isally",     ISALLY);

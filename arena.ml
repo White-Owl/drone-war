@@ -10,17 +10,20 @@ object (self)
 	val mutable drones : drone list = []
 	val mutable bullets : bullet list = []
     val mutable arena_gui = new gui
+	val mutable gui_enabled = true
 	val mutable debug_mode = false
 
 	val mutable look_range = 30 		(* +30 and -30 on the given degree *)
-	val mutable bullet_speed = 50
-	val mutable drone_speed = 10
+	val mutable bullet_speed = 5
+	val mutable drone_speed = 1
 
 	val mutable area_map_x = 1000
 	val mutable area_map_y = 1000
 
 	val mutable team_counter = 0
 	val mutable gathering_team = false
+
+	method disable_gui = gui_enabled<-false
 
 	method set_debug_mode mode = debug_mode <- mode
 
@@ -33,7 +36,7 @@ object (self)
 				let decompiled_file = open_out (file_name ^ ".decompiled") in
 				d#decompile decompiled_file;
 				close_out decompiled_file;
-				d#set_debug_output (open_out (file_name ^ ".debug"));
+				d#set_debug_output (open_out (file_name ^ ".debug"))
 			end;
 			drones <- d :: drones
 		end
@@ -48,7 +51,7 @@ object (self)
 
 
 	method run =
-                arena_gui#drawArena;
+		if gui_enabled then arena_gui#drawArena;
 		let steps = ref 1 in
 		while (self#step > 1) && (!steps < 1000) do
 			incr steps
@@ -66,15 +69,6 @@ object (self)
 		) drones
 
 
-   	method look_one_drone dire d_shoot d_target =
-	   	let	d_shoot_x=d_shoot#get_x_position and d_shoot_y=d_shoot#get_y_position and
-				d_target_x=d_target#get_x_position and d_target_y=d_target#get_y_position in
-		let target_dire = int_of_float(atan( (d_target_y -. d_shoot_y) /. (d_target_x  -. d_shoot_x)) *. 180. /. pi) and
-				dist = distance (d_target_x, d_target_y, d_shoot_x, d_shoot_y)	in
-		let flag=(if (d_shoot#get_team_id=d_target#get_team_id) then Ally else Foe) in
-		if (target_dire < (dire + look_range)) && (target_dire > (dire - look_range)) && (not (d_shoot == d_target) && (d_target#is_alive = true))
-			then d_shoot#found_target dist target_dire flag
-
 
 	(* get a distance to the wall in the exact direction of the drone's look *)
 	 method look_wall dire d_look=
@@ -89,42 +83,6 @@ object (self)
         d_look#found_target dist dire Wall
 
 
- (*  That method is extremly complicated and therefore prone to mistakes... *)
-	(* method look_wall2 dire d_look=
-		let d_look_x=d_look#get_x_position and d_look_y=d_look#get_y_position in
-		let	k=tan(float_of_int(dire)) in
-		let	intercept=d_look_x -. k *. d_look_y in
-		let mod_dire=dire mod 360 in
-		let (wall_x, wall_y )=
-			if mod_dire > 0 && mod_dire<=90 then
-				if (float_of_int(area_map_y)) *. k +. intercept > ((float_of_int(area_map_x)) -. intercept )/. k
-				then
-				 	((float_of_int(area_map_x)),((float_of_int(area_map_x)) -. intercept )/. k)
-				else
-				 	(((float_of_int(area_map_y)) -. intercept )/. k,(float_of_int(area_map_y)))
-			else if mod_dire > 90 && mod_dire<=180 then
-				if (float_of_int(area_map_y)) *. k +. intercept<0.
-				then
-				 	(0. ,(0. -. intercept )/. k)
-				else
-				 	(((float_of_int(area_map_y)) -. intercept )/. k,(float_of_int(area_map_y)))
-			else if mod_dire > 180 && mod_dire<=270 then
-				if  intercept > 0.
-				then
-				 	(intercept,0.)
-				else
-				 	(0.,intercept /.(0.-.k))
-			else
-				if  intercept >float_of_int(area_map_x)
-				then
-					(float_of_int(area_map_x),(float_of_int(area_map_x)-.intercept)/.k)
-				else
-				 	(intercept,0.)
-		in
-		let dist = distance (d_look_x, d_look_y, wall_x, wall_y) in
-		d_look#found_target dist dire Wall  *)
-
-
 
 
    	method explosion b d =
@@ -136,21 +94,34 @@ object (self)
 
 	method step =
 		let live_drones = ref 0 in 		(* to check how many drones are still alive and kicking *)
-		List.iter (fun drone ->
-			if (drone#is_alive) && (not drone#is_brain_dead) then begin
+		List.iter (fun active_drone ->
+			if (active_drone#is_alive) && (not active_drone#is_brain_dead) then begin
 				incr live_drones;
 				try (
-					let action = drone#step in
+					let action = active_drone#step in
 					match action with
 					  No_Action                     -> ()
-					| Do_Shoot(direction, distance) -> self#add_bullet distance direction drone
+					| Do_Shoot(direction, distance) -> self#add_bullet distance direction active_drone
 					| Do_Look(direction)            -> 	begin
-														drone#found_target 0 0 End;
-														self#look_wall direction drone;
-														List.iter (fun dd -> self#look_one_drone direction drone dd) (List.rev(self#sort_by_dist drone drones));
+														self#look_wall direction active_drone; (* the wall is always visible, and it is always the farthest object from the active drone *)
+														let found_drones = List.filter (fun d ->
+															if d==active_drone then false     (* the drone cannot see itself *)
+															else if not d#is_alive then false (* ignore dead drones *)
+															else begin  (* check if the drone is in the look range *)
+																let angle_to_drone = degree_of_radian (atan2 (d#get_y_position -. active_drone#get_y_position)  (d#get_x_position -. active_drone#get_x_position) ) in
+																abs (direction - angle_to_drone)  < look_range
+															end
+														) drones in
+														(* sort all drones in the look range by the distance from the active drone *)
+														let sorted_found_drones = List.rev(self#sort_by_dist active_drone found_drones) in
+														(* add all found drones into the active drone's stack *)
+														List.iter (fun d -> active_drone#found_target (distance(active_drone#get_x_position, active_drone#get_y_position, d#get_x_position, d#get_y_position))
+																			                          (degree_of_radian (atan2 (d#get_y_position -. active_drone#get_y_position)  (d#get_x_position -. active_drone#get_x_position) ))
+																			                          (if active_drone#get_team_id=d#get_team_id then Ally else Foe)
+																  ) sorted_found_drones
 														end
 				)
- 				with Error_in_AI (reason, sub, position) -> printf "Drone %s died at %s:%d with explanation: %s\n" drone#get_drone_name sub position reason
+ 				with Error_in_AI (reason, sub, position) -> printf "Drone %s died at %s:%d with explanation: %s\n" active_drone#get_drone_name sub position reason
 			end
 		) drones;
 		(* update position for all drones and bullets *)
@@ -158,14 +129,15 @@ object (self)
 		List.iter (fun b -> b#move bullet_speed; if b#is_exploded then List.iter(fun d -> self#explosion b d) drones) bullets;
 
  		List.iter (fun d -> d#print_current_pos ) drones;
-		(* TO DO! call GUI if needed *)
+		if gui_enabled then begin
                 arena_gui#clear;
                 List.iter (fun d -> arena_gui#drawDroneDetail (int_of_float d#get_x_position) (int_of_float d#get_y_position) (radian_of_degree d#get_moving_direction) (radian_of_degree d#get_direction_of_the_gun) d#get_drone_name d#get_health d#get_team_id d#get_ai_ticks d#get_moving_status d#get_reason_for_coma d#get_gun_cooldown) drones;
-                List.iter (fun b -> if(b#is_exploded) then arena_gui#drawExplode (int_of_float b#get_pos_x) (int_of_float b#get_pos_y)else arena_gui#drawBullet (int_of_float b#get_pos_x) (int_of_float b#get_pos_y)) bullets;
-                arena_gui#wait;
+                List.iter (fun b -> if(b#is_exploded) then arena_gui#drawExplode (int_of_float b#get_pos_x) (int_of_float b#get_pos_y) else arena_gui#drawBullet (int_of_float b#get_pos_x) (int_of_float b#get_pos_y)) bullets;
+                (*arena_gui#wait; *)
+		end;
 		(* remove all exploded bullets from the arena *)
 		bullets <- List.filter (fun b -> not b#is_exploded) bullets;
-		!live_drones 
+		!live_drones
 
 
 	method ins d drone d_list =
