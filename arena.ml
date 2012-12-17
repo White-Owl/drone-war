@@ -12,7 +12,7 @@ object (self)
     val mutable arena_gui = new gui
 	val mutable debug_mode = false
 
-	val mutable look_range = 180 		(* +30 and -30 on the given degree *)
+	val mutable look_range = 30 		(* +30 and -30 on the given degree *)
 	val mutable bullet_speed = 50
 	val mutable drone_speed = 10
 
