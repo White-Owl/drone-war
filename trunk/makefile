@@ -3,7 +3,7 @@ ML1=ast.ml utils.ml gui.ml
 ML2=bullet.ml drone.ml arena.ml main.ml
 MLY=parser_dbt.mly parser.mly
 MLL=scanner_dbt.mll scanner.mll
-LIBS=$(WITHGRAPHICS)
+LIBS=graphics.cma unix.cma
 OBJS=$(ML1:.ml=.cmo) $(MLL:.mll=.cmo) $(MLY:.mly=.cmo) $(ML2:.ml=.cmo)
 
 # uncomment and recompile to see the full parser log
@@ -26,7 +26,7 @@ else
 endif
 
 $(TARGET): $(OBJS)
-	ocamlc  -o $@ $(LIBS) graphics.cma $^
+	ocamlc  -o $@ $(LIBS) $^
 
 %.ml: %.mll
 	ocamllex $<

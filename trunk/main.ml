@@ -27,7 +27,6 @@ let main =
 		begin
 			print_string "Loading ";
 			print_string parameter;
-			Random.self_init();
 			try
 				cage#load parameter;
 				printf " - ok\n"
