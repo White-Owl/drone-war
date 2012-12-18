@@ -36,7 +36,7 @@ let main =
 			| Sys_error t          -> printf " - file error\n%s\n" t
 		end
 	) Sys.argv;
-
+	Random.self_init();
 	print_string ("Loaded " ^ (string_of_int cage#get_drone_count) ^ " drones\n");
 	cage#run;
 	exit 0;;
