@@ -56,7 +56,6 @@ operations:
 	| operations compaund_statment    { $2 @ $1 }
 	| operations error       { let pos = Parsing.rhs_start_pos 2 in
 	                           raise (Parse_failure ("Unrecognized tokens starting from line %d position %d\n", pos.pos_lnum, (pos.pos_cnum - pos.pos_bol +1)));
-	                           (* TO DO! I have no idea how to reach lex_buffer from the parser. So the exact token or text of the line are unknown *)
 	                         }
 
 
