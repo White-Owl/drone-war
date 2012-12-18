@@ -15,7 +15,7 @@ object (self)
 
 
     method drawArena=
-	      Graphics.open_graph " 1000x1000";
+	      Graphics.open_graph " 1000x800";
         Graphics.set_window_title "Arena";
 
         Graphics.set_color (Graphics.black);
