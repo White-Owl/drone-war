@@ -18,7 +18,7 @@
 				drop drop
 			again
 			drop
-			20 >
+			50 >
 		while
 
 		again
