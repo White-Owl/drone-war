@@ -1,3 +1,4 @@
+open Unix;;
 
 class gui =
 object (self)
@@ -11,41 +12,32 @@ object (self)
     val mutable temp_y = 0
     val mutable counter = 0
 
-  
+
 
 
     method drawArena=
-	      Graphics.open_graph " 1000x800";
+	    Graphics.open_graph "";
         Graphics.set_window_title "Arena";
+		Graphics.display_mode false;
+		Graphics.remember_mode true;
+		self#clear
 
-        Graphics.set_color (Graphics.black);
-        max_x <- Graphics.size_x();
-        max_y <- Graphics.size_y();
-        info_x <-(max_x-190);
-        info_y <-(max_y-25);
-        size_x <-(max_x-220);
-        size_y <-(max_y-40);
-        Graphics.draw_rect 20 20 size_x size_y;
-        Graphics.moveto info_x (max_y-30);
-        Graphics.draw_string "Total Ticks: ";
-        Graphics.draw_string (string_of_int counter);
-    
     method translate x y=
-	temp_x <- (20 + x * size_x / 1000);
+        temp_x <- (20 + x * size_x / 1000);
         temp_y <- (20 + y * size_y / 1000);
-     
+
 
 
     method drawDrone x y z=
-	Graphics.set_color (Graphics.blue);
+        Graphics.set_color (Graphics.blue);
         self#translate x y;
      	Graphics.draw_circle temp_x temp_y 6;
      	Graphics.moveto temp_x temp_y;
      	Graphics.lineto ( int_of_float(cos (z)*.12.) +size_x) (int_of_float(sin (z)*.12.)+temp_y);
-        
+
 
     method drawCircleDroneDetail x y z name health=
-	Graphics.set_color (Graphics.blue);
+        Graphics.set_color (Graphics.blue);
         self#translate x y;
      	Graphics.draw_circle temp_x temp_y 6;
      	Graphics.moveto temp_x temp_y;
@@ -56,7 +48,7 @@ object (self)
         Graphics.draw_string name;
         (*self#drawDroneHealth name health;*)
         if health=0 then (self#drawDroneDead x y);
-        
+
     method drawDroneDetail x y body_direc gun_direc name health team_id ai_ticks moving_status reason_for_coma gun_cooldown=
         self#drawDroneColor team_id;
         self#translate x y;
@@ -113,7 +105,7 @@ object (self)
         Graphics.moveto info_x info_y;
         Graphics.draw_string "Gun cooldown: ";
         Graphics.draw_string (string_of_int gun_cooldown);
-    
+
     method drawDroneDead x y=
         Graphics.set_color (Graphics.red);
         self#translate x y;
@@ -123,49 +115,55 @@ object (self)
         Graphics.lineto (temp_x+7) (temp_y+7);
 
     method drawDroneColor x=
-        match x with 
-          0 ->  Graphics.set_color (Graphics.red)
-          |1 -> Graphics.set_color (Graphics.green)
-          |2 -> Graphics.set_color (Graphics.blue)
-          |3 -> Graphics.set_color (10506797)
-          |4 -> Graphics.set_color (Graphics.cyan)
-          |5 -> Graphics.set_color (Graphics.magenta)
-          |6 -> Graphics.set_color (16744228)
-          |7 -> Graphics.set_color (16759055)
-          |8 -> Graphics.set_color (13487360)
-          |9 -> Graphics.set_color (13445520)
-          |10 -> Graphics.set_color (12092939)
-          |11 -> Graphics.set_color (9005261)
-          |12 -> Graphics.set_color (9132544)
-          |13 -> Graphics.set_color (5577355)
-          |14 -> Graphics.set_color (128)
-          |_ -> Graphics.set_color (Graphics.black)
+        match x with
+             0 ->  Graphics.set_color (Graphics.red)
+          |  1 -> Graphics.set_color (Graphics.green)
+          |  2 -> Graphics.set_color (Graphics.blue)
+          |  3 -> Graphics.set_color (10506797)
+          |  4 -> Graphics.set_color (Graphics.cyan)
+          |  5 -> Graphics.set_color (Graphics.magenta)
+          |  6 -> Graphics.set_color (16744228)
+          |  7 -> Graphics.set_color (16759055)
+          |  8 -> Graphics.set_color (13487360)
+          |  9 -> Graphics.set_color (13445520)
+          | 10 -> Graphics.set_color (12092939)
+          | 11 -> Graphics.set_color (9005261)
+          | 12 -> Graphics.set_color (9132544)
+          | 13 -> Graphics.set_color (5577355)
+          | 14 -> Graphics.set_color (128)
+          | _ -> Graphics.set_color (Graphics.black)
 
     method drawBullet x y=
-	Graphics.set_color (Graphics.black);
+        Graphics.set_color (Graphics.black);
         self#translate x y;
         Graphics.fill_circle temp_x temp_y 4;
-  
+
     method drawExplode x y=
      	Graphics.set_color (Graphics.red);
         self#translate x y;
      	Graphics.fill_poly [|(temp_x-27,temp_y+9);(temp_x-9,temp_y+9);(temp_x,temp_y+27);(temp_x+9,temp_y+9);(temp_x+27,temp_y+9);(temp_x+15,temp_y-6);(temp_x+18,temp_y-27);(temp_x,temp_y-12);(temp_x-18,temp_y-27);(temp_x-15,temp_y-6)|];
 
     method clear=
-	Graphics.clear_graph ();
+        Graphics.clear_graph ();
         Graphics.set_color (Graphics.black);
-        Graphics.draw_rect 20 20 size_x size_y;  
-        info_y <- (max_y-25);
+        max_x <- Graphics.size_x();
+        max_y <- Graphics.size_y();
+        info_x <-(max_x-190);
+        info_y <-(max_y-25);
+        size_x <-(max_x-220);
+        size_y <-(max_y-40);
         counter <- (counter+1);
+        Graphics.draw_rect 20 20 size_x size_y;
         Graphics.moveto info_x (max_y-30);
         Graphics.draw_string "Total Ticks: ";
         Graphics.draw_string (string_of_int counter);
 
     method wait=
-        let s = Graphics.wait_next_event [Graphics.Button_down;Graphics.Key_pressed] in if s.Graphics.button
-          then Graphics.set_color (Graphics.red);
+		Graphics.synchronize();
+        (*let s = Graphics.wait_next_event [Graphics.Button_down;Graphics.Key_pressed] in if s.Graphics.button
+          then Graphics.set_color (Graphics.red); *)
+		let tt = Unix.gettimeofday() in
+		while Unix.gettimeofday() < tt +. 0.05 do () done
+
 
 end;;
-
-
-

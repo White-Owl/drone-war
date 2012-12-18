@@ -128,12 +128,12 @@ object (self)
 		List.iter (fun d -> d#move drone_speed ) drones;
 		List.iter (fun b -> b#move bullet_speed; if b#is_exploded then List.iter(fun d -> self#explosion b d) drones) bullets;
 
-(*  		List.iter (fun d -> d#print_current_pos ) drones;
- *)		if gui_enabled then begin
+		(*	List.iter (fun d -> d#print_current_pos ) drones; *)
+		if gui_enabled then begin
                 arena_gui#clear;
                 List.iter (fun d -> arena_gui#drawDroneDetail (int_of_float d#get_x_position) (int_of_float d#get_y_position) (radian_of_degree d#get_moving_direction) (radian_of_degree d#get_direction_of_the_gun) d#get_drone_name d#get_health d#get_team_id d#get_ai_ticks d#get_moving_status d#get_reason_for_coma d#get_gun_cooldown) drones;
                 List.iter (fun b -> if(b#is_exploded) then arena_gui#drawExplode (int_of_float b#get_pos_x) (int_of_float b#get_pos_y) else arena_gui#drawBullet (int_of_float b#get_pos_x) (int_of_float b#get_pos_y)) bullets;
-                (*arena_gui#wait; *)
+                arena_gui#wait;
 		end;
 		(* remove all exploded bullets from the arena *)
 		bullets <- List.filter (fun b -> not b#is_exploded) bullets;
