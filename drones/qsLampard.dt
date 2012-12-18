@@ -1,0 +1,27 @@
+0 run store
+90 fight store
+run read
+move
+main_loop:
+     run read look
+     isWall change_move jumpif
+     dropALL
+     fight read look
+     isWall change_gun jumpif
+     dup
+     fight store
+     shoot
+     main_loop jump
+
+
+change_move:
+     run read 90 + run read 270 + random
+     dup 
+     run store
+     move
+     main_loop jump
+
+change_gun:
+     fight read 90 + fight read 180 + random
+     fight store
+     main_loop jump
