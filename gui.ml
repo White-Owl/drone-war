@@ -10,9 +10,14 @@ object (self)
     val mutable temp_x = 0
     val mutable temp_y = 0
     val mutable counter = 0
+
+  
+
+
     method drawArena=
-	Graphics.open_graph " 1000x1000";
+	      Graphics.open_graph " 1000x1000";
         Graphics.set_window_title "Arena";
+
         Graphics.set_color (Graphics.black);
         max_x <- Graphics.size_x();
         max_y <- Graphics.size_y();
@@ -29,6 +34,8 @@ object (self)
 	temp_x <- (20 + x * size_x / 1000);
         temp_y <- (20 + y * size_y / 1000);
      
+
+
     method drawDrone x y z=
 	Graphics.set_color (Graphics.blue);
         self#translate x y;
