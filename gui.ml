@@ -139,10 +139,19 @@ object (self)
         Graphics.fill_circle temp_x temp_y 4;
 
     method drawExplode x y=
-     	Graphics.set_color (Graphics.red);
         self#translate x y;
-     	Graphics.fill_poly [|(temp_x-27,temp_y+9);(temp_x-9,temp_y+9);(temp_x,temp_y+27);(temp_x+9,temp_y+9);(temp_x+27,temp_y+9);(temp_x+15,temp_y-6);(temp_x+18,temp_y-27);(temp_x,temp_y-12);(temp_x-18,temp_y-27);(temp_x-15,temp_y-6)|];
+        Graphics.set_color (14423100);
+      Graphics.draw_circle temp_x temp_y 10;
+        Graphics.set_color (15597568);
+      Graphics.draw_circle temp_x temp_y 20;
+        Graphics.set_color (15608876);
+      Graphics.draw_circle temp_x temp_y 30;
+        Graphics.set_color (15613952);
+      Graphics.draw_circle temp_x temp_y 40;
+        Graphics.set_color (15627776);
+      Graphics.draw_circle temp_x temp_y 50;
 
+      
     method clear=
         Graphics.clear_graph ();
         Graphics.set_color (Graphics.black);
