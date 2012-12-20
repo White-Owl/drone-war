@@ -53,7 +53,7 @@ object (self)
 	method run =
 		if gui_enabled then arena_gui#drawArena;
 		let steps = ref 1 in
-		while (self#step > 1) && (!steps < 2000) do
+		while (self#step > 1) && (!steps < 5000) do
 			incr steps
 		done;
 		printf "Results:\n";
@@ -80,7 +80,7 @@ object (self)
 		let dist = if md=0 || md=180 then dh
 					else if md=90 || md=270 then dv
 					else min dh dv in
-        d_look#found_target dist dire Wall
+        d_look#found_target dist dire Wall 
 
 
 

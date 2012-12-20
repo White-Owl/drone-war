@@ -13,7 +13,6 @@
 
 			direction read look
 			begin
-
 				iswall not
 			while
 				drop drop
@@ -21,11 +20,6 @@
 			drop
 			20 >
 		while
-
-		again
-// stop moving
-		stop
-
 		begin
 // lay on the wall and look backward
 			direction read 180 + look
@@ -41,9 +35,14 @@
 // shoot foe
 			shoot
 			shoottime read 1 + shoottime store
-			shoottime read 5 <
+			shoottime read 15 <
 		while
 		again
+		again
+// stop moving
+		stop
+
+		
 // repeat it until die
 	again
 
